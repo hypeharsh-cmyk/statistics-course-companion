@@ -1,0 +1,581 @@
+<section id="ch5" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Chapter 5</div>
+    <h1>Correlation and Simple Linear Regression</h1>
+    <p>By the end of this chapter you can measure how tightly two variables move together, rank-correlate data that has no numbers, fit a least-squares line by hand, read what its slope means, and test whether that slope is real.</p>
+  </div>
+
+  <p class="lead">Everything so far concerned one variable at a time. Now there are two, and two new questions. <strong>Correlation</strong> asks: do these move together, and how tightly? <strong>Regression</strong> goes further and asks: given one, what is my best guess for the other? The first gives you a number between −1 and 1. The second gives you a line.</p>
+
+  <h2 id="ch5-s1">5.1 · Scatter plots — always look first</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Correlation analysis is used to measure the strength of the association (linear relationship) between two variables.</li>
+    <li>Correlation is only concerned with strength of the relationship.</li>
+    <li>No causal effect is implied with correlation.</li>
+    <li>A scatter plot (or scatter diagram or dot diagram) is used to show the relationship between two variables. Scattering of points around the line represents variation.</li>
+    <li>If a scatter plot shows some sort of linear relationship, we can use correlation analysis to measure the strength of the linear relationship between two variables.</li>
+    <li>We consider the two variables equally; as a result, no causal effect is implied.</li>
+  </ul></div>
+
+  <div class="box warn"><span class="lbl">Plot before you compute</span>
+  The correlation coefficient only measures <strong>straight-line</strong> association. A perfect U-shaped relationship — strong, obvious, completely real — can produce $r$ near <strong>zero</strong>, because the rising half and the falling half cancel. Computing $r$ without looking at the scatter plot will eventually tell you "no relationship" about data with an unmistakable pattern.</div>
+
+  <figure data-fig="scatter-r"><figcaption></figcaption></figure>
+
+  <h2 id="ch5-s2">5.2 · The correlation coefficient</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Correlation is used to quantify the degree to which two random variables are related, provided the relationship is linear.</li>
+    <li>The population correlation coefficient $\rho$ (rho) measures the strength of the association between the variables.</li>
+    <li>The sample correlation coefficient $r$ is an estimator of $\rho$ and is used to measure the strength of the linear relationship in the sample observations.</li>
+  </ul></div>
+
+  <div class="box def"><span class="lbl">Features of ρ and r</span>
+  <ul>
+    <li>Unit free</li>
+    <li>Range between −1 and 1</li>
+    <li>The closer to −1, the stronger the negative linear relationship</li>
+    <li>The closer to 1, the stronger the positive linear relationship</li>
+    <li>The closer to 0, the weaker the linear relationship</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">"Unit free" is the useful part</span>
+  Measure height in centimetres or in inches, weight in kilograms or in pounds — $r$ does not change. It is a pure number describing shape, not size. That is exactly why it can compare relationships from completely different fields.</div>
+
+  <h3>Why r can never escape [−1, 1] — the slides' proof</h3>
+  <p>Standardise both variables first:</p>
+  $$ x_i' = \frac{x_i - \bar{x}}{s_x}, \qquad y_i' = \frac{y_i - \bar{y}}{s_y} $$
+  <p>In these units the correlation is simply an average product, and each standardised variable has squares summing to $n$:</p>
+  $$ r = \frac{1}{n}\sum_i x_i' y_i' \qquad\text{and}\qquad \sum_i x_i'^2 = n = \sum_i y_i'^2 $$
+  <div class="box def"><span class="lbl">Proof</span>
+  <p><strong>Lower bound.</strong> A sum of squares can never be negative:</p>
+  $$ \frac{1}{n}\sum_i (x_i' + y_i')^2 \ge 0 \;\Rightarrow\; \frac{1}{n}\sum x_i'^2 + \frac{1}{n}\sum y_i'^2 + \frac{2}{n}\sum x_i'y_i' \ge 0 $$
+  $$ \Rightarrow\; 1 + 1 + 2r \ge 0 \;\Rightarrow\; 2(1+r) \ge 0 \;\Rightarrow\; r \ge -1 $$
+  <p><strong>Upper bound.</strong> Same trick with a minus sign:</p>
+  $$ \frac{1}{n}\sum_i (x_i' - y_i')^2 \ge 0 \;\Rightarrow\; 2(1-r) \ge 0 \;\Rightarrow\; r \le 1 $$
+  <p>Therefore $-1 \le r \le 1$. $\blacksquare$</p></div>
+
+  <div class="box tip"><span class="lbl">If you ever compute r = 1.4</span>
+  You have made an arithmetic error — usually a squared term entered as unsquared in the denominator. The proof above says no data on earth can produce it.</div>
+
+  <h3>Three formulas for the same number</h3>
+
+  <div class="formula">
+    <div class="name">Pearson's r — deviational (product-moment) form</div>
+    $$ r = \frac{\sum (x-\bar{x})(y-\bar{y})}{\sqrt{\left[\sum (x-\bar{x})^2\right]\left[\sum (y-\bar{y})^2\right]}} = \frac{SS_{xy}}{\sqrt{SS_{xx}\,SS_{yy}}} $$
+    <div class="where"><b>SS<sub>xy</sub></b> sum of cross-products of deviations · <b>SS<sub>xx</sub>, SS<sub>yy</sub></b> sums of squared deviations · best when the means are whole numbers</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Pearson's r — computational form (use this one in exams)</div>
+    $$ r = \frac{n\sum xy - \sum x \sum y}{\sqrt{\left[n\sum x^2 - \left(\sum x\right)^2\right]\left[n\sum y^2 - \left(\sum y\right)^2\right]}} $$
+    <div class="where"><b>n</b> number of <em>pairs</em> · everything else is a column total from a five-column table: x, y, xy, x², y²</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Pearson's r — covariance form</div>
+    $$ r = \frac{Cov(X,Y)}{S_x S_y} = \frac{E(XY) - E(X)E(Y)}{S_x S_y} $$
+    <div class="where"><b>Cov(X,Y)</b> the covariance, which carries the units · dividing by both standard deviations is what strips the units away</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">Exam method</span>
+  Build the five-column table — $x$, $y$, $xy$, $x^2$, $y^2$ — total every column, then substitute into the computational form. It needs no means, no decimals until the very end, and it is far harder to get wrong than the deviational version.</div>
+
+  <div class="example">
+    <div class="hd">Worked example 1 — computing Pearson's r</div>
+    <div class="bd">
+      <p>Calculate Pearson's product-moment correlation coefficient $r$ for the child height ($x$, in cm) and child weight ($y$, in kg) data given below.</p>
+      <div class="tw"><table>
+        <thead><tr><th class="num">x</th><th class="num">y</th><th class="num">xy</th><th class="num">x²</th><th class="num">y²</th></tr></thead>
+        <tbody>
+          <tr><td class="num">35</td><td class="num">8</td><td class="num">280</td><td class="num">1225</td><td class="num">64</td></tr>
+          <tr><td class="num">49</td><td class="num">9</td><td class="num">441</td><td class="num">2401</td><td class="num">81</td></tr>
+          <tr><td class="num">27</td><td class="num">7</td><td class="num">189</td><td class="num">729</td><td class="num">49</td></tr>
+          <tr><td class="num">33</td><td class="num">6</td><td class="num">198</td><td class="num">1089</td><td class="num">36</td></tr>
+          <tr><td class="num">60</td><td class="num">13</td><td class="num">780</td><td class="num">3600</td><td class="num">169</td></tr>
+          <tr><td class="num">21</td><td class="num">7</td><td class="num">147</td><td class="num">441</td><td class="num">49</td></tr>
+          <tr><td class="num">45</td><td class="num">11</td><td class="num">495</td><td class="num">2025</td><td class="num">121</td></tr>
+          <tr><td class="num">51</td><td class="num">12</td><td class="num">612</td><td class="num">2601</td><td class="num">144</td></tr>
+          <tr><th class="num">Σ = 321</th><th class="num">73</th><th class="num">3142</th><th class="num">14111</th><th class="num">713</th></tr>
+        </tbody>
+      </table></div>
+      <div class="given"><b>Given</b> n = 8 pairs · Σx = 321 · Σy = 73 · Σxy = 3142 · Σx² = 14111 · Σy² = 713</div>
+      <ol class="steps">
+        <li>Numerator: $n\sum xy - \sum x\sum y = 8(3142) - (73)(321) = 25136 - 23433 = 1703$</li>
+        <li>First bracket: $n\sum y^2 - (\sum y)^2 = 8(713) - 73^2 = 5704 - 5329 = 375$</li>
+        <li>Second bracket: $n\sum x^2 - (\sum x)^2 = 8(14111) - 321^2 = 112888 - 103041 = 9847$</li>
+        <li>Denominator: $\sqrt{375 \times 9847} = \sqrt{3692625} = 1921.62$</li>
+        <li>$r = \dfrac{1703}{1921.62} = 0.886$</li>
+      </ol>
+      <div class="final">r = 0.886 — a relatively strong positive linear association between height and weight</div>
+    </div>
+  </div>
+
+  <p>Now build your own intuition. Drag the dots below and watch $r$ move. Try to make $r$ exactly 0 while the points still clearly form a pattern — then you will never trust a bare correlation number again.</p>
+
+  <figure data-fig="i-regress"><figcaption></figcaption></figure>
+
+  <h2 id="ch5-s3">5.3 · Is the correlation real? The significance test</h2>
+
+  <p>A sample of 8 children gave $r = 0.886$. But even two <em>unrelated</em> variables will show some correlation by luck in a small sample. So we test it.</p>
+
+  <div class="box def"><span class="lbl">Hypotheses</span>
+  $H_0: \rho = 0$ (no correlation) &nbsp;·&nbsp; $H_A: \rho \neq 0$ (correlation exists)</div>
+
+  <div class="formula">
+    <div class="name">Test statistic for a correlation coefficient</div>
+    $$ t = \frac{r}{\sqrt{\dfrac{1-r^2}{n-2}}} \qquad \text{with } df = n-2 $$
+    <div class="where"><b>r</b> the sample correlation · <b>n</b> the number of pairs · the denominator is the standard error of r</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  Here the degrees of freedom are taken to be $n-2$ because two points can be joined by a straight line surely.</div>
+
+  <div class="box plain"><span class="lbl">Why n − 2 and not n − 1</span>
+  Any two points lie perfectly on a line — with $n = 2$ you always get $r = \pm 1$ and it means nothing. You must "spend" two observations before the data can say anything about a line at all. Everything in this chapter that involves a fitted line uses $n-2$ degrees of freedom for exactly this reason.</div>
+
+  <h2 id="ch5-s4">5.4 · Spearman's rank correlation</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Karl Pearson's coefficient of correlation cannot be used in cases where the direct quantitative measurement of the phenomenon under study is not possible. In such situations we can use Spearman's rank correlation coefficient.</li>
+    <li>Spearman's rank correlation coefficient, denoted by $r_s$, measures the correlation between two paired samples of ranked data. This correlation coefficient is applied to the ranks in two paired samples (not to the original scores).</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">When you need this</span>
+  Two judges rank six paintings. There is no number for "beauty" — only positions. Pearson has nothing to work with, but Spearman does: it throws away the values and keeps only the <em>order</em>, then asks whether the two orderings agree.</div>
+
+  <div class="formula">
+    <div class="name">Spearman's rank correlation — no ties</div>
+    $$ r_s = 1 - \frac{6\sum d_i^{2}}{n(n^{2}-1)} $$
+    <div class="where"><b>d<sub>i</sub></b> the difference between the two ranks of the same item · <b>n</b> the number of pairs · the 6 is a constant that makes the answer land in [−1, 1]</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Computation steps, from the slides</span>
+  <ol><li>List the n pairs of ranks, X and Y.</li>
+  <li>Find the differences ($d_i$) between the ranks.</li>
+  <li>Square these differences and add the squares ($\sum d_i^2$).</li>
+  <li>Compute $r_s$.</li></ol></div>
+
+  <div class="example">
+    <div class="hd">Worked example 2 — Spearman with no ties</div>
+    <div class="bd">
+      <p>Six paintings were ranked by two judges. Calculate the rank correlation coefficient.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Painting</th><th class="num">First judge (X)</th><th class="num">Second judge (Y)</th><th class="num">d</th><th class="num">d²</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr><td>B</td><td class="num">1</td><td class="num">3</td><td class="num">−2</td><td class="num">4</td></tr>
+          <tr><td>C</td><td class="num">4</td><td class="num">4</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr><td>D</td><td class="num">5</td><td class="num">6</td><td class="num">−1</td><td class="num">1</td></tr>
+          <tr><td>E</td><td class="num">6</td><td class="num">5</td><td class="num">1</td><td class="num">1</td></tr>
+          <tr><td>F</td><td class="num">3</td><td class="num">1</td><td class="num">2</td><td class="num">4</td></tr>
+          <tr><th colspan="4">Σd²</th><th class="num">10</th></tr>
+        </tbody>
+      </table></div>
+      <div class="given"><b>Given</b> n = 6 · Σd² = 10</div>
+      <ol class="steps">
+        <li>$r_s = 1 - \dfrac{6\sum d^2}{n(n^2-1)} = 1 - \dfrac{6 \times 10}{6(6^2-1)}$</li>
+        <li>$= 1 - \dfrac{60}{6(35)} = 1 - \dfrac{60}{210} = 1 - 0.29$</li>
+        <li>$= 0.71$</li>
+      </ol>
+      <div class="final">r<sub>s</sub> = 0.71 — the two judges broadly agree</div>
+      <div class="box tip" style="margin-top:1rem"><span class="lbl">Check yourself</span>
+      $\sum d$ (not squared) must always come to <strong>zero</strong>. If it does not, you have mis-assigned a rank somewhere. Do this check before squaring.</div>
+    </div>
+  </div>
+
+  <h3>When ranks are tied</h3>
+  <p>If two items are equal, they share the average of the ranks they would have occupied — and the formula needs a correction for each group of ties.</p>
+
+  <div class="formula">
+    <div class="name">Correction factor and the corrected coefficient</div>
+    $$ C.F. = \frac{m(m^{2}-1)}{12} $$
+    $$ r = 1 - \frac{6}{n(n^{2}-1)}\left[\sum d_i^{2} + \sum \frac{m(m^{2}-1)}{12}\right] $$
+    <div class="where"><b>m</b> how many times one particular value is repeated · one C.F. term per tied group, in <em>either</em> variable · they are all added inside the bracket alongside Σd²</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">Two rules for ties</span>
+  <ul>
+    <li><strong>Average the ranks.</strong> If the value 16 occupies positions 7, 8 and 9, all three get rank $\frac{7+8+9}{3} = 8$. The next item takes rank 10 — you do not renumber.</li>
+    <li><strong>One C.F. per tied group, counted separately in x and in y.</strong> Three 16s in x gives $\frac{3(9-1)}{12} = 2$; two 13s in y gives $\frac{2(4-1)}{12} = 0.5$. Miss one and the answer is quietly wrong.</li>
+  </ul></div>
+
+  <h2 id="ch5-s5">5.5 · Correlation and causation</h2>
+
+  <div class="box def"><span class="lbl">From the slides</span>
+  <p>Correlation fails to show the cause and effect between the two variables. In a bivariate distribution, if the variables have a cause-and-effect relationship, there definitely exists a high degree of correlation between these variables. But the converse may not be true for the bivariate case — that means a high degree of correlation may not guarantee a cause-effect relationship between them.</p></div>
+
+  <div class="box plain"><span class="lbl">The arrow only points one way</span>
+  <strong>Causation ⟹ correlation.</strong> If A really drives B, they will correlate. <strong>Correlation ⇏ causation.</strong> Ice-cream sales correlate with drowning deaths; neither causes the other, summer causes both. A high $r$ is evidence that something is going on — not evidence of what.</div>
+
+  <h2 id="ch5-s6">5.6 · The simple linear regression model</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Regression analysis is used to: predict the value of a dependent variable based on the value of at least one independent variable; explain the impact of changes in an independent variable on the dependent variable; and controlling.</li>
+    <li>Regression can be a powerful tool for addressing three important practical questions: prediction, isolating the effect of a single predictor, and understanding multiple predictors.</li>
+    <li><strong>Dependent / response variable:</strong> the variable we wish to explain. In simple linear regression it is always a continuous variable.</li>
+    <li><strong>Independent / explanatory variable:</strong> the variable used to explain the dependent variable. In linear regression it could have any measurement scale.</li>
+    <li>Only one independent variable, x; the relationship between x and y is described by a linear function; changes in y are assumed to be caused by changes in x.</li>
+  </ul></div>
+
+  <div class="formula">
+    <div class="name">Population linear regression model</div>
+    $$ y = \beta_0 + \beta_1 x + \epsilon $$
+    <div class="where"><b>β₀</b> the population y-intercept · <b>β₁</b> the population slope · <b>x</b> the independent variable · <b>ε</b> the random error term, everything about y that x cannot explain</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Estimated (sample) regression line</div>
+    $$ \hat{y}_i = b_0 + b_1 x \qquad\text{or, in the notation your slides also use,}\qquad y = a + bx $$
+    <div class="where"><b>ŷ</b> the predicted y · <b>b₀ (or a)</b> the estimated intercept · <b>b₁ (or b)</b> the estimated slope · the sample line estimates the population line</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">Greek versus Latin — worth two seconds every time</span>
+  $\beta_0, \beta_1$ are the <strong>true, unknown</strong> population values. $a, b$ (or $b_0, b_1$) are what you <strong>computed from your sample</strong>. The whole of section 5.11 exists to ask: is the $b_1$ I computed far enough from zero to believe $\beta_1$ isn't zero?</div>
+
+  <div class="box def"><span class="lbl">Assumptions — the "LINE" conditions</span>
+  <ul>
+    <li>The relationship between the two variables x and y is <strong>L</strong>inear</li>
+    <li><strong>I</strong>ndependent observations</li>
+    <li>Error values are <strong>N</strong>ormally distributed for any given value of x</li>
+    <li>The probability distribution of the errors has <strong>E</strong>qual variance</li>
+    <li>Fixed independent variables (not random, non-stochastic, given values, deterministic) — the only randomness in the values of Y comes from the error term</li>
+    <li>No autocorrelation of the errors</li>
+    <li>No outlier distortion</li>
+  </ul></div>
+
+  <h2 id="ch5-s7">5.7 · Least squares and the normal equations</h2>
+
+  <p>Infinitely many lines could be drawn through a scatter of points. Least squares picks one rule: make the total squared vertical miss as small as possible.</p>
+
+  <div class="formula">
+    <div class="name">The least squares criterion</div>
+    $$ \Phi(a,b) = \sum e_i^{2} = \sum (y_i - \hat{y}_i)^{2} = \sum \left(y_i - (a + bx_i)\right)^{2} $$
+    <div class="where"><b>e<sub>i</sub></b> the residual, observed minus predicted · we choose a and b to make this total as small as possible</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">Why square the errors?</span>
+  Squaring does two jobs at once. It makes every miss positive, so overshoots and undershoots cannot cancel into a fake "perfect" fit. And it punishes big misses far more than small ones — being off by 4 costs sixteen times as much as being off by 1 — so the line is pulled hard away from leaving any point badly stranded.</div>
+
+  <p>Setting both partial derivatives to zero, $\frac{\partial \Phi}{\partial a} = 0$ and $\frac{\partial \Phi}{\partial b} = 0$, gives</p>
+  $$ \sum 2(y_i - a - bx_i)(-1) = 0, \qquad \sum 2(y_i - a - bx_i)(-x_i) = 0 $$
+  <p>which tidy up into the two <strong>normal equations</strong>:</p>
+
+  <div class="formula">
+    <div class="name">The normal equations</div>
+    $$ \sum y_i = na + b\sum x_i $$
+    $$ \sum x_i y_i = a\sum x_i + b\sum x_i^{2} $$
+    <div class="where">two linear equations in the two unknowns a and b · solve them simultaneously and you have your line</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Solved directly for the slope and intercept</div>
+    $$ b = \frac{n\sum xy - \sum x\sum y}{n\sum x^{2} - \left(\sum x\right)^{2}} = \frac{Cov(x,y)}{Var(x)} \qquad\qquad a = \bar{y} - b\bar{x} $$
+    <div class="where">compute <b>b</b> first, always · then <b>a</b> follows from the means · note the numerator of b is the same numerator as in r</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">Two ways to be asked the same thing</span>
+  If the question gives you the raw pairs and $n$ is tiny, forming and solving the normal equations (as in Worked example 3) is quick and shows full method. If the question hands you $\sum x, \sum y, \sum xy, \sum x^2$ (as in Worked example 4), go straight to the direct formulas. Both give identical answers.</div>
+
+  <div class="example">
+    <div class="hd">Worked example 3 — fitting a line via the normal equations</div>
+    <div class="bd">
+      <p>Assume $f(x) = a + bx$. Find the linear regression line for the following data: &nbsp; $x$: 1, 2, 3 &nbsp;·&nbsp; $y$: 5.1, 5.9, 6.3</p>
+      <div class="tw"><table>
+        <thead><tr><th class="num">i</th><th class="num">xᵢ</th><th class="num">yᵢ</th><th class="num">xᵢ²</th><th class="num">xᵢyᵢ</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="num">1</td><td class="num">5.1</td><td class="num">1</td><td class="num">5.1</td></tr>
+          <tr><td class="num">2</td><td class="num">2</td><td class="num">5.9</td><td class="num">4</td><td class="num">11.8</td></tr>
+          <tr><td class="num">3</td><td class="num">3</td><td class="num">6.3</td><td class="num">9</td><td class="num">18.9</td></tr>
+          <tr><th class="num">Σ</th><th class="num">6</th><th class="num">17.3</th><th class="num">14</th><th class="num">35.8</th></tr>
+        </tbody>
+      </table></div>
+      <div class="given"><b>Given</b> n = 3 · Σx = 6 · Σy = 17.3 · Σx² = 14 · Σxy = 35.8</div>
+      <ol class="steps">
+        <li>Form the normal equations: &nbsp; (1) $3a + 6b = 17.3$ &nbsp;&nbsp; (2) $6a + 14b = 35.8$</li>
+        <li>Multiply (1) by 2: $6a + 12b = 34.6$</li>
+        <li>Subtract from (2): $(6a+14b) - (6a+12b) = 35.8 - 34.6 \Rightarrow 2b = 1.2 \Rightarrow b = 0.60$</li>
+        <li>Substitute into (1): $3a + 6(0.60) = 17.3 \Rightarrow 3a + 3.6 = 17.3 \Rightarrow 3a = 13.7$</li>
+        <li>$a = 4.5667$</li>
+      </ol>
+      <div class="final">ŷ = 4.5667 + 0.60x</div>
+    </div>
+  </div>
+
+  <h2 id="ch5-s8">5.8 · Two regression lines, and r as their geometric mean</h2>
+
+  <p>Regressing $y$ on $x$ minimises <em>vertical</em> misses. Regressing $x$ on $y$ minimises <em>horizontal</em> misses. These are different questions, so they give different lines.</p>
+
+  <div class="formula">
+    <div class="name">The two regression equations</div>
+    $$ \text{Y on X:}\quad y - \bar{y} = b_{yx}(x - \bar{x}), \qquad b_{yx} = \frac{Cov(x,y)}{Var(x)} = r\frac{S_y}{S_x} $$
+    $$ \text{X on Y:}\quad x - \bar{x} = b_{xy}(y - \bar{y}), \qquad b_{xy} = \frac{Cov(x,y)}{Var(y)} = r\frac{S_x}{S_y} $$
+    <div class="where"><b>b<sub>yx</sub></b> used when predicting y from x · <b>b<sub>xy</sub></b> used when predicting x from y · both pass through the point of means</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">r is the geometric mean of the two regression coefficients</div>
+    $$ b_{yx} \times b_{xy} = r\frac{S_y}{S_x} \times r\frac{S_x}{S_y} = r^{2} \qquad\Rightarrow\qquad r = \pm\sqrt{b_{yx}\,b_{xy}} $$
+    <div class="where">take the <b>positive</b> root if both regression coefficients are positive, the negative root if both are negative — they always share a sign</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  The intersection point of the two regression lines is $(\bar{x}, \bar{y})$ — that is, the mean. The point of intersection of the regression lines gives the mean, because both lines pass through this common point; therefore it is the solution of both equations.</div>
+
+  <div class="box tip"><span class="lbl">Free marks</span>
+  If a question gives you both regression lines and asks for the means, do not hunt for data — just solve the two line equations simultaneously. The answer <em>is</em> $(\bar{x},\bar{y})$. And if it gives both lines and asks for $r$, take $\pm\sqrt{b_{yx}b_{xy}}$.</div>
+
+  <h2 id="ch5-s9">5.9 · Interpreting the slope and the intercept</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>$a$ is the estimated average value of $y$ when the value of $x$ is zero (provided that $x$ is inside the data range considered).</li>
+    <li>Otherwise, it shows the portion of the variability of the dependent variable left unexplained by the independent variable considered.</li>
+    <li>$b$ is the estimated change in the average value of $y$ as a result of a one-unit change in $x$.</li>
+  </ul></div>
+
+  <div class="box warn"><span class="lbl">Say "on average", and stay inside the data</span>
+  <p>The slope is an <em>average</em> change, not a promise about any individual. And an intercept at $x = 0$ is meaningless when no observation was anywhere near zero — you would be extrapolating far outside the data. That is exactly why the slides describe such an intercept as "the portion of the variability left unexplained" rather than as a real prediction.</p></div>
+
+  <div class="example">
+    <div class="hd">Worked example 4 — estimating and interpreting a and b</div>
+    <div class="bd">
+      <p>A researcher wishes to examine the relationship between the amount of the daily average diet taken by a cohort of 20 sample children and the weight gained by them in one month (both measured in kg). The content of the food is the same for all of them.</p>
+      <p>Dependent variable ($y$) = weight gained in one month, in kg. Independent variable ($x$) = average weight of diet taken per day by a child, in kg.</p>
+      <div class="given"><b>Given</b> n = 20 · Σx = 20.35 · Σy = 16.27 · Σxy = 17.58 · Σx² = 22.30</div>
+      <ol class="steps">
+        <li>Means: $\bar{x} = \frac{20.35}{20} = 1.0175$ and $\bar{y} = \frac{16.27}{20} = 0.8135$</li>
+        <li>Slope numerator: $n\sum xy - \sum x \sum y = 20(17.58) - (20.35)(16.27) = 351.6 - 331.0945 = 20.5055$</li>
+        <li>Slope denominator: $n\sum x^2 - (\sum x)^2 = 20(22.30) - (20.35)^2 = 446 - 414.1225 = 31.8775$</li>
+        <li>$b = \dfrac{20.5055}{31.8775} = 0.643$</li>
+        <li>$a = \bar{y} - b\bar{x} = 0.8135 - 0.643(1.0175) = 0.160$</li>
+      </ol>
+      <div class="final">Weight gained = 0.160 + 0.643 (food weight)</div>
+      <p style="margin-top:1rem"><strong>Interpretation, as the slides give it:</strong></p>
+      <ul>
+        <li><strong>Intercept ($a = 0.160$):</strong> no child has had 0 kg of food per day, so for foods within the range of sizes observed, 0.160 kg is the portion of the weight gained not explained by food.</li>
+        <li><strong>Slope ($b = 0.643$):</strong> the average weight of a child increases by 0.643 kg, on average, for each additional one kilogram of food taken each day.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 id="ch5-s10">5.10 · Explained and unexplained variation, and R²</h2>
+
+  <p>How good is the line? Compare it against the dumbest possible predictor: ignoring $x$ entirely and always guessing $\bar{y}$.</p>
+
+  <figure data-fig="sst-decomp"><figcaption></figcaption></figure>
+
+  <div class="formula">
+    <div class="name">The decomposition of variation</div>
+    $$ SST = SSR + SSE $$
+    $$ SST = \sum (y-\bar{y})^{2} \qquad SSR = \sum (\hat{y}-\bar{y})^{2} \qquad SSE = \sum (y-\hat{y})^{2} $$
+    <div class="where"><b>SST</b> total variation of y about its own mean · <b>SSR</b> the part the line explains · <b>SSE</b> the part still left over, the residuals</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  <strong>SST</strong> is how wrong you are guessing $\bar{y}$ every time. <strong>SSE</strong> is how wrong you still are after using the line. <strong>SSR</strong> is the improvement — the amount of wrongness the line removed. They must add up, because the line either explained a bit of variation or it did not.</div>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>The coefficient of determination is the portion of the total variation in the dependent variable that is explained by variation in the independent variable.</li>
+    <li>The coefficient of determination is also called R-squared and is denoted as R².</li>
+    <li>The F-test tests the statistical significance of the regression of the dependent variable on the independent variable: $H_0: \beta = 0$.</li>
+    <li>The reliability of the regression equation is very commonly measured by the correlation coefficient R. Equivalently one can check the statistical significance of R or R² using the F-test and reach exactly the same F-value as the model coefficients' test.</li>
+  </ul></div>
+
+  <div class="formula">
+    <div class="name">Coefficient of determination</div>
+    $$ R^{2} = \frac{SSR}{SST}, \qquad 0 \le R^{2} \le 1 \qquad\text{and for one independent variable}\qquad R^{2} = r^{2} $$
+    <div class="where"><b>R²</b> the fraction of y's variation explained by x · read it as a percentage</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">Reading R² out loud, and a sign warning</span>
+  <p>$R^2 = 0.785$ means "78.5% of the variation in weight is explained by variation in height". That is the sentence an examiner wants.</p>
+  <p>And note the direction of $R^2 = r^2$: going from $r$ to $R^2$ is safe, but going back is not — $R^2 = 0.64$ means $r = +0.8$ <em>or</em> $r = -0.8$. Squaring destroys the sign, so take it from the slope.</p></div>
+
+  <h2 id="ch5-s11">5.11 · Inference about the slope</h2>
+
+  <p>Your fitted slope $b_1$ will essentially never be exactly zero, even for unrelated variables. So we test whether it is far enough from zero to be believed.</p>
+
+  <div class="box def"><span class="lbl">Hypotheses, from the slides</span>
+  Is there a linear relationship between x and y? &nbsp; $H_0: \beta_1 = 0$ (no linear relationship) &nbsp;·&nbsp; $H_1: \beta_1 \neq 0$ (a linear relationship does exist)</div>
+
+  <div class="formula">
+    <div class="name">t-test for the population slope</div>
+    $$ t = \frac{b_1 - \beta_1}{s_{b_1}} \qquad \text{with } df = n-2 $$
+    <div class="where"><b>b₁</b> your sample slope · <b>β₁</b> the hypothesised slope, almost always 0 · <b>s<sub>b₁</sub></b> the standard error of the slope, read off the software output</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Confidence interval for the slope</div>
+    $$ b_1 \pm t_{\alpha/2,\,n-2}\; s_{b_1} $$
+    <div class="where">same shape as every interval in Chapter 3: estimate ± (critical value × standard error)</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">The interval and the test always agree</span>
+  If the 95% confidence interval for $\beta_1$ <strong>excludes 0</strong>, then the two-tailed test at $\alpha = 0.05$ <strong>rejects</strong> $H_0$. They are two views of the same calculation, so if your interval excludes zero but your test fails to reject, you have made an arithmetic error somewhere.</div>
+
+  <h2 id="ch5-exercises">5.12 · Practice questions</h2>
+  <p>The rank-correlation questions are where the marks leak: assign ranks carefully, check $\sum d = 0$, and never forget a correction factor.</p>
+  <button class="revealall">Reveal all solutions</button>
+
+  <div class="exercise">
+    <div class="hd">Question 1 — is the correlation significant?</div>
+    <div class="bd">
+      <p>Is there evidence of a linear relationship between child height and weight at the 0.05 level of significance?</p>
+      <div class="given"><b>Given</b> α = 0.05 · n = 8 · r = 0.886 · $H_0: \rho = 0$ · $H_1: \rho \neq 0$</div>
+      <p class="hint">Hint: df = n − 2, and the test is two-tailed, so look up the α/2 = 0.025 column.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>Degrees of freedom: $df = n - 2 = 8 - 2 = 6$.</li>
+          <li>Test statistic: $t = \dfrac{r}{\sqrt{\frac{1-r^2}{n-2}}} = \dfrac{0.886}{\sqrt{\frac{1-0.886^2}{6}}}$</li>
+          <li>$= \dfrac{0.886}{\sqrt{\frac{1-0.7850}{6}}} = \dfrac{0.886}{\sqrt{\frac{0.2150}{6}}} = \dfrac{0.886}{0.1893} = 4.68$</li>
+          <li>Critical value: two-tailed, α/2 = 0.025, df = 6, so $t_{0.025,\,6} = 2.447$.</li>
+          <li>Decision: observed $4.68 > 2.447$, so reject $H_0$.</li>
+        </ol>
+        <div class="final">t = 4.68 &gt; 2.447 → reject H₀: correlation exists between height and weight at the 5% level of significance</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 2 — rank correlation with ties</div>
+    <div class="bd">
+      <p>Find the rank correlation coefficient for the following data:</p>
+      <div class="tw"><table>
+        <thead><tr><th>x</th><td class="num">48</td><td class="num">33</td><td class="num">40</td><td class="num">9</td><td class="num">16</td><td class="num">16</td><td class="num">65</td><td class="num">24</td><td class="num">16</td><td class="num">57</td></tr></thead>
+        <tbody><tr><th>y</th><td class="num">13</td><td class="num">13</td><td class="num">24</td><td class="num">6</td><td class="num">15</td><td class="num">4</td><td class="num">20</td><td class="num">9</td><td class="num">6</td><td class="num">19</td></tr></tbody>
+      </table></div>
+      <div class="given"><b>Given</b> n = 10 pairs · ties in both x and y</div>
+      <p class="hint">Hint: 16 appears three times in x; 13 and 6 each appear twice in y. That is three correction factors, not one.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Assign ranks, averaging ties.</b> In x, 16 occupies positions 7, 8, 9 → all get rank 8. In y, 13 occupies 5, 6 → 5.5 each; 6 occupies 8, 9 → 8.5 each.</li>
+          <li>$R_x$: 3, 5, 4, 10, 8, 8, 1, 6, 8, 2 &nbsp;·&nbsp; $R_y$: 5.5, 5.5, 1, 8.5, 4, 10, 2, 7, 8.5, 3</li>
+          <li>$d$: −2.5, −0.5, 3, 1.5, 4, −2, −1, −1, −0.5, −1 &nbsp;(check: these sum to 0 ✓)</li>
+          <li>$d^2$: 6.25, 0.25, 9, 2.25, 16, 4, 1, 1, 0.25, 1 → $\sum d^2 = 41$</li>
+          <li><b>Correction factors.</b> x-value 16 with m = 3: $\frac{3(9-1)}{12} = 2$. y-value 13 with m = 2: $\frac{2(4-1)}{12} = 0.5$. y-value 6 with m = 2: $0.5$. Total C.F. = 3.</li>
+          <li>$r = 1 - \dfrac{6}{10(10^2-1)}\left[41 + 3\right] = 1 - \dfrac{6(44)}{990} = 1 - \dfrac{264}{990} = 1 - \dfrac{4}{15}$</li>
+          <li>$= \dfrac{11}{15} = 0.7333$</li>
+        </ol>
+        <div class="final">r = 0.7333</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 3 — ranking from marks</div>
+    <div class="bd">
+      <p>A group of eight students get the following percentage of marks in a test of statistics and mathematics. Find the rank correlation coefficient.</p>
+      <div class="tw"><table>
+        <thead><tr><th class="num">Roll No.</th><th class="num">% Marks in Statistics</th><th class="num">% Marks in Mathematics</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="num">50</td><td class="num">80</td></tr>
+          <tr><td class="num">2</td><td class="num">60</td><td class="num">71</td></tr>
+          <tr><td class="num">3</td><td class="num">65</td><td class="num">60</td></tr>
+          <tr><td class="num">4</td><td class="num">70</td><td class="num">75</td></tr>
+          <tr><td class="num">5</td><td class="num">75</td><td class="num">90</td></tr>
+          <tr><td class="num">6</td><td class="num">40</td><td class="num">82</td></tr>
+          <tr><td class="num">7</td><td class="num">70</td><td class="num">70</td></tr>
+          <tr><td class="num">8</td><td class="num">80</td><td class="num">50</td></tr>
+        </tbody>
+      </table></div>
+      <div class="given"><b>Given</b> n = 8 · statistics marks 70 appear twice</div>
+      <p class="hint">Hint: rank the marks (highest = rank 1), average the tied pair, and remember the single correction factor. The answer is negative — do not "fix" it.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Ranks (highest mark = rank 1), averaging ties.</b> Statistics: 70 appears twice, taking positions 3 and 4 → both get 3.5.</li>
+          <li>$R_x$: 7, 6, 5, 3.5, 2, 8, 3.5, 1 &nbsp;·&nbsp; $R_y$: 3, 5, 7, 4, 1, 2, 6, 8</li>
+          <li>$d = R_x - R_y$: 4, 1, −2, −0.5, 1, 6, −2.5, −7 &nbsp;(sum = 0 ✓)</li>
+          <li>$d^2$: 16, 1, 4, 0.25, 1, 36, 6.25, 49 → $\sum d^2 = 113.5$</li>
+          <li><b>Correction factor.</b> Statistics value 70 with m = 2: $\frac{2(4-1)}{12} = 0.5$.</li>
+          <li>$r_s = 1 - \dfrac{6\left[113.5 + 0.5\right]}{8(8^2-1)} = 1 - \dfrac{6(114)}{8(63)} = 1 - \dfrac{684}{504}$</li>
+          <li>$= 1 - 1.35714 = -0.357$</li>
+        </ol>
+        <div class="final">r<sub>s</sub> = −0.357 — a moderate <em>negative</em> rank correlation: students who did well in statistics tended to do worse in mathematics</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 4 — both regression lines and r</div>
+    <div class="bd">
+      <p>Find the regression equations of both $Y$ on $X$ and $X$ on $Y$ from the data given below. Hence find the correlation coefficient.</p>
+      <div class="tw"><table>
+        <thead><tr><th>X</th><td class="num">15</td><td class="num">20</td><td class="num">25</td><td class="num">30</td><td class="num">35</td></tr></thead>
+        <tbody><tr><th>Y</th><td class="num">12</td><td class="num">14</td><td class="num">18</td><td class="num">25</td><td class="num">31</td></tr></tbody>
+      </table></div>
+      <div class="given"><b>Given</b> n = 5</div>
+      <p class="hint">Hint: the means are whole numbers here, so the deviational method is fastest. Build columns for $(X-\bar{x})$, $(Y-\bar{y})$, their squares, and their product.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>Means: $\bar{x} = \frac{125}{5} = 25$, $\bar{y} = \frac{100}{5} = 20$.</li>
+          <li>$\sum(X-\bar{x})^2 = 100+25+0+25+100 = 250$</li>
+          <li>$\sum(Y-\bar{y})^2 = 64+36+4+25+121 = 250$</li>
+          <li>$\sum(X-\bar{x})(Y-\bar{y}) = 80+30+0+25+110 = 245$</li>
+          <li>Regression coefficients: $b_{yx} = \frac{245}{250} = 0.98$ and $b_{xy} = \frac{245}{250} = 0.98$.</li>
+          <li><b>Y on X:</b> $Y - 20 = 0.98(X - 25) \Rightarrow Y = 20 - 24.5 + 0.98X$, so $Y = -4.5 + 0.98X$.</li>
+          <li><b>X on Y:</b> $X - 25 = 0.98(Y - 20) \Rightarrow X = 25 - 19.6 + 0.98Y$, so $X = 5.4 + 0.98Y$.</li>
+          <li>$r = \pm\sqrt{b_{yx}b_{xy}} = \sqrt{0.98 \times 0.98} = 0.98$, positive because both coefficients are positive.</li>
+        </ol>
+        <div class="final">Y = −4.5 + 0.98X &nbsp;·&nbsp; X = 5.4 + 0.98Y &nbsp;·&nbsp; r = 0.98</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 5 — testing the slope, and its confidence interval</div>
+    <div class="bd">
+      <p>Using the child weight-gain model (Weight gained $= 0.160 + 0.643\,($food weight$)$, sample size $n = 20$), the MS-Excel output gives:</p>
+      <div class="tw"><table>
+        <thead><tr><th>Model</th><th class="num">Coefficient B</th><th class="num">Std. Error</th><th class="num">t Stat</th><th class="num">Sig. (P-value)</th></tr></thead>
+        <tbody>
+          <tr><td>(Constant)</td><td class="num">0.160</td><td class="num">0.077</td><td class="num">2.065</td><td class="num">.054</td></tr>
+          <tr><td>Food weight</td><td class="num">0.643</td><td class="num">0.073</td><td class="num">8.772</td><td class="num">0.000</td></tr>
+        </tbody>
+      </table></div>
+      <p>a) Test whether daily food weight affects children's weight ($H_0: \beta_1 = 0$ vs $H_1: \beta_1 \neq 0$) at $\alpha = 0.05$.<br>
+         b) Construct a 95% confidence interval for the population slope $\beta_1$.</p>
+      <div class="given"><b>Given</b> n = 20 · $b_1 = 0.643$ · $s_{b_1} = 0.073$ · $\beta_1 = 0$ under H₀ · α = 0.05</div>
+      <p class="hint">Hint: df = n − 2 = 18. For part (b), the interval is the estimate plus or minus the same critical t times the same standard error — and check whether it contains 0.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Test statistic.</b> $t = \dfrac{b_1 - \beta_1}{s_{b_1}} = \dfrac{0.643 - 0}{0.073} = 8.772$</li>
+          <li>Degrees of freedom: $df = n - 2 = 20 - 2 = 18$.</li>
+          <li>Critical value: $t_{0.025,\,18} = 2.101$.</li>
+          <li>Decision: $8.772 > 2.101$, so reject $H_0$. There is sufficient evidence that the food weight taken per day affects children's weight.</li>
+          <li><b>(b) Confidence interval.</b> $b_1 \pm t_{\alpha/2,\,n-2}\,s_{b_1} = 0.643 \pm (2.101)(0.073) = 0.643 \pm 0.153$</li>
+          <li>Limits: $0.643 - 0.153 = 0.489$ and $0.643 + 0.153 = 0.796$.</li>
+        </ol>
+        <div class="final">t = 8.772 → reject H₀ &nbsp;·&nbsp; 95% CI for β₁ = (0.489, 0.796)</div>
+        <div class="box plain" style="margin-top:1rem"><span class="lbl">The two answers agree, as they must</span>
+        The interval (0.489, 0.796) does not include 0 — which is the same verdict as the test rejecting $H_0: \beta_1 = 0$. Notice also the P-value column: 0.000 for food weight (reject) versus 0.054 for the constant (do not reject at 5%). Three routes, one conclusion.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <h4>Chapter recap</h4>
+    <ul>
+      <li><strong>Always draw the scatter plot first</strong> — $r$ only sees straight lines and is blind to curves.</li>
+      <li><strong>Pearson's r:</strong> use the computational form with the five-column table. It is unit free and trapped in [−1, 1].</li>
+      <li><strong>Test a correlation</strong> with $t = r / \sqrt{(1-r^2)/(n-2)}$ on $n-2$ degrees of freedom.</li>
+      <li><strong>Spearman</strong> for ranks: $r_s = 1 - \frac{6\sum d^2}{n(n^2-1)}$, check $\sum d = 0$, and add a $\frac{m(m^2-1)}{12}$ correction for <em>every</em> tied group in both variables.</li>
+      <li><strong>Correlation ⇏ causation</strong>, though causation does imply correlation.</li>
+      <li><strong>Least squares</strong> minimises the squared vertical misses; solve the normal equations, or use $b = \frac{n\sum xy - \sum x \sum y}{n\sum x^2 - (\sum x)^2}$ and $a = \bar{y} - b\bar{x}$.</li>
+      <li><strong>Two lines, one crossing point:</strong> they always meet at $(\bar{x}, \bar{y})$, and $r = \pm\sqrt{b_{yx}b_{xy}}$.</li>
+      <li><strong>SST = SSR + SSE</strong> and $R^2 = SSR/SST = r^2$ — the share of y's variation the line explains.</li>
+      <li><strong>Slope inference</strong> uses $t = (b_1-\beta_1)/s_{b_1}$ with $n-2$ df; the CI excluding 0 and the test rejecting $H_0$ always agree.</li>
+    </ul>
+  </div>
+</section>

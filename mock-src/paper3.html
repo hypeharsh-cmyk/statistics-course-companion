@@ -1,0 +1,375 @@
+<div class="pane" id="pane-p3">
+<div class="sheet">
+  <section id="p3" class="wrap" data-paper="p3" data-title="Mock Test 3">
+
+  <div class="examhead">
+    <div class="inst">IIFT Kakinada · IPM 2025–30 · Second Semester</div>
+    <h1>Mock Test 3 — Introductory Statistics (MST 02)<span class="pill hard">Stretch level</span></h1>
+    <div class="meta">Time: 2 Hours 30 Minutes · Max Marks: 50 · No negative marking</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">Read this first</span>
+    This paper is deliberately harder than the end-term. Every question uses the same eight topics and
+    the same tables, but each one adds a second step the real paper stopped short of — a conditional
+    probability, a sample-size calculation, a Type II error, a p-value squeezed between two table
+    columns, tied ranks. If you can clear 35 here, the real paper will feel slow. Marks are identical
+    to the real paper and there is <b>no negative marking</b>.
+  </div>
+
+  <div class="timerbar">
+    <div class="clock" data-clock>2:30:00</div>
+    <button class="btn primary" data-act="start">Start paper</button>
+    <button class="btn" data-act="pause" disabled>Pause</button>
+    <button class="btn" data-act="submit" disabled>Finish &amp; see solutions</button>
+  </div>
+
+  <div class="exercise" data-q="1" data-max="5">
+    <div class="hd">Question 1 — Normal distribution <span class="mk">2+1+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">μ and σ recovered, then a guarantee time and a conditional probability</div>
+      <p>The lifetime of an electronic component is normally distributed. It is found that 10% of the
+      components last less than 1200 hours, while 5% of them last more than 1800 hours.</p>
+      <p><b>a.</b> Find the mean and the standard deviation of the lifetime.</p>
+      <p><b>b.</b> The manufacturer replaces free of charge any component that fails before a stated
+      guarantee time. If at most 3% of components are to be replaced, what guarantee time should be
+      stated?</p>
+      <p><b>c.</b> Among the components that are still working at 1500 hours, what fraction will survive
+      beyond 1800 hours?</p>
+      <p class="hint">Hint for (c): "among those that survived 1500" is the language of conditional
+      probability.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Turn each percentage into a z.</b> $P(X &lt; 1200) = 0.10$ gives $z_1 = -1.28$, and
+          $P(X &gt; 1800) = 0.05$ gives $z_2 = 1.645$.</li>
+          <li><b>Two equations, two unknowns.</b>
+          $$\frac{1200-\mu}{\sigma} = -1.28 \qquad \frac{1800-\mu}{\sigma} = 1.645$$
+          Subtracting, $\dfrac{600}{\sigma} = 2.925$, so $\sigma = 205.1282$ hours, and
+          $\mu = 1200 + 1.28(205.1282) = 1462.5641$ hours.</li>
+          <li><b>(b) Guarantee time.</b> At most 3% replaced means the guarantee time $t$ has 3% of the
+          area to its left, so $z = -1.88$:
+          $$t = \mu + z\sigma = 1462.5641 - 1.88(205.1282) = 1462.5641 - 385.6410 = 1076.9231$$
+          Rounding down to be safe, state a guarantee of about 1076 hours.</li>
+          <li><b>(c) Set up the conditional probability.</b>
+          $$P(X &gt; 1800 \mid X &gt; 1500) = \frac{P(X &gt; 1800 \ \cap\ X &gt; 1500)}{P(X &gt; 1500)}
+          = \frac{P(X &gt; 1800)}{P(X &gt; 1500)}$$
+          because surviving past 1800 already implies surviving past 1500.</li>
+          <li><b>Numerator is given.</b> $P(X &gt; 1800) = 0.05$.</li>
+          <li><b>Denominator.</b> $z = \dfrac{1500-1462.5641}{205.1282} = 0.18$, so
+          $\Phi(0.18) = 0.5714$ and $P(X &gt; 1500) = 1 - 0.5714 = 0.4286$.</li>
+          <li><b>Divide.</b> $\dfrac{0.05}{0.4286} = 0.1167$.</li>
+        </ol>
+        <div class="final">a. μ = 1462.5641 h, σ = 205.1282 h · b. guarantee ≈ 1076.9231 h · c. 0.1167</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="2" data-max="5">
+    <div class="hd">Question 2 — Markov and Chebyshev compared <span class="mk">1+1+1+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Two bounds on the same event, and inverting one of them</div>
+      <p>The daily demand $X$ at a retail counter is a non-negative random variable with mean 60 units
+      and variance 25 units². Nothing else is known about its distribution.</p>
+      <p><b>a.</b> Use Markov's inequality to find an upper bound for $P(X \ge 80)$.</p>
+      <p><b>b.</b> Use Chebyshev's inequality to find an upper bound for $P(X \ge 80)$.</p>
+      <p><b>c.</b> Which bound is sharper, and why?</p>
+      <p><b>d.</b> Find the smallest $c$ for which Chebyshev's inequality guarantees
+      $P\{|X-\mu| &lt; c\} \ge 0.96$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Markov.</b> For a non-negative $X$, $P(X \ge a) \le \dfrac{E(X)}{a}$:
+          $$P(X \ge 80) \le \frac{60}{80} = 0.7500$$</li>
+          <li><b>(b) Chebyshev.</b> The event $X \ge 80$ sits inside the two-sided event
+          $|X-60| \ge 20$, so
+          $$P(X \ge 80) \le P\{|X-60| \ge 20\} \le \frac{\sigma^2}{20^2} = \frac{25}{400} = 0.0625$$</li>
+          <li><b>(c) Which is sharper.</b> Chebyshev, by a factor of twelve. Markov uses only the mean
+          and so must allow for distributions that put a lot of probability far above 60. Chebyshev
+          also knows the variance is only 25, i.e. $\sigma = 5$, and 80 is four standard deviations
+          above the mean — information Markov simply cannot see. More information, tighter bound.</li>
+          <li><b>(d) Invert the inequality.</b> Chebyshev in complement form says
+          $$P\{|X-\mu| &lt; c\} \ge 1 - \frac{\sigma^2}{c^2}$$
+          so we need $1 - \dfrac{25}{c^2} \ge 0.96$.</li>
+          <li><b>Solve.</b> $\dfrac{25}{c^2} \le 0.04 \Rightarrow c^2 \ge \dfrac{25}{0.04} = 625
+          \Rightarrow c \ge 25$. The smallest such $c$ is 25 units.</li>
+          <li><b>Sense-check.</b> $c = 25$ is $k = 5$ standard deviations, and
+          $1 - 1/k^2 = 1 - 1/25 = 0.96$ exactly, as required.</li>
+        </ol>
+        <div class="final">a. 0.7500 · b. 0.0625 · c. Chebyshev, it uses the variance · d. c = 25.0000</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="3" data-max="6">
+    <div class="hd">Question 3 — Sampling distribution of $\bar{X}$ <span class="mk">2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">A probability, a required sample size, and a finite population</div>
+      <p>A population has mean 75 and standard deviation 12.</p>
+      <p><b>a.</b> For a random sample of 36, find the probability that the sample mean lies within 3
+      units of the population mean.</p>
+      <p><b>b.</b> How large must the sample be so that the sample mean lies within 2 units of the
+      population mean with probability 0.95?</p>
+      <p><b>c.</b> Suppose instead the population contains only $N = 200$ members and a sample of
+      $n = 50$ is drawn without replacement. Using the finite population correction
+      $\sigma_{\bar{x}} = \dfrac{\sigma}{\sqrt{n}}\sqrt{\dfrac{N-n}{N-1}}$, find
+      $P(\bar{X} &gt; 78)$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Standard error.</b>
+          $\sigma_{\bar{x}} = \dfrac{12}{\sqrt{36}} = 2$. "Within 3 units" means
+          $|\bar{X}-\mu| &lt; 3$, i.e. $|z| &lt; \dfrac{3}{2} = 1.50$.</li>
+          <li><b>Two-sided area.</b>
+          $$P(|Z| &lt; 1.50) = 2\Phi(1.50) - 1 = 2(0.9332) - 1 = 0.8664$$</li>
+          <li><b>(b) Set the margin and solve for n.</b> For probability 0.95 the z-value is 1.96, and
+          the half-width must equal 2:
+          $$1.96 \times \frac{12}{\sqrt{n}} = 2 \;\Rightarrow\; \sqrt{n} = \frac{1.96 \times 12}{2}
+          = 11.76$$</li>
+          <li><b>Square and round up.</b> $n = (11.76)^2 = 138.2976$. Sample size must be a whole
+          number and must not fall short, so round <i>up</i>: $n = 139$.</li>
+          <li><b>(c) Apply the correction factor.</b>
+          $$\sqrt{\frac{N-n}{N-1}} = \sqrt{\frac{200-50}{199}} = \sqrt{0.7538} = 0.8682$$
+          $$\sigma_{\bar{x}} = \frac{12}{\sqrt{50}} \times 0.8682 = 1.6971 \times 0.8682 = 1.4734$$</li>
+          <li><b>Standardise and read.</b> $z = \dfrac{78-75}{1.4734} = 2.04$, so
+          $P(\bar{X} &gt; 78) = 1 - \Phi(2.04) = 1 - 0.9793 = 0.0207$.</li>
+          <li><b>Note why the correction matters.</b> Without it the standard error would be 1.6971 and
+          $z = 1.77$, giving 0.0384 — nearly double. Sampling a quarter of a small population really
+          does make $\bar{X}$ less variable.</li>
+        </ol>
+        <div class="final">a. 0.8664 · b. n = 139 · c. 0.0207</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="4" data-max="6">
+    <div class="hd">Question 4 — Confidence intervals <span class="mk">2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">An interval for μ, an interval for σ², and a sample-size consequence</div>
+      <p>A random sample of 12 observations drawn from a normal population gives
+      $\sum x = 300$ and $\sum x^2 = 7600$.</p>
+      <p><b>a.</b> Construct a 99% confidence interval for $\mu$.</p>
+      <p><b>b.</b> Construct a 95% confidence interval for $\sigma^2$.</p>
+      <p><b>c.</b> Roughly what sample size would be needed to halve the width of the interval in
+      part (a)?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Mean and corrected sum of squares.</b>
+          $\bar{x} = \dfrac{300}{12} = 25$, and using the shortcut
+          $$\sum(x-\bar{x})^2 = \sum x^2 - n\bar{x}^2 = 7600 - 12(25)^2 = 7600 - 7500 = 100$$
+          so $s^2 = \dfrac{100}{11} = 9.0909$ and $s = 3.0151$.</li>
+          <li><b>(a) σ is unknown, so use t with $df = 11$.</b> For 99% two-sided,
+          $t_{0.005,\,11} = 3.106$.</li>
+          <li><b>Margin of error.</b>
+          $\dfrac{s}{\sqrt{n}} = \dfrac{3.0151}{\sqrt{12}} = 0.8704$, so the margin is
+          $3.106 \times 0.8704 = 2.7034$, giving $25 \pm 2.7034$.</li>
+          <li><b>(b) Interval for a variance uses chi-square, and the tails swap sides.</b>
+          $$\left(\frac{(n-1)s^2}{\chi^2_{0.025,\,11}},\ \frac{(n-1)s^2}{\chi^2_{0.975,\,11}}\right)$$
+          with $\chi^2_{0.025,\,11} = 21.920$ and $\chi^2_{0.975,\,11} = 3.816$.</li>
+          <li><b>Substitute.</b> $(n-1)s^2 = 100$, so the interval is
+          $\left(\dfrac{100}{21.920},\ \dfrac{100}{3.816}\right) = (4.5620,\ 26.2055)$. It is wide and
+          strongly asymmetric — that is normal for a variance interval from only 12 observations.</li>
+          <li><b>(c) Width is proportional to $1/\sqrt{n}$.</b> To halve the width you need
+          $\sqrt{n}$ to double, so $n$ must quadruple:
+          $n \approx 4 \times 12 = 48$. (Slightly fewer in truth, because $t$ shrinks towards $z$ as
+          $df$ grows, but 48 is the answer expected.)</li>
+        </ol>
+        <div class="final">a. (22.2966, 27.7034) · b. (4.5620, 26.2055) · c. n ≈ 48</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="5" data-max="7">
+    <div class="hd">Question 5 — Proportion test and Type II error <span class="mk">4+3 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">p-value method, then the probability of missing a real shift</div>
+      <p>A manufacturer claims that at most 5% of the items produced by a machine are defective. In a
+      random sample of 300 items, 22 were found defective.</p>
+      <p><b>a.</b> Test the claim at 1% level of significance using the p-value method.</p>
+      <p><b>b.</b> Using the same test, find the probability of a Type II error if the true defective
+      rate is in fact 8%.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Hypotheses.</b> "At most 5%" contains equality, so it is the null; the sample is
+          above it, so the alternative points right:
+          $$H_0: p \le 0.05 \qquad H_1: p &gt; 0.05$$</li>
+          <li><b>Sample proportion and standard error.</b>
+          $\hat{p} = \dfrac{22}{300} = 0.0733$, and under $H_0$
+          $$\sigma_{\hat{p}} = \sqrt{\frac{0.05 \times 0.95}{300}} = \sqrt{0.00015833} = 0.0126$$</li>
+          <li><b>Test statistic and p-value.</b>
+          $z = \dfrac{0.0733 - 0.05}{0.0126} = 1.85$, so the right-tail p-value is
+          $1 - \Phi(1.85) = 1 - 0.9678 = 0.0322$.</li>
+          <li><b>Decide.</b> $0.0322 &gt; 0.01$, so do <b>not</b> reject $H_0$ at the 1% level. There is
+          not enough evidence at 1% to say the defective rate exceeds 5%. (Note it <i>would</i> have
+          been rejected at 5% — the significance level genuinely decides this one.)</li>
+          <li><b>(b) Find the decision boundary in $\hat{p}$ units.</b> A Type II error means failing
+          to reject when $H_1$ is true, so first fix the critical value. At $\alpha = 0.01$
+          right-tailed, $z_{0.01} = 2.33$:
+          $$\hat{p}_{crit} = 0.05 + 2.33(0.012583) = 0.05 + 0.029319 = 0.0793$$
+          We reject only if $\hat{p} &gt; 0.0793$.</li>
+          <li><b>Re-centre on the true value $p = 0.08$.</b> The standard error changes because $p$
+          changed:
+          $$\sigma_{\hat{p}}' = \sqrt{\frac{0.08 \times 0.92}{300}} = \sqrt{0.00024533} = 0.0157$$</li>
+          <li><b>β is the probability of landing in the acceptance region.</b>
+          $$\beta = P(\hat{p} &lt; 0.0793 \mid p = 0.08)
+          = \Phi\!\left(\frac{0.0793 - 0.08}{0.015663}\right) = \Phi(-0.04) = 0.4840$$</li>
+          <li><b>Interpret.</b> Even though the true rate is 8%, this test misses it about 48% of the
+          time. The power is only $1 - \beta = 0.5160$. A 1% significance level with $n = 300$ is
+          simply not sensitive enough to catch a shift this small.</li>
+        </ol>
+        <div class="final">a. z = 1.8543, p-value = 0.0322 &gt; 0.01, do not reject H₀ · b. β = 0.4840 (power = 0.5160)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="6" data-max="6">
+    <div class="hd">Question 6 — Variance test, one-tailed <span class="mk">4+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Chi-square in one tail, and squeezing a p-value out of a table</div>
+      <p>A bottling process is regarded as being in control if the variance of the fill weights does not
+      exceed 1.5 g². A random sample of 16 bottles gives a sample variance of 2.8 g².</p>
+      <p><b>a.</b> Test at 5% level whether the process variance exceeds 1.5 g².</p>
+      <p><b>b.</b> Using the chi-square table only, place the p-value between two bounds.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Hypotheses.</b> "Does not exceed" contains equality and is the in-control state:
+          $$H_0: \sigma^2 \le 1.5 \qquad H_1: \sigma^2 &gt; 1.5$$
+          This is one-tailed to the right, so the whole 5% sits in the upper tail.</li>
+          <li><b>Test statistic.</b>
+          $$\chi^2 = \frac{(n-1)s^2}{\sigma_0^2} = \frac{15 \times 2.8}{1.5} = \frac{42}{1.5}
+          = 28.0000 \qquad df = 15$$</li>
+          <li><b>Critical value.</b> $\chi^2_{0.05,\,15} = 24.996$.</li>
+          <li><b>Decide.</b> $28.0000 &gt; 24.996$, so reject $H_0$ at the 5% level. There is sufficient
+          evidence that the process variance exceeds 1.5 g² — the process is out of control on
+          consistency.</li>
+          <li><b>(b) Locate 28.0000 in the $df = 15$ row.</b> Reading along that row:
+          $\chi^2_{0.025,\,15} = 27.488$ and $\chi^2_{0.010,\,15} = 30.578$.</li>
+          <li><b>Sandwich it.</b> Since $27.488 &lt; 28.0000 &lt; 30.578$, the upper-tail area lies
+          between 0.010 and 0.025:
+          $$0.010 &lt; p\text{-value} &lt; 0.025$$
+          This is consistent with part (a): the whole interval sits below 0.05, so rejection at 5% was
+          never in doubt. It would also be rejected at 2.5%, but not at 1%.</li>
+        </ol>
+        <div class="final">a. χ² = 28.0000 &gt; 24.996, reject H₀ · b. 0.010 &lt; p-value &lt; 0.025</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="7" data-max="7">
+    <div class="hd">Question 7 — Spearman rank correlation with ties <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Repeated values, mid-ranks, and the correction factor</div>
+      <p>Find the rank correlation coefficient between the marks in Statistics and the marks in
+      Economics from the data given below.</p>
+      <div class="tw"><table>
+        <tbody>
+          <tr><th>Statistics</th>
+            <td class="num">68</td><td class="num">72</td><td class="num">68</td><td class="num">75</td>
+            <td class="num">80</td><td class="num">72</td><td class="num">85</td><td class="num">68</td>
+            <td class="num">75</td><td class="num">90</td></tr>
+          <tr><th>Economics</th>
+            <td class="num">62</td><td class="num">70</td><td class="num">65</td><td class="num">72</td>
+            <td class="num">78</td><td class="num">68</td><td class="num">82</td><td class="num">60</td>
+            <td class="num">74</td><td class="num">88</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hint">Hint: look at the Statistics row before you start ranking.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Spot the ties.</b> In Statistics, 68 occurs three times, 72 occurs twice and 75 occurs
+          twice. Economics has no repeats. Tied values must share the average of the ranks they would
+          have occupied.</li>
+          <li><b>Assign mid-ranks in Statistics.</b> Sorted, the values are
+          $68, 68, 68, 72, 72, 75, 75, 80, 85, 90$ occupying positions 1 to 10.
+          The three 68s occupy positions 1, 2, 3, so each gets $\dfrac{1+2+3}{3} = 2$.
+          The two 72s occupy 4 and 5, so each gets 4.5. The two 75s occupy 6 and 7, so each gets 6.5.
+          Then $80 \to 8$, $85 \to 9$, $90 \to 10$.</li>
+          <li><b>Build the working table.</b>
+          <div class="tw"><table>
+            <thead><tr><th>Stats</th><th>Econ</th><th class="num">$R_x$</th><th class="num">$R_y$</th>
+              <th class="num">$d$</th><th class="num">$d^2$</th></tr></thead>
+            <tbody>
+              <tr><td class="num">68</td><td class="num">62</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">72</td><td class="num">70</td><td class="num">4.5</td><td class="num">5</td><td class="num">−0.5</td><td class="num">0.25</td></tr>
+              <tr><td class="num">68</td><td class="num">65</td><td class="num">2</td><td class="num">3</td><td class="num">−1</td><td class="num">1</td></tr>
+              <tr><td class="num">75</td><td class="num">72</td><td class="num">6.5</td><td class="num">6</td><td class="num">0.5</td><td class="num">0.25</td></tr>
+              <tr><td class="num">80</td><td class="num">78</td><td class="num">8</td><td class="num">8</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">72</td><td class="num">68</td><td class="num">4.5</td><td class="num">4</td><td class="num">0.5</td><td class="num">0.25</td></tr>
+              <tr><td class="num">85</td><td class="num">82</td><td class="num">9</td><td class="num">9</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">68</td><td class="num">60</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+              <tr><td class="num">75</td><td class="num">74</td><td class="num">6.5</td><td class="num">7</td><td class="num">−0.5</td><td class="num">0.25</td></tr>
+              <tr><td class="num">90</td><td class="num">88</td><td class="num">10</td><td class="num">10</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><th colspan="5">$\sum d^2$</th><th class="num">3</th></tr>
+            </tbody>
+          </table></div></li>
+          <li><b>Correction factor, one term per tied group.</b> With
+          $C.F. = \dfrac{m(m^2-1)}{12}$:
+          $$\frac{3(9-1)}{12} = 2 \qquad \frac{2(4-1)}{12} = 0.5 \qquad \frac{2(4-1)}{12} = 0.5$$
+          so $\sum C.F. = 2 + 0.5 + 0.5 = 3$.</li>
+          <li><b>Apply the corrected formula.</b>
+          $$r = 1 - \frac{6}{n(n^2-1)}\left[\sum d_i^2 + \sum \frac{m(m^2-1)}{12}\right]
+          = 1 - \frac{6}{990}\left[3 + 3\right]$$
+          $$= 1 - \frac{36}{990} = 1 - 0.0364 = 0.9636$$</li>
+          <li><b>Interpret.</b> A very strong positive rank correlation — students who rank high in
+          Statistics rank high in Economics almost without exception.</li>
+        </ol>
+        <div class="final">Σd² = 3 · ΣC.F. = 3 · r = 0.9636</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="8" data-max="8">
+    <div class="hd">Question 8 — Regression, correlation and prediction <span class="mk">2+2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Identify the lines, recover σ, then predict with the right one</div>
+      <p>In a partially destroyed laboratory record of an analysis of bivariate data, the following
+      results only are legible.</p>
+      <div class="box def"><span class="lbl">Legible</span>
+      $\operatorname{Var}(Y) = 4$, and the two regression lines are
+      $$X + 4Y - 32 = 0 \qquad \text{and} \qquad X + Y - 11 = 0$$</div>
+      <p><b>a.</b> The mean values of $X$ and $Y$.</p>
+      <p><b>b.</b> Identify which line is which, and find the coefficient of correlation.</p>
+      <p><b>c.</b> The standard deviation of $X$.</p>
+      <p><b>d.</b> Estimate $Y$ when $X = 5$, stating clearly which line you must use and why.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Both lines pass through $(\bar{x}, \bar{y})$.</b> Solve
+          $\bar{x} + 4\bar{y} = 32$ and $\bar{x} + \bar{y} = 11$. Subtracting the second from the
+          first gives $3\bar{y} = 21$, so $\bar{y} = 7$, and then $\bar{x} = 11 - 7 = 4$.</li>
+          <li><b>(b) Try the assignment and test $r^2 = b_{yx}b_{xy} \le 1$.</b>
+          Take $X + 4Y - 32 = 0$ as $Y$ on $X$: $4Y = 32 - X$ gives
+          $b_{yx} = -\dfrac{1}{4} = -0.25$. Take $X + Y - 11 = 0$ as $X$ on $Y$: $X = 11 - Y$ gives
+          $b_{xy} = -1$. Then $r^2 = (-0.25)(-1) = 0.25 \le 1$ — valid.</li>
+          <li><b>Confirm the alternative is impossible.</b> If $X + 4Y - 32 = 0$ were $X$ on $Y$ then
+          $b_{xy} = -4$, and $X + Y - 11 = 0$ as $Y$ on $X$ gives $b_{yx} = -1$, so $r^2 = 4 &gt; 1$.
+          Rejected. The first assignment stands.</li>
+          <li><b>Correlation.</b> $r = \pm\sqrt{0.25} = \pm 0.5$, and both slopes are negative, so
+          $r = -0.5000$.</li>
+          <li><b>(c) Standard deviation of X.</b> $\operatorname{Var}(Y) = 4$ gives $\sigma_y = 2$.
+          From $b_{yx} = r\dfrac{\sigma_y}{\sigma_x}$:
+          $$-0.25 = -0.5 \times \frac{2}{\sigma_x} \;\Rightarrow\; -0.25 = \frac{-1}{\sigma_x}
+          \;\Rightarrow\; \sigma_x = 4.0000$$</li>
+          <li><b>(d) Choose the line by what is being predicted.</b> We are given $X$ and want $Y$, so
+          we must use the regression of $Y$ on $X$, which is $X + 4Y - 32 = 0$. The other line
+          minimises horizontal deviations and would give a biased answer here.</li>
+          <li><b>Substitute.</b> $Y = \dfrac{32 - X}{4} = \dfrac{32 - 5}{4} = \dfrac{27}{4} = 6.7500$.</li>
+        </ol>
+        <div class="final">a. x̄ = 4, ȳ = 7 · b. X+4Y−32=0 is Y on X, r = −0.5000 · c. σ_x = 4.0000 · d. Ŷ = 6.7500</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard" data-score>
+    <h3>Paper 3 score</h3>
+    <div class="bigscore"><span data-total>—</span><small> / 50</small></div>
+    <p class="legend">This paper is harder than the end-term on purpose. 35 or more here is a strong
+    signal you are ready. No negative marking: award yourself the method marks you earned.</p>
+  </div>
+
+  </section>
+</div>
+</div>

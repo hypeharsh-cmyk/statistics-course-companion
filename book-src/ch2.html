@@ -1,0 +1,339 @@
+<section id="ch2" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Chapter 2</div>
+    <h1>Uniform, Exponential, and the Probability Inequalities</h1>
+    <p>By the end of this chapter you can handle waiting-time problems with one exponential formula, spot when the memoryless property collapses a hard conditional question into an easy one, and put bounds on a distribution you know almost nothing about.</p>
+  </div>
+
+  <p class="lead">Chapter 1 gave you the bell. But not everything is a bell. Waiting for a bus, a machine breaking down, a customer reaching the counter — these follow a curve that starts high and slides downwards. And sometimes you are handed a mean and a variance with no idea of the shape at all. This chapter covers both situations: the two named curves, and the two inequalities that work when you are flying blind.</p>
+
+  <h2 id="ch2-s1">2.1 · The Uniform distribution</h2>
+
+  <p>The simplest continuous distribution there is: every value in a range is equally likely, and nothing outside the range can happen. A bus arrives at some point in the next 10 minutes, all moments equally likely — that is uniform.</p>
+
+  <div class="box def"><span class="lbl">Definition</span>
+  A continuous random variable $X$ follows a <strong>uniform distribution</strong> on the interval $[a, b]$ if its probability density function is constant across that interval and zero everywhere else.</div>
+
+  <div class="formula">
+    <div class="name">Uniform density and cumulative functions</div>
+    $$ f(x) = \begin{cases} \dfrac{1}{b-a} & ;\ x \in [a,b] \\[6pt] 0 & ;\ \text{otherwise} \end{cases} \qquad F(x) = \begin{cases} 0 & ;\ x < a \\[4pt] \dfrac{x-a}{b-a} & ;\ x \in [a,b] \\[4pt] 1 & ;\ x > b \end{cases} $$
+    <div class="where"><b>a</b> the lower end of the range · <b>b</b> the upper end · <b>f(x)</b> the flat height of the rectangle · <b>F(x)</b> the area accumulated up to x, i.e. $P(X \le x)$</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  The density is a rectangle. Its width is $b - a$, and since the total area must be 1, its height has to be $\frac{1}{b-a}$. That is the whole distribution. Any probability is just <em>width of the slice you want ÷ total width</em> — no integration, no tables.</div>
+
+  <figure data-fig="uniform" data-a="2" data-b="8"><figcaption></figcaption></figure>
+
+  <div class="formula">
+    <div class="name">Mean and variance of the uniform</div>
+    $$ E(X) = \frac{a+b}{2} \qquad\qquad Var(X) = \frac{(b-a)^{2}}{12} $$
+    <div class="where"><b>E(X)</b> the mean, which is simply the midpoint of the interval · <b>Var(X)</b> the variance, which depends only on how wide the interval is</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">Both are worth a second's thought</span>
+  The mean sitting at the midpoint is obvious — the shape is symmetric. The variance formula is worth memorising because it is easy to state and easy to be asked. Note it grows with the <em>square</em> of the width: double the interval and the variance quadruples.</div>
+
+  <h2 id="ch2-s2">2.2 · The Exponential distribution</h2>
+
+  <p>This is the distribution of <strong>waiting time</strong>: how long until the next customer, the next breakdown, the next phone call. Its defining feature is that short waits are the most likely and the probability drops away smoothly as the wait gets longer.</p>
+
+  <div class="box def"><span class="lbl">Definition</span>
+  A continuous random variable $X$ follows an <strong>exponential distribution</strong> with parameter $\lambda > 0$ if its density is $f(x) = \lambda e^{-\lambda x}$ for $x \ge 0$.</div>
+
+  <div class="formula">
+    <div class="name">Exponential density, CDF, and tail</div>
+    $$ f(x) = \lambda e^{-\lambda x},\ x \ge 0 $$
+    $$ F(x) = P(X \le x) = \int_0^x \lambda e^{-\lambda t}\,dt = 1 - e^{-\lambda x} $$
+    $$ P(X \ge x) = 1 - F(x) = e^{-\lambda x} $$
+    <div class="where"><b>λ</b> the rate — how many events happen per unit of time · <b>x</b> the amount of time you are asking about · <b>F(x)</b> probability the event has happened by time x · <b>P(X ≥ x)</b> probability you are <em>still waiting</em> at time x</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  The tail probability $P(X \ge x) = e^{-\lambda x}$ is the opposite of $F(x)$.</div>
+
+  <div class="box tip"><span class="lbl">This is the only formula you actually need</span>
+  <p>Almost every exponential question in your deck reduces to one of these two lines:</p>
+  <ul>
+    <li>"still waiting / survives / exceeds / more than" $\rightarrow\ e^{-\lambda x}$</li>
+    <li>"happens by / fails within / less than" $\rightarrow\ 1 - e^{-\lambda x}$</li>
+  </ul>
+  <p>The integrals in the slides all collapse to these. You may quote them directly — but be ready to show the integration if the question says "derive".</p></div>
+
+  <figure data-fig="exponential" data-lambda="0.5"><figcaption></figcaption></figure>
+
+  <div class="formula">
+    <div class="name">Mean and variance of the exponential</div>
+    $$ E(X) = \frac{1}{\lambda} \qquad\qquad Var(X) = \frac{1}{\lambda^{2}} $$
+    <div class="where"><b>λ</b> the rate (events per unit time) · <b>1/λ</b> the average waiting time between events</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">λ and the mean are reciprocals — this is where marks are lost</span>
+  <p>Questions almost never hand you $\lambda$. They hand you an <em>average</em>: "average waiting time is 45 seconds", "mean life 10,000 hours", "mean 100,000 miles". You must flip it:</p>
+  $$ \lambda = \frac{1}{E(X)} $$
+  <p>And <strong>watch the units.</strong> If the mean is given in seconds but the question asks about minutes, convert <em>before</em> computing $\lambda$. In the burger-chain question below, 45 seconds becomes 0.75 minutes, so $\lambda = \frac{1}{0.75} = \frac{4}{3}$ per minute. Getting this backwards ($\lambda = 0.75$) silently produces a completely wrong answer.</p></div>
+
+  <h2 id="ch2-s3">2.3 · The memoryless property</h2>
+
+  <p>This is the strangest and most useful fact in the chapter.</p>
+
+  <div class="formula">
+    <div class="name">Memorylessness</div>
+    $$ P(X > s + t \mid X > s) = P(X > t) \qquad \text{for any } s, t > 0 $$
+    <div class="where"><b>s</b> time you have already waited · <b>t</b> further time you are asking about · the left side reads "given I've already waited s, what's the chance I wait t more?"</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  This property is unique to the exponential distribution. The converse is also true: if $P(X > s+t \mid X > s) = P(X > t)$, then $X$ follows an exponential distribution.</div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  The waiting time has no memory of how long you have already waited. A component that has run for 10,000 hours is exactly as likely to survive the next 5,000 as a brand-new one. It does not age, it does not wear out — it just fails at random. That is unrealistic for car tyres and quite realistic for radioactive decay or a call arriving at a switchboard.</div>
+
+  <figure data-fig="memoryless" data-lambda="0.4" data-s="3"><figcaption></figcaption></figure>
+
+  <h3>The proof from your slides</h3>
+  <p>Worth reading once, because it is short and it may be asked directly.</p>
+  <div class="box def"><span class="lbl">Proof</span>
+  <p>If $X \sim Exp(\lambda)$ then $f(x) = \lambda e^{-\lambda x}$ for $x \ge 0$, and $F(x) = \int_0^x \lambda e^{-\lambda t}dt = 1 - e^{-\lambda x}$.</p>
+  <p>First, the survival probability past any threshold $k$:</p>
+  $$ P(X > k) = \int_k^\infty \lambda e^{-\lambda x}dx = e^{-\lambda k} $$
+  <p>Now apply the definition of conditional probability. Note that if $X > s+t$ then automatically $X > s$, so the intersection is just the event $X > s+t$:</p>
+  $$ P(X > s+t \mid X > s) = \frac{P(X > s+t \ \text{and}\ X > s)}{P(X > s)} = \frac{P(X > s+t)}{P(X > s)} = \frac{e^{-\lambda(s+t)}}{e^{-\lambda s}} = e^{-\lambda t} $$
+  <p>And separately, $P(X > t) = e^{-\lambda t}$. The two are equal, therefore $P(X > s+t \mid X > s) = P(X > t)$. $\blacksquare$</p></div>
+
+  <div class="box tip"><span class="lbl">How to use it in an exam</span>
+  When you see the words <em>"given that it has already…"</em> in an exponential question, do not set up a conditional probability. Just <strong>subtract</strong> to find the extra time being asked about, and compute the plain unconditional probability for that extra time. "More than 5 given already 2" becomes simply $P(X > 3)$. That is the whole trick, and it turns a two-line problem into a one-liner.</div>
+
+  <div class="example">
+    <div class="hd">Worked example 1 — exponential and memorylessness together</div>
+    <div class="bd">
+      <p>The time (in hours) required to repair a machine is exponentially distributed with parameter $\lambda = 1/2$.</p>
+      <p>(i) What is the probability that the repair time exceeds 2 h?<br>
+         (ii) What is the conditional probability that a repair takes at least 10 h given that its duration exceeds 9 h?</p>
+      <div class="given"><b>Given</b> $\lambda = 1/2 = 0.5$ per hour · $X \sim Exp(0.5)$ · so $f(x) = \frac{1}{2}e^{-x/2}$</div>
+      <ol class="steps">
+        <li><b>Part (i) — name the tool.</b> "Exceeds" means a tail probability, so we want $P(X > 2) = e^{-\lambda x}$.</li>
+        <li>Shown as the full integral, as the slides do: $P(X>2) = \int_2^\infty \frac{1}{2}e^{-x/2}dx = \left[-e^{-x/2}\right]_2^\infty = 0 - (-e^{-1}) = e^{-1}$</li>
+        <li>$e^{-1} = 0.3679$</li>
+        <li><b>Part (ii) — spot the memoryless cue.</b> "At least 10 given it exceeds 9" is a conditional. Subtract: the extra time asked about is $10 - 9 = 1$ hour.</li>
+        <li>By memorylessness, $P(X \ge 10 \mid X > 9) = P(X \ge 9+1 \mid X>9) = P(X \ge 1)$.</li>
+        <li>$P(X \ge 1) = \int_1^\infty \frac{1}{2}e^{-x/2}dx = e^{-0.5} = 0.6065$</li>
+      </ol>
+      <div class="final">(i) 0.3679 &nbsp;·&nbsp; (ii) 0.6065</div>
+      <div class="box plain" style="margin-top:1.1rem"><span class="lbl">Notice</span>
+      Part (ii) never used the number 9 or the number 10 in the final computation — only their difference. That is memorylessness doing the work.</div>
+    </div>
+  </div>
+
+  <h2 id="ch2-s4">2.4 · When you don't know the distribution: Markov and Chebyshev</h2>
+
+  <p>Everything so far assumed you knew the shape of the curve. But suppose someone tells you only "the mean is 8 and the variance is 9" and refuses to say anything more. You cannot compute an exact probability. But you can still put a <strong>ceiling</strong> on it — and that ceiling holds for <em>every possible distribution</em>.</p>
+
+  <h3>Markov's inequality — needs only the mean</h3>
+
+  <div class="formula">
+    <div class="name">Markov's inequality</div>
+    $$ P(X \ge k) \le \frac{E(X)}{k} $$
+    <div class="where"><b>X</b> a random variable that can never be negative · <b>E(X)</b> its mean · <b>k</b> any positive threshold you choose · the result is an <em>upper bound</em>, not an exact answer</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Conditions</span>
+  (i) $X \ge 0$ — the variable must be non-negative &nbsp;·&nbsp; (ii) $k > 0$</div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  If the class average is 70, there cannot be very many students scoring 90 or above — because too many high scores would drag the average up past 70. Markov turns that common-sense argument into a number. It is crude, but it needs nothing except the mean.</div>
+
+  <h3>Chebyshev's inequality — uses the variance too</h3>
+
+  <div class="formula">
+    <div class="name">Chebyshev's inequality, both forms</div>
+    $$ P(|X - \mu| \ge k\sigma) \le \frac{1}{k^{2}} \qquad\text{equivalently}\qquad P(|X - \mu| < k\sigma) \ge 1 - \frac{1}{k^{2}} $$
+    <div class="where"><b>μ</b> the mean · <b>σ</b> the standard deviation · <b>k</b> how many standard deviations out you are asking about · left form bounds the tails from <em>above</em>, right form bounds the middle from <em>below</em></div>
+  </div>
+
+  <div class="box def"><span class="lbl">Conditions</span>
+  $E(X) = \mu$ and $Var(X) = \sigma^2$ must both exist, and $k > 0$.</div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  If the variance is small, then $X$ is unlikely to be too far from the mean.</div>
+
+  <figure data-fig="chebyshev" data-k="2"><figcaption></figcaption></figure>
+
+  <div class="box warn"><span class="lbl">Which form do I use?</span>
+  <p>Read the question's inequality and match it:</p>
+  <ul>
+    <li>Asked for a probability of being <strong>far away</strong> ($\ge$, "at least", "differs by more than") → use $\le \frac{1}{k^2}$, and your answer is a <em>maximum</em>.</li>
+    <li>Asked for a probability of being <strong>close in</strong> ($<$, "between", "within") → use $\ge 1 - \frac{1}{k^2}$, and your answer is a <em>minimum</em>.</li>
+  </ul>
+  <p>Then write the answer with the inequality sign, not as an equals. "$P \le 0.25$", never "$P = 0.25$" — you were only ever given a bound.</p></div>
+
+  <div class="box tip"><span class="lbl">Finding k — the step people fumble</span>
+  You are never given $k$ directly. You are given a distance, and you must ask <em>how many standard deviations is that?</em> Set $k\sigma = \text{distance}$ and divide. If $\sigma = 3$ and the distance is 12, then $k = 12/3 = 4$. If the range is written as $-4 < X < 20$, first re-centre it on the mean: subtract 8 throughout to get $-12 < X - 8 < 12$, which is $|X - 8| < 12$, so the distance is 12.</div>
+
+  <div class="example">
+    <div class="hd">Worked example 2 — a Markov bound</div>
+    <div class="bd">
+      <p>Suppose that the average grade of students in the upcoming statistics exam is 70%. Give an upper bound on the proportion of students who score at least 90%.</p>
+      <div class="given"><b>Given</b> $E(X) = 70$ · $X \ge 0$ (a grade cannot be negative) · threshold $k = 90$</div>
+      <ol class="steps">
+        <li><b>Name the tool.</b> We know only the mean, and the variable is non-negative — that is exactly Markov's situation.</li>
+        <li>$P(X \ge k) \le \frac{E(X)}{k}$</li>
+        <li>Substitute: $P(X \ge 90) \le \frac{70}{90} = \frac{7}{9}$</li>
+        <li>$= 0.7778$</li>
+      </ol>
+      <div class="final">P(X ≥ 90) ≤ 0.7778, i.e. at most 7/9 of students</div>
+      <div class="box plain" style="margin-top:1.1rem"><span class="lbl">Is that a useful answer?</span>
+      Barely — it says "at most 78% of students got 90+", which we could almost have guessed. That is the honest character of Markov: it asks for almost no information, and gives back a very loose bound in return. Chebyshev asks for the variance as well, and pays you back with a much tighter one, as Question 4 below shows dramatically.</div>
+    </div>
+  </div>
+
+  <h2 id="ch2-exercises">2.5 · Practice questions</h2>
+  <p>These are the remaining problems from your slides. For each exponential one, your first move should be to find $\lambda$ from the mean and check the units. For each inequality one, your first move is to find $k$.</p>
+  <button class="revealall">Reveal all solutions</button>
+
+  <div class="exercise">
+    <div class="hd">Question 1 — units matter</div>
+    <div class="bd">
+      <p>A burger chain observes that the average waiting time per customer is 45 seconds to get the service. Assuming the waiting time is an exponential random variable, what is the probability that a customer will have to wait more than 5 minutes given that he has already waited for 2 minutes?</p>
+      <div class="given"><b>Given</b> average waiting time = 45 seconds · question is asked in minutes</div>
+      <p class="hint">Hint: convert to minutes before you compute λ. Then notice "given he has already waited" — that is the memoryless cue.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Convert units first.</b> $E(X) = 45$ seconds $= \frac{45}{60} = 0.75$ minutes.</li>
+          <li><b>Find λ.</b> $\lambda = \frac{1}{E(X)} = \frac{1}{0.75} = \frac{4}{3}$ per minute.</li>
+          <li><b>Apply memorylessness.</b> We want $P(X > 5 \mid X > 2)$. The extra time is $5 - 2 = 3$ minutes, so this equals $P(X > 3)$.</li>
+          <li>$P(X > 3) = e^{-\lambda x} = e^{-\frac{4}{3}(3)} = e^{-4}$</li>
+          <li>$e^{-4} = 0.0183156 \approx 0.0183$</li>
+        </ol>
+        <div class="final">0.0183</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 2</div>
+    <div class="bd">
+      <p>The number of miles travelled by a given car before its transmission ceases to function is governed by the exponential distribution with mean 100,000 miles. What is the probability that a car's transmission will fail during its first 50,000 miles of operation?</p>
+      <div class="given"><b>Given</b> $E(X) = 100{,}000$ miles</div>
+      <p class="hint">Hint: "fail during its first 50,000" means it happens <em>by</em> 50,000 — that is the CDF, not the tail.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Find λ.</b> $E(X) = \frac{1}{\lambda} = 100000 \implies \lambda = \frac{1}{100000}$.</li>
+          <li><b>Name the tool.</b> "Fails during the first 50,000" is $P(X \le 50000)$, so use $F(x) = 1 - e^{-\lambda x}$.</li>
+          <li>$P(X \le 50000) = \int_0^{50000}\frac{1}{100000}e^{-x/100000}dx = 1 - e^{-\frac{50000}{100000}} = 1 - e^{-0.5}$</li>
+          <li>$= 1 - 0.60653 = 0.39347 \approx 0.3935$</li>
+        </ol>
+        <div class="final">0.3935</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 3 — two memoryless parts</div>
+    <div class="bd">
+      <p>A component has an exponential time-to-failure distribution with mean of 10,000 hours.</p>
+      <p>(i) The component has already been in operation for its mean life. What is the probability that it will fail by 15,000 hours?<br>
+         (ii) At 15,000 hours the component is still in operation. What is the probability that it operates for another 5,000 hours?</p>
+      <div class="given"><b>Given</b> $E(X) = 10{,}000$ hours $\implies \lambda = \frac{1}{10000}$</div>
+      <p class="hint">Hint: both parts are conditionals with an extra time of 5,000 hours. Part (i) asks for failure, so take the complement at the end.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(i)</b> "Already in operation for its mean life" means it has survived 10,000 hours. We want $P(X \le 15000 \mid X > 10000)$.</li>
+          <li>Work with survival first: $P(X > 10000+5000 \mid X > 10000) = P(X > 5000)$ by memorylessness.</li>
+          <li>$P(X > 5000) = e^{-5000/10000} = e^{-0.5} = 0.6065$</li>
+          <li>Failing is the complement: $P(X \le 15000 \mid X>10000) = 1 - 0.6065 = 0.3935$.</li>
+          <li><b>(ii)</b> $P(X > 15000+5000 \mid X > 15000) = P(X > 5000) = e^{-0.5} = 0.6065$.</li>
+        </ol>
+        <div class="final">(i) 0.3935 &nbsp;·&nbsp; (ii) 0.6065</div>
+        <div class="box plain" style="margin-top:1rem"><span class="lbl">Look at what just happened</span>
+        Parts (i) and (ii) start from completely different ages — 10,000 hours and 15,000 hours — and give the identical answer, because both ask about the same extra 5,000 hours. That is the memoryless property stated as loudly as it can be.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 4 — Markov versus Chebyshev on the same problem</div>
+    <div class="bd">
+      <p>A biased coin has probability of heads occurring on 20% of trials. The coin is flipped 200 times. Find a bound that a head appears at least 120 times.</p>
+      <div class="given"><b>Given</b> $n = 200$ · $p = 0.20$ · so $E(X) = np$ and $Var(X) = np(1-p)$</div>
+      <p class="hint">Hint: compute the binomial mean and variance first. Then do it twice — once with Markov, once with Chebyshev — and compare how tight the two bounds are.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Set up.</b> $E(X) = np = 200 \times 0.20 = 40$ heads. $Var(X) = np(1-p) = 200 \times 0.20 \times 0.80 = 32$.</li>
+          <li><b>Markov bound.</b> $X \ge 0$ and $k = 120$: $P(X \ge 120) \le \frac{E(X)}{120} = \frac{40}{120} = \frac{1}{3} \approx 0.3333$.</li>
+          <li><b>Chebyshev bound.</b> Getting 120 or more heads means being at least $120 - 40 = 80$ away from the mean, so $P(X \ge 120) \le P(|X - 40| \ge 80)$.</li>
+          <li>Here $k\sigma = 80$, so $(k\sigma)^2 = 80^2 = 6400$.</li>
+          <li>$P(|X-40| \ge 80) \le \frac{Var(X)}{(k\sigma)^2} = \frac{32}{6400} = \frac{1}{200} = 0.005$</li>
+        </ol>
+        <div class="final">Markov bound: 0.3333 &nbsp;·&nbsp; Chebyshev bound: 0.005</div>
+        <div class="box plain" style="margin-top:1rem"><span class="lbl">Why the enormous gap?</span>
+        Markov knows only the average (40) and says "at most a third of the time". Chebyshev also knows the variance is a mere 32, so it knows the count almost never strays far from 40 — and returns a bound nearly 70 times tighter. <strong>More information in, tighter bound out.</strong> If a question gives you a variance, it wants Chebyshev.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 5 — both Chebyshev forms</div>
+    <div class="bd">
+      <p>A random variable $X$ has a mean 8 and variance 9 and it is an unknown distribution. Find $P(-4 < X < 20)$ and $P(|X - 8| \ge 6)$.</p>
+      <div class="given"><b>Given</b> $\mu = 8$ · $\sigma^2 = 9 \implies \sigma = 3$ · distribution shape unknown</div>
+      <p class="hint">Hint: for the first, re-centre the range on the mean by subtracting 8 from every part of the inequality. Then find k, and pick the form of Chebyshev that matches the direction.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Part 1 — re-centre.</b> $-4 < X < 20$. Subtract 8 throughout: $-12 < X - 8 < 12$, which is exactly $|X - 8| < 12$.</li>
+          <li><b>Find k.</b> $k\sigma = 12$ and $\sigma = 3$, so $k = 4$.</li>
+          <li>This is a "close in" question, so use the lower-bound form: $P(|X-\mu| < k\sigma) \ge 1 - \frac{1}{k^2}$.</li>
+          <li>$P(|X-8| < 12) \ge 1 - \frac{1}{16} = \frac{15}{16} = 0.9375$</li>
+          <li><b>Part 2.</b> $|X - 8| \ge 6$ gives $k\sigma = 6$, $\sigma = 3$, so $k = 2$.</li>
+          <li>This is a "far away" question, so use the upper-bound form: $P(|X-8| \ge 6) \le \frac{1}{2^2} = 0.25$.</li>
+        </ol>
+        <div class="final">P(−4 &lt; X &lt; 20) ≥ 0.9375 &nbsp;·&nbsp; P(|X − 8| ≥ 6) ≤ 0.25</div>
+        <div class="box warn" style="margin-top:1rem"><span class="lbl">Write the inequality signs</span>
+        These answers are bounds, not values. Writing "= 0.9375" is wrong even though the number is right, because Chebyshev never claims to know the actual probability — only that it cannot be worse than this.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 6 — the mean and variance refresher</div>
+    <div class="bd">
+      <p>A random variable $X$ with probability distribution is given below. Find the mean and variance of this distribution.</p>
+      <div class="tw"><table>
+        <thead><tr><th>X</th><th class="num">−2</th><th class="num">−1</th><th class="num">0</th><th class="num">1</th><th class="num">2</th></tr></thead>
+        <tbody><tr><th>f(x)</th><td class="num">0.1</td><td class="num">0.15</td><td class="num">0.2</td><td class="num">0.4</td><td class="num">0.15</td></tr></tbody>
+      </table></div>
+      <p class="hint">Hint: use $Var(X) = E(X^2) - [E(X)]^2$. Compute $E(X)$ and $E(X^2)$ as separate sums, and do not forget to square the mean at the end.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Mean.</b> $E(X) = \sum x f(x) = (-2)(0.1) + (-1)(0.15) + (0)(0.2) + (1)(0.4) + (2)(0.15)$</li>
+          <li>$= -0.2 - 0.15 + 0 + 0.4 + 0.3 = 0.35$</li>
+          <li><b>Second moment.</b> $E(X^2) = \sum x^2 f(x) = 4(0.1) + 1(0.15) + 0(0.2) + 1(0.4) + 4(0.15)$</li>
+          <li>$= 0.4 + 0.15 + 0 + 0.4 + 0.6 = 1.55$</li>
+          <li><b>Variance.</b> $Var(X) = E(X^2) - [E(X)]^2 = 1.55 - (0.35)^2 = 1.55 - 0.1225 = 1.4275$</li>
+        </ol>
+        <div class="final">Mean = 0.35 · Variance = 1.4275</div>
+        <div class="box plain" style="margin-top:1rem"><span class="lbl">Why this question is in this deck</span>
+        Chebyshev needs a mean and a variance before it can do anything. This question is the deck making sure you can produce both from a raw distribution table — because in an exam the inequality question may hand you the table rather than the finished numbers.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <h4>Chapter recap</h4>
+    <ul>
+      <li><strong>Uniform:</strong> a rectangle of height $\frac{1}{b-a}$. Mean $\frac{a+b}{2}$, variance $\frac{(b-a)^2}{12}$.</li>
+      <li><strong>Exponential:</strong> "still waiting" is $e^{-\lambda x}$, "already happened by now" is $1 - e^{-\lambda x}$. Mean $\frac{1}{\lambda}$, variance $\frac{1}{\lambda^2}$.</li>
+      <li><strong>Always derive λ from the mean</strong> ($\lambda = 1/E(X)$) and fix the units before you do it.</li>
+      <li><strong>Memorylessness:</strong> the words "given it has already…" mean subtract the two times and compute the plain probability of the difference.</li>
+      <li><strong>Markov</strong> needs only a mean and gives a loose ceiling. <strong>Chebyshev</strong> also uses the variance and gives a much tighter one.</li>
+      <li><strong>Find k by dividing the distance by σ</strong>, and re-centre the range on μ first if the question is written as a plain interval.</li>
+      <li><strong>Answer bounds with ≤ or ≥</strong>, never with an equals sign.</li>
+    </ul>
+  </div>
+</section>

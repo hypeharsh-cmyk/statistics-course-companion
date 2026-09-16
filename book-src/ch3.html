@@ -1,0 +1,526 @@
+<section id="ch3" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Chapter 3</div>
+    <h1>Estimation and Confidence Intervals</h1>
+    <p>By the end of this chapter you can pick the right interval formula on sight, build a confidence interval for a mean, a proportion or a variance, and say what "95% confident" actually means without getting it wrong.</p>
+  </div>
+
+  <p class="lead">You have one sample. The population is out there, unknown, and you will never see all of it. Estimation is the business of making an honest statement about that population from your one sample — and, crucially, of admitting how much you might be off by. A single guessed number hides its own uncertainty. An interval wears it on the outside.</p>
+
+  <h2 id="ch3-s1">3.1 · What statistical inference is</h2>
+
+  <div class="box def"><span class="lbl">Definition</span>
+  <strong>Inference</strong> is the process of generalising, or drawing conclusions about, the target population on the basis of results obtained from a sample.</div>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Inference involves: estimation, and hypothesis testing.</li>
+    <li>Purpose: to make decisions about population characteristics.</li>
+    <li>Before beginning statistical analysis it is essential to examine the distribution of the variable for skewness (tails), kurtosis (peaked or flat distribution), spread (range of the values) and outliers (data values separated from the rest of the data).</li>
+    <li>Information about each of these characteristics determines the choice of statistical analysis, and lets it be accurately explained and interpreted.</li>
+  </ul></div>
+
+  <h3>The four words you must keep straight</h3>
+
+  <div class="tw"><table>
+    <thead><tr><th>Term</th><th>What it means</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Population</strong></td><td>The totality of the observations with which we are concerned</td><td>every student in India</td></tr>
+      <tr><td><strong>Sample</strong></td><td>A subset of the population</td><td>the 200 students you surveyed</td></tr>
+      <tr><td><strong>Statistic</strong></td><td>A function of the sample random variables containing no unknown parameters</td><td>$\bar{X}$, $S^2$</td></tr>
+      <tr><td><strong>Estimator</strong></td><td>A statistic $\hat{\theta}$ used to estimate an unknown parameter $\theta$ — it is a random variable, a <em>recipe</em></td><td>"take the sample mean"</td></tr>
+      <tr><td><strong>Estimate</strong></td><td>A specific value of that estimator, obtained from one actual sample — a <em>number</em></td><td>$\bar{x} = 2.20$</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="formula">
+    <div class="name">An estimator is a function of the sample</div>
+    $$ \hat{\theta} = U(X_1, X_2, \dots, X_n) $$
+    <div class="where"><b>θ̂</b> the estimator of the unknown parameter · <b>U</b> the rule applied to the sample · <b>X₁…X<sub>n</sub></b> the sample random variables</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">Estimator vs estimate, in one line</span>
+  The <strong>estimator</strong> is the recipe ("add them up and divide by n"). The <strong>estimate</strong> is the cake you got this time (2.20). The recipe is what has statistical properties; the cake is just a number.</div>
+
+  <div class="box def"><span class="lbl">Two ways to draw inferences</span>
+  <ol>
+    <li><strong>Estimation</strong> — we estimate one or more parameters using sample statistics. It comes in two types: (a) point estimation, (b) interval estimation. <em>This chapter.</em></li>
+    <li><strong>Testing of hypotheses</strong> — we hypothesise that one or more parameters have some specific value or relationship, and make a decision based on sample statistics. <em>Chapter 4.</em></li>
+  </ol></div>
+
+  <h3>Why any of this works: the sampling distribution</h3>
+  <p>Everything in this chapter is borrowed from Chapter 1. Because the Central Limit Theorem tells us that</p>
+  <div class="formula">
+    <div class="name">The engine underneath every formula in this chapter</div>
+    $$ Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0,1) \quad \text{for large } n $$
+    <div class="where"><b>x̄</b> your sample mean · <b>μ</b> the unknown population mean · <b>σ/√n</b> the standard error</div>
+  </div>
+  <p>we know exactly how far $\bar{x}$ is likely to stray from $\mu$. Turn that statement inside out — instead of "how far will $\bar{x}$ be from $\mu$", ask "how far might $\mu$ be from my $\bar{x}$" — and you have a confidence interval. That inversion is the whole idea.</p>
+
+  <h2 id="ch3-s2">3.2 · Point estimation and what makes an estimator good</h2>
+
+  <p>A <strong>point estimate</strong> is a single number offered as the value of a parameter. Simple, but silent about its own reliability.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Population parameter</th><th>Point estimate (sample statistic)</th></tr></thead>
+    <tbody>
+      <tr><td>Mean $\mu$</td><td>$\bar{X}$</td></tr>
+      <tr><td>Proportion $P$</td><td>$\hat{p}$</td></tr>
+      <tr><td>Variance $\sigma^2$</td><td>$S^2$</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Unbiasedness</h3>
+
+  <div class="formula">
+    <div class="name">Unbiased estimator</div>
+    $$ E(\hat{\theta}) = \theta $$
+    <div class="where"><b>E(θ̂)</b> the mean of the estimator's sampling distribution · <b>θ</b> the true parameter — if these match, the estimator is unbiased</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  Unbiased does not mean "right". Any one sample will be off. It means the estimator is not <em>systematically</em> off — aim it a thousand times and the misses cancel out, landing on the truth on average. A biased estimator is a rifle with bent sights: it may be very precise and still consistently miss to the left.</div>
+
+  <p>From the slides: the sample mean $\bar{x}$ is an unbiased estimator of $\mu$; the sample variance $s^2$ is an unbiased estimator of $\sigma^2$; the sample proportion $\hat{p}$ is an unbiased estimator of $P$.</p>
+
+  <div class="formula">
+    <div class="name">Bias</div>
+    $$ \text{Bias}(\hat{\theta}) = E(\hat{\theta}) - \theta $$
+    <div class="where"><b>Bias</b> the gap between where the estimator lands on average and the truth</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  The bias of an unbiased estimator is 0.</div>
+
+  <div class="box tip"><span class="lbl">Why $s^2$ divides by n − 1</span>
+  This is the classic exam follow-up. Dividing by $n$ would make the sample variance too small on average, because the deviations are measured from $\bar{x}$ — which is itself pulled towards the data — rather than from the true $\mu$. Dividing by $n-1$ exactly corrects that shrinkage and makes $s^2$ unbiased. That "$-1$" is also where the degrees of freedom in the t-interval come from.</div>
+
+  <h3>Efficiency</h3>
+  <p>Unbiasedness alone is not enough — several estimators can all be unbiased. Among them we prefer the one that scatters least.</p>
+
+  <div class="formula">
+    <div class="name">Relative efficiency</div>
+    $$ \hat{\theta}_1 \text{ is more efficient than } \hat{\theta}_2 \iff Var(\hat{\theta}_1) < Var(\hat{\theta}_2) $$
+    <div class="where">both must be unbiased and based on the same number of observations · the <b>most efficient</b> estimator, the minimum variance unbiased estimator, is the unbiased one with the smallest variance</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">Both properties together</span>
+  <strong>Unbiased</strong> = centred on the bullseye. <strong>Efficient</strong> = tightly grouped. You want both, and if you must rank them, an estimator that is centred but scattered is usually preferred to one that is tight but wrong.</div>
+
+  <h2 id="ch3-s3">3.3 · Interval estimation, and what confidence really means</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>How much uncertainty is associated with a point estimate of a population parameter?</li>
+    <li>An interval estimate provides more information about a population characteristic than does a point estimate.</li>
+    <li>Such interval estimates are called confidence intervals.</li>
+    <li>An interval takes into consideration variation in sample statistics from sample to sample; is based on observation from one sample; gives information about closeness to unknown population parameters; and is stated in terms of a level of confidence — which can never be 100%.</li>
+  </ul></div>
+
+  <div class="formula">
+    <div class="name">Definition of a confidence interval</div>
+    $$ P(a < \theta < b) = 1 - \alpha $$
+    <div class="where"><b>a, b</b> the lower and upper confidence limits · <b>θ</b> the unknown parameter · <b>1 − α</b> the confidence level · then $(a,b)$ is called a $100(1-\alpha)\%$ confidence interval for θ</div>
+  </div>
+
+  <figure data-fig="ci-coverage" data-conf="0.95"><figcaption></figcaption></figure>
+
+  <div class="box warn"><span class="lbl">The single most misunderstood sentence in statistics</span>
+  <p>"There is a 95% probability that μ lies in (1.99, 2.41)" is <strong>wrong</strong>, and it is wrong in the exam too.</p>
+  <p>Look at the figure. The vertical line — the true μ — never moves. It is a fixed, if unknown, number. What moves is the <em>intervals</em>: each sample throws a different one. 95% of those thrown intervals land over the line; the red ones missed.</p>
+  <p>So once you have computed your particular interval, it either contains μ or it does not — there is no probability left in it. The 95% describes <strong>the method</strong>, not your one answer. The slides put it exactly this way: <em>"A specific interval either will contain or will not contain the true parameter (no probability involved in a specific interval)."</em></p>
+  <p><strong>Safe wording for the exam:</strong> "We are 95% confident that μ lies between a and b" — or, more fully, "95% of intervals constructed in this manner will contain the true mean."</p></div>
+
+  <div class="box note"><span class="lbl">Note from the slides — the relative frequency interpretation</span>
+  <ul>
+    <li>In repeated samples of the population, the true value of the parameter $\theta$ would be contained in $100(1-\alpha)\%$ of intervals calculated this way.</li>
+    <li>From repeated samples, 95% of all the confidence intervals that can be constructed will contain the unknown true parameter.</li>
+  </ul></div>
+
+  <h3>Which interval do I use? — the decision table</h3>
+  <p>Read this table before every question in this chapter. Choosing the wrong row is the most common way to lose all the marks on an otherwise correct calculation.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>What you want</th><th>What you know</th><th>Use</th><th>Formula</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Mean $\mu$</td><td>$\sigma$ <strong>known</strong> (and normal population, or $n \ge 30$)</td>
+        <td><span class="chip">Z</span></td>
+        <td>$\bar{x} \pm z_{\alpha/2}\dfrac{\sigma}{\sqrt{n}}$</td>
+      </tr>
+      <tr>
+        <td>Mean $\mu$</td><td>$\sigma$ <strong>unknown</strong>, only $s$ available</td>
+        <td><span class="chip">t</span>, df $= n-1$</td>
+        <td>$\bar{x} \pm t_{n-1,\alpha/2}\dfrac{s}{\sqrt{n}}$</td>
+      </tr>
+      <tr>
+        <td>Proportion $P$</td><td>$\hat{p}$ from a large sample</td>
+        <td><span class="chip">Z</span></td>
+        <td>$\hat{p} \pm z_{\alpha/2}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}$</td>
+      </tr>
+      <tr>
+        <td>Variance $\sigma^2$</td><td>$\mu$ <strong>known</strong></td>
+        <td><span class="chip">χ²</span>, df $= n$</td>
+        <td>$\left(\dfrac{\sum(x_i-\mu)^2}{\chi^2_{n,\alpha/2}},\ \dfrac{\sum(x_i-\mu)^2}{\chi^2_{n,1-\alpha/2}}\right)$</td>
+      </tr>
+      <tr>
+        <td>Variance $\sigma^2$</td><td>$\mu$ <strong>unknown</strong>, $s^2$ available</td>
+        <td><span class="chip">χ²</span>, df $= n-1$</td>
+        <td>$\dfrac{(n-1)s^2}{\chi^2_{n-1,\alpha/2}} < \sigma^2 < \dfrac{(n-1)s^2}{\chi^2_{n-1,1-\alpha/2}}$</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="ch3-s4">3.4 · Confidence interval for a mean, σ known</h2>
+
+  <p>Start from what the CLT guarantees about the standard normal:</p>
+  <div class="formula">
+    <div class="name">The probability statement we invert</div>
+    $$ P\!\left(-z_{\alpha/2} < Z < z_{\alpha/2}\right) = 1 - \alpha $$
+    <div class="where"><b>z<sub>α/2</sub></b> the critical value leaving area α/2 in each tail · the middle area is the confidence level 1 − α</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Assumptions</span>
+  <ul><li>Population variance $\sigma^2$ is known.</li>
+  <li>Population is normally distributed.</li>
+  <li>If the population is not normal, use a large sample ($n \ge 30$).</li></ul></div>
+
+  <div class="formula">
+    <div class="name">Confidence interval for μ, σ known</div>
+    $$ \bar{X} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}} \;<\; \mu \;<\; \bar{X} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}} $$
+    <div class="where"><b>x̄</b> the sample mean, the centre of the interval · <b>z<sub>α/2</sub></b> the reliability factor from the Z-table · <b>σ/√n</b> the standard error · together the last two make the margin of error</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Margin of error</div>
+    $$ ME = z_{\alpha/2}\frac{\sigma}{\sqrt{n}} \qquad\text{so the interval is}\qquad \bar{x} \pm ME $$
+    <div class="where"><b>ME</b> the half-width of the interval — how far you are willing to be wrong</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>The interval width is equal to twice the margin of error.</li>
+    <li>If $\bar{x}$ is used as an estimate of $\mu$, we can be $100(1-\alpha)\%$ confident that the error will not exceed $z_{\alpha/2}\frac{\sigma}{\sqrt{n}}$.</li>
+    <li>The margin of error can be reduced if: the population standard deviation can be reduced ($\sigma \downarrow$); the sample size is increased ($n \uparrow$); or the confidence level is decreased ($(1-\alpha) \downarrow$).</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">The trade-off, stated honestly</span>
+  You can always make your interval narrower by demanding less confidence — a 50% interval is delightfully tight and nearly useless. The only way to get <em>both</em> high confidence and a narrow interval is to collect more data. And because $n$ sits under a square root, halving your margin of error costs you <strong>four times</strong> the sample size.</div>
+
+  <h3>Finding the reliability factor $z_{\alpha/2}$</h3>
+  <p>For a 95% interval: $1-\alpha = 0.95 \Rightarrow \alpha = 0.05 \Rightarrow \alpha/2 = 0.025$, and the table gives $z_{0.025} = 1.96$.</p>
+
+  <div class="box warn"><span class="lbl">Always halve α</span>
+  A two-sided interval puts α/2 in <em>each</em> tail, not α. For 95% the value is 1.96, not 1.645. Using 1.645 by mistake is the same error as running a one-tailed test when you meant two-tailed.</div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Confidence level</th><th class="num">Confidence coefficient, 1 − α</th><th class="num">$z_{\alpha/2}$</th></tr></thead>
+    <tbody>
+      <tr><td>80%</td><td class="num">.80</td><td class="num">1.28</td></tr>
+      <tr><td>90%</td><td class="num">.90</td><td class="num">1.645</td></tr>
+      <tr><td>95%</td><td class="num">.95</td><td class="num">1.96</td></tr>
+      <tr><td>98%</td><td class="num">.98</td><td class="num">2.33</td></tr>
+      <tr><td>99%</td><td class="num">.99</td><td class="num">2.58</td></tr>
+      <tr><td>99.8%</td><td class="num">.998</td><td class="num">3.08</td></tr>
+      <tr><td>99.9%</td><td class="num">.999</td><td class="num">3.27</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="example">
+    <div class="hd">Worked example 1 — CI for a mean with σ known</div>
+    <div class="bd">
+      <p>A sample of 11 circuits from a large normal population has a mean resistance of 2.20 ohms. We know from past testing that the population standard deviation is 0.35 ohms. Determine a 95% confidence interval for the true mean resistance of the population.</p>
+      <div class="given"><b>Given</b> n = 11 · $\bar{x} = 2.20$ ohms · σ = 0.35 ohms (known, from past testing) · 95% confidence, so α = 0.05</div>
+      <ol class="steps">
+        <li><b>Pick the row.</b> We want a mean, and σ is <em>known</em> from past testing, and the population is stated normal — so the Z-interval, even though n is only 11.</li>
+        <li>Reliability factor: $\alpha/2 = 0.025$, table value $z_{0.025} = 1.96$.</li>
+        <li>Substitute into $\bar{x} \pm z\frac{\sigma}{\sqrt{n}}$: &nbsp; $2.20 \pm 1.96\left(\frac{0.35}{\sqrt{11}}\right)$</li>
+        <li>Margin of error: $1.96 \times \frac{0.35}{3.31662} = 1.96 \times 0.10553 = 0.2068$</li>
+        <li>Limits: $2.20 - 0.2068 = 1.9932$ and $2.20 + 0.2068 = 2.4068$.</li>
+      </ol>
+      <div class="final">1.9932 &lt; μ &lt; 2.4068 ohms</div>
+      <p style="margin-top:1rem"><strong>Interpretation, written the safe way:</strong> we are 95% confident that the true mean resistance is between 1.9932 and 2.4068 ohms. Although the true mean may or may not be in this interval, 95% of intervals formed in this manner will contain the true mean.</p>
+    </div>
+  </div>
+
+  <h2 id="ch3-s5">3.5 · Confidence interval for a mean, σ unknown — the t-distribution</h2>
+
+  <p>In real work you almost never know $\sigma$. So you use $s$, the sample standard deviation, in its place. But that substitution costs something: $s$ is itself an estimate, and it wobbles from sample to sample. You have added a second source of uncertainty on top of the first, and the normal curve no longer tells the truth about how far $\bar{x}$ can stray.</p>
+
+  <div class="formula">
+    <div class="name">The t statistic</div>
+    $$ t = \frac{\bar{X} - \mu}{S/\sqrt{n}} $$
+    <div class="where"><b>x̄</b> sample mean · <b>μ</b> population mean · <b>S</b> the <em>sample</em> standard deviation, standing in for the unknown σ · <b>n</b> sample size</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  This variable follows the Student's t distribution with $(n-1)$ degrees of freedom.</div>
+
+  <div class="formula">
+    <div class="name">Degrees of freedom</div>
+    $$ \text{d.f.} = n - 1 $$
+    <div class="where">the number of observations that are free to vary after the sample mean has been calculated</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">What "degrees of freedom" means</span>
+  Suppose five numbers must average 10, so they must total 50. You may choose the first four freely — anything you like. But once they are fixed, the fifth is forced; it has no freedom left. Four of the five could vary: $n - 1 = 4$ degrees of freedom. Using $\bar{x}$ in the calculation is what spends that one degree.</div>
+
+  <figure data-fig="t-vs-z"><figcaption></figcaption></figure>
+
+  <div class="box note"><span class="lbl">Notes from the slides — properties of the t</span>
+  <ul>
+    <li>The t is a family of distributions; the t value depends on the degrees of freedom.</li>
+    <li>t-distributions are bell-shaped and symmetric, but have 'fatter' tails than the normal.</li>
+    <li>$t \longrightarrow Z$ as $n$ increases.</li>
+    <li>The body of the t table contains t values, not probabilities.</li>
+  </ul></div>
+
+  <div class="box def"><span class="lbl">Assumptions</span>
+  Population standard deviation is unknown · population is normally distributed · if the population is not normal, use a large sample.</div>
+
+  <div class="formula">
+    <div class="name">Confidence interval for μ, σ unknown</div>
+    $$ \bar{X} - t_{n-1,\,\alpha/2}\frac{S}{\sqrt{n}} \;<\; \mu \;<\; \bar{X} + t_{n-1,\,\alpha/2}\frac{S}{\sqrt{n}} $$
+    <div class="where"><b>t<sub>n−1, α/2</sub></b> the critical t with n−1 df and area α/2 in each tail, defined by $P(t_{n-1} > t_{n-1,\alpha/2}) = \alpha/2$ · <b>ME</b> $= t_{n-1,\alpha/2}\frac{S}{\sqrt{n}}$</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">How to read the t-table</span>
+  Two things to get right. <strong>First, the row:</strong> it is df $= n-1$, not $n$. <strong>Second, the column:</strong> your slides' table is headed by the area in <em>one</em> tail, so for a 95% two-sided interval you want the $\alpha/2 = .025$ column, not the .05 column. Worked reading from the slides: for $n = 3$, df $= 2$, $\alpha = .10 \Rightarrow \alpha/2 = .05$, giving $t_{2,\,0.05} = 2.920$.</div>
+
+  <p>Notice in the comparison below how the t value falls towards the Z value as df grows — by 30 df they are nearly the same, which is exactly the "$n \ge 30$" rule of thumb showing up again.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Confidence level</th><th class="num">t (10 d.f.)</th><th class="num">t (20 d.f.)</th><th class="num">t (30 d.f.)</th><th class="num">Z</th></tr></thead>
+    <tbody>
+      <tr><td>.80</td><td class="num">1.372</td><td class="num">1.325</td><td class="num">1.310</td><td class="num">1.282</td></tr>
+      <tr><td>.90</td><td class="num">1.812</td><td class="num">1.725</td><td class="num">1.697</td><td class="num">1.645</td></tr>
+      <tr><td>.95</td><td class="num">2.228</td><td class="num">2.086</td><td class="num">2.042</td><td class="num">1.960</td></tr>
+      <tr><td>.99</td><td class="num">3.169</td><td class="num">2.845</td><td class="num">2.750</td><td class="num">2.576</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box plain"><span class="lbl">Why the t is always wider — and why that is honest</span>
+  Every t value in that table is bigger than the Z beside it. A bigger multiplier means a wider interval. That extra width is the price of not knowing σ: you are less sure, so you must claim less precision. An interval built with Z when you should have used t is <em>too narrow</em> — it looks more confident than the data entitles you to be.</div>
+
+  <div class="example">
+    <div class="hd">Worked example 2 — CI for a mean with σ unknown</div>
+    <div class="bd">
+      <p>A random sample of $n = 25$ has $\bar{x} = 50$ and $s = 8$. Form a 95% confidence interval for $\mu$.</p>
+      <div class="given"><b>Given</b> n = 25 · $\bar{x} = 50$ · s = 8 (a <em>sample</em> standard deviation) · 95% confidence, α = 0.05</div>
+      <ol class="steps">
+        <li><b>Pick the row.</b> The 8 is $s$, not σ — σ is unknown. So this is a t-interval.</li>
+        <li>Degrees of freedom: d.f. $= n - 1 = 25 - 1 = 24$.</li>
+        <li>Table value: $t_{24,\,0.025} = 2.0639$.</li>
+        <li>Substitute: $50 - 2.0639\left(\frac{8}{\sqrt{25}}\right) < \mu < 50 + 2.0639\left(\frac{8}{\sqrt{25}}\right)$</li>
+        <li>Margin of error: $2.0639 \times \frac{8}{5} = 2.0639 \times 1.6 = 3.302$</li>
+        <li>Limits: $50 - 3.302 = 46.698$ and $50 + 3.302 = 53.302$.</li>
+      </ol>
+      <div class="final">46.698 &lt; μ &lt; 53.302</div>
+      <p style="margin-top:1rem">Had you wrongly used $z = 1.96$ here, you would have got $46.86 < \mu < 53.14$ — narrower, and overclaiming.</p>
+    </div>
+  </div>
+
+  <h2 id="ch3-s6">3.6 · Confidence interval for a proportion</h2>
+
+  <p>Now the parameter is a percentage: the proportion $P$ of the population with some property. The sample proportion $\hat{p}$ is our point estimate, and for a large sample its distribution is approximately normal.</p>
+
+  <div class="formula">
+    <div class="name">Standard error of a proportion</div>
+    $$ \sigma_P = \sqrt{\frac{P(1-P)}{n}} \qquad\text{estimated by}\qquad \sqrt{\frac{\hat{p}(1-\hat{p})}{n}} $$
+    <div class="where"><b>P</b> the true population proportion, which we do not know · <b>p̂</b> the sample proportion, used in its place · <b>n</b> the sample size</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">Confidence interval for a population proportion</div>
+    $$ \hat{p} - z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} \;<\; P \;<\; \hat{p} + z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} $$
+    <div class="where"><b>p̂</b> = (number with the property) ÷ (sample size) · <b>z<sub>α/2</sub></b> the normal critical value · note there is no σ and no s anywhere — a proportion carries its own spread</div>
+  </div>
+
+  <div class="box tip"><span class="lbl">Two habits that keep this clean</span>
+  <ul>
+    <li>Compute $\hat{p}$ as a <em>decimal</em> first ($25/100 = 0.25$), then feed it in. Mixing percentages into the square root is a reliable way to be wrong by a factor of 10.</li>
+    <li>It is always $z$, never $t$ — there is no sample standard deviation being estimated here, so there are no degrees of freedom to lose.</li>
+  </ul></div>
+
+  <div class="example">
+    <div class="hd">Worked example 3 — CI for a proportion</div>
+    <div class="bd">
+      <p>A random sample of 100 people shows that 25 are left-handed. Form a 95% confidence interval for the true proportion of left-handers.</p>
+      <div class="given"><b>Given</b> n = 100 · x = 25 left-handers · $\hat{p} = \frac{25}{100} = 0.25$ · 95% confidence</div>
+      <ol class="steps">
+        <li>Table value: $z_{0.025} = 1.96$.</li>
+        <li>Standard error: $\sqrt{\frac{0.25(0.75)}{100}} = \sqrt{\frac{0.1875}{100}} = 0.043301$</li>
+        <li>Margin of error: $1.96 \times 0.043301 = 0.08487$</li>
+        <li>Limits: $0.25 - 0.08487 = 0.1651$ and $0.25 + 0.08487 = 0.3349$.</li>
+      </ol>
+      <div class="final">0.1651 &lt; P &lt; 0.3349</div>
+      <p style="margin-top:1rem"><strong>Interpretation:</strong> we are 95% confident that the true percentage of left-handers in the population is between 16.51% and 33.49%. Although the interval may or may not contain the true proportion, 95% of intervals formed from samples of size 100 in this manner will contain it.</p>
+    </div>
+  </div>
+
+  <h2 id="ch3-s7">3.7 · Confidence interval for a variance — the chi-square</h2>
+
+  <p>Sometimes the <em>consistency</em> of a process matters more than its average. A machine that fills bottles to 500 ml on average is no good if half of them are at 480. To put an interval around $\sigma^2$ we need a new distribution.</p>
+
+  <figure data-fig="chisq" data-df="16"><figcaption></figcaption></figure>
+
+  <div class="box warn"><span class="lbl">The chi-square is NOT symmetric — this changes how you work</span>
+  <p>With Z and t you looked up one number and used it with a $\pm$. You cannot do that here. The chi-square is skewed to the right and lives only on positive values, so the left and right critical values are <strong>different numbers</strong> and must be looked up separately: $\chi^2_{1-\alpha/2}$ and $\chi^2_{\alpha/2}$.</p>
+  <p>Worse, they land in the formula <em>the opposite way round from your intuition</em>: the <strong>bigger</strong> chi-square value goes in the denominator of the <strong>lower</strong> limit. Dividing by a bigger number gives a smaller result — which is exactly right, but only if you resist the urge to "fix" it.</p></div>
+
+  <h3>Case I — the population mean μ is known</h3>
+  <p>If $X_1,\dots,X_n$ are normal with mean $\mu$ and variance $\sigma^2$, then standardising each observation as $Y_i = \frac{x_i-\mu}{\sigma}$ gives $Y_i \sim N(0,1)$, and the sum of their squares follows a chi-square distribution with $n$ degrees of freedom:</p>
+  $$ \sum Y_i^2 = \sum\left(\frac{x_i-\mu}{\sigma}\right)^2 \sim \chi^2_{(n)} $$
+  <p>Starting from $P\left(\chi^2_{n,1-\alpha/2} < \frac{\sum(x_i-\mu)^2}{\sigma^2} < \chi^2_{n,\alpha/2}\right) = 1-\alpha$ and rearranging to isolate $\sigma^2$ in the middle gives the interval:</p>
+
+  <div class="formula">
+    <div class="name">CI for σ², μ known — degrees of freedom = n</div>
+    $$ \left(\frac{\sum(x_i-\mu)^2}{\chi^2_{n,\,\alpha/2}},\ \frac{\sum(x_i-\mu)^2}{\chi^2_{n,\,1-\alpha/2}}\right) $$
+    <div class="where"><b>Σ(xᵢ−μ)²</b> the sum of squared deviations from the <em>known</em> mean · <b>df = n</b>, not n−1, because no degree of freedom was spent estimating the mean</div>
+  </div>
+
+  <div class="example">
+    <div class="hd">Worked example 4 — CI for a variance, μ known</div>
+    <div class="bd">
+      <p>A machine fills bottles with a known mean volume of $\mu = 500$ ml. We want to estimate the variance of the filling process. A random sample of $n = 10$ bottles yields the following volumes (in ml): 502, 495, 500, 498, 499, 501, 503, 497, 500, 501. Find the 95% confidence interval for the population variance.</p>
+      <div class="given"><b>Given</b> μ = 500 ml (known) · n = 10 · 95% confidence, α = 0.05</div>
+      <ol class="steps">
+        <li><b>Degrees of freedom.</b> Since μ is known, d.f. $= n = 10$.</li>
+        <li>Sum of squared deviations from 500: $2^2 + (-5)^2 + 0^2 + (-2)^2 + (-1)^2 + 1^2 + 3^2 + (-3)^2 + 0^2 + 1^2$</li>
+        <li>$= 4 + 25 + 0 + 4 + 1 + 1 + 9 + 9 + 0 + 1 = 52$</li>
+        <li>Table values at df = 10: upper $\chi^2_{10,\,0.025} = 20.483$, lower $\chi^2_{10,\,0.975} = 3.247$.</li>
+        <li>Lower limit: $\frac{52}{20.483} = 2.539$ &nbsp;(divide by the <em>bigger</em> chi-square)</li>
+        <li>Upper limit: $\frac{52}{3.247} = 16.015$</li>
+      </ol>
+      <div class="final">(2.539, 16.015) ml²</div>
+    </div>
+  </div>
+
+  <h3>Case II — the population mean μ is unknown</h3>
+  <p>The usual situation. We use the sample variance $s^2$, and pay one degree of freedom for it:</p>
+
+  <div class="formula">
+    <div class="name">The chi-square statistic for a variance</div>
+    $$ \chi^2_{n-1} = \frac{(n-1)s^2}{\sigma^2} $$
+    <div class="where"><b>s²</b> the sample variance · <b>σ²</b> the unknown population variance · this follows a chi-square distribution with n−1 df, where $\chi^2_{n-1,\alpha}$ is defined by $P(\chi^2_{n-1} > \chi^2_{n-1,\alpha}) = \alpha$</div>
+  </div>
+
+  <div class="formula">
+    <div class="name">CI for σ², μ unknown — degrees of freedom = n − 1</div>
+    $$ \frac{(n-1)s^2}{\chi^2_{n-1,\,\alpha/2}} \;<\; \sigma^2 \;<\; \frac{(n-1)s^2}{\chi^2_{n-1,\,1-\alpha/2}} $$
+    <div class="where">same numerator both sides · the two different chi-square values do all the work · take square roots of both limits if the question asks about σ rather than σ²</div>
+  </div>
+
+  <div class="example">
+    <div class="hd">Worked example 5 — CI for a variance, μ unknown</div>
+    <div class="bd">
+      <p>You are testing the speed of a batch of computer processors. You collect the following data (in MHz): sample size $n = 17$, sample mean $\bar{x} = 3004$, sample standard deviation $s = 74$. Assume the population is normal. Determine the 95% confidence interval for $\sigma_x^2$.</p>
+      <div class="given"><b>Given</b> n = 17 · $\bar{x} = 3004$ MHz · s = 74 MHz · 95% confidence, α = 0.05</div>
+      <ol class="steps">
+        <li><b>Degrees of freedom.</b> μ is unknown, so d.f. $= n - 1 = 16$.</li>
+        <li>Table values at df = 16: $\chi^2_{16,\,0.025} = 28.85$ and $\chi^2_{16,\,0.975} = 6.91$.</li>
+        <li>Numerator: $(n-1)s^2 = 16 \times 74^2 = 16 \times 5476 = 87616$.</li>
+        <li>Lower limit: $\frac{87616}{28.85} = 3036.95 \approx 3037$</li>
+        <li>Upper limit: $\frac{87616}{6.91} = 12679.59 \approx 12680$</li>
+      </ol>
+      <div class="final">3037 &lt; σ² &lt; 12680</div>
+      <p style="margin-top:1rem">Notice how lopsided that interval is around $s^2 = 5476$ — it stretches much further up than down. That asymmetry is the skew of the chi-square distribution showing through, and it is correct, not a mistake.</p>
+    </div>
+  </div>
+
+  <h2 id="ch3-exercises">3.8 · Practice questions</h2>
+  <p>Before computing anything, say out loud which row of the decision table you are in and why. That single habit prevents most of the errors in this chapter.</p>
+  <button class="revealall">Reveal all solutions</button>
+
+  <div class="exercise">
+    <div class="hd">Question 1</div>
+    <div class="bd">
+      <p>A random sample of 100 people shows that 25 are left-handed. Form a 95% confidence interval for the true proportion of left-handers.</p>
+      <div class="given"><b>Given</b> n = 100 · 25 left-handed · 95% confidence</div>
+      <p class="hint">Hint: a proportion, so no σ and no t. Convert 25/100 to a decimal first.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>$\hat{p} = \frac{25}{100} = 0.25$, and $z_{0.025} = 1.96$.</li>
+          <li>Standard error: $\sqrt{\frac{0.25 \times 0.75}{100}} = \sqrt{0.001875} = 0.043301$</li>
+          <li>Margin of error: $1.96 \times 0.043301 = 0.08487$</li>
+          <li>Limits: $0.25 \mp 0.08487$ gives $0.16513$ and $0.33487$.</li>
+        </ol>
+        <div class="final">0.1651 &lt; P &lt; 0.3349</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 2 — a 99% interval</div>
+    <div class="bd">
+      <p>A random sample of 700 units from a large consignment showed that 200 were damaged. Find the 99% confidence interval for the proportion of damaged units in the consignment.</p>
+      <div class="given"><b>Given</b> n = 700 · x = 200 damaged · 99% confidence</div>
+      <p class="hint">Hint: 99% is not 95% — go back to the table of common confidence levels and pick the right z. Everything else is the same as Question 1.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>$\hat{p} = \frac{200}{700} = \frac{2}{7} = 0.285714$.</li>
+          <li>For 99% confidence, $\alpha = 0.01$ so $\alpha/2 = 0.005$, and the table gives $z_{0.005} = 2.58$.</li>
+          <li>Standard error: $\sqrt{\frac{0.285714 \times 0.714286}{700}} = \sqrt{\frac{0.204082}{700}} = \sqrt{0.000291545} = 0.017075$</li>
+          <li>Margin of error: $2.58 \times 0.017075 = 0.044053$</li>
+          <li>Limits: $0.285714 - 0.044053 = 0.241661$ and $0.285714 + 0.044053 = 0.329767$.</li>
+        </ol>
+        <div class="final">0.2417 &lt; P &lt; 0.3298</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 3 — variance with μ known</div>
+    <div class="bd">
+      <p>A machine fills bottles with a known mean volume of $\mu = 500$ ml. We want to estimate the variance of the filling process. A random sample of $n = 10$ bottles yields the following volumes (in ml): 502, 495, 500, 498, 499, 501, 503, 497, 500, 501. Find the 95% confidence interval for the population variance.</p>
+      <div class="given"><b>Given</b> μ = 500 ml known · n = 10 · 95% confidence</div>
+      <p class="hint">Hint: μ is <em>known</em>, so the degrees of freedom are n, not n − 1, and you measure deviations from 500 rather than from the sample mean.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>d.f. $= n = 10$ because μ is known.</li>
+          <li>$\sum(X_i - 500)^2 = 4 + 25 + 0 + 4 + 1 + 1 + 9 + 9 + 0 + 1 = 52$</li>
+          <li>Table values, df = 10: $\chi^2_{10,\,0.025} = 20.483$, $\chi^2_{10,\,0.975} = 3.247$.</li>
+          <li>Lower: $\frac{52}{20.483} = 2.539$ &nbsp;·&nbsp; Upper: $\frac{52}{3.247} = 16.015$</li>
+        </ol>
+        <div class="final">(2.539, 16.015)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 4 — variance with μ unknown</div>
+    <div class="bd">
+      <p>You are testing the speed of a batch of computer processors. Sample size 17, sample mean 3004 MHz, sample standard deviation 74 MHz. Assume the population is normal. Determine the 95% confidence interval for $\sigma_x^2$.</p>
+      <div class="given"><b>Given</b> n = 17 · $\bar{x} = 3004$ · s = 74 · 95% confidence</div>
+      <p class="hint">Hint: here μ is unknown, so df = n − 1 = 16, and the numerator is $(n-1)s^2$. Remember the bigger chi-square goes under the lower limit.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>d.f. $= 17 - 1 = 16$.</li>
+          <li>$(n-1)s^2 = 16 \times 74^2 = 16 \times 5476 = 87616$</li>
+          <li>Table values, df = 16: $\chi^2_{16,\,0.025} = 28.85$, $\chi^2_{16,\,0.975} = 6.91$.</li>
+          <li>Lower: $\frac{87616}{28.85} = 3036.95 \approx 3037$</li>
+          <li>Upper: $\frac{87616}{6.91} = 12679.59 \approx 12680$</li>
+        </ol>
+        <div class="final">3037 &lt; σ² &lt; 12680</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <h4>Chapter recap</h4>
+    <ul>
+      <li><strong>Estimator</strong> is the recipe, <strong>estimate</strong> is the number it produced this time.</li>
+      <li><strong>Unbiased</strong> = right on average ($E(\hat{\theta}) = \theta$). <strong>Efficient</strong> = smallest variance among the unbiased.</li>
+      <li><strong>Every interval has the same shape:</strong> point estimate ± (reliability factor × standard error).</li>
+      <li><strong>Pick the row before you compute:</strong> σ known → z; σ unknown → t with n−1 df; proportion → z with $\sqrt{\hat{p}(1-\hat{p})/n}$; variance → chi-square.</li>
+      <li><strong>Halve α</strong> for a two-sided interval — 1.96 for 95%, 2.58 for 99%.</li>
+      <li><strong>The chi-square is skewed</strong>: two different critical values, and the bigger one sits under the lower limit.</li>
+      <li><strong>The confidence is in the method, not in your one interval.</strong> Say "we are 95% confident", never "there is a 95% probability that μ is in here".</li>
+      <li><strong>To narrow an interval honestly, raise n</strong> — and remember it costs 4× the data to halve the margin of error.</li>
+    </ul>
+  </div>
+</section>

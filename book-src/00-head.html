@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Statistics — A Visual Textbook</title>
+<meta name="description" content="An interactive statistics textbook: the normal distribution and the CLT, uniform and exponential distributions, estimation and confidence intervals, hypothesis testing, and regression — with 20 explorable figures.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbf9f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16151a" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Statistics — A Visual Textbook">
+<meta property="og:description" content="An interactive statistics textbook with 20 explorable figures, from the Central Limit Theorem to regression.">
+<meta name="twitter:card" content="summary">
+<script>
+  /* Restore the saved theme before first paint so dark-mode readers never see a white flash. */
+  try{ var t=localStorage.getItem("stats-theme"); if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);} }catch(e){}
+</script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+    startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.classList.add('math-ready')) }
+  };
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+:root{
+  --paper:#fbf9f5; --paper-2:#f3efe7; --ink:#1e1c19; --ink-2:#4a463f; --ink-3:#7b756a;
+  --rule:#e0d9cc; --rule-2:#cfc6b4;
+  --accent:#8a4b2a; --accent-soft:#f4e6dc;
+  --blue:#25506e; --blue-soft:#e3edf5;
+  --green:#2c5f3f; --green-soft:#e2efe6;
+  --gold:#8a6d1f; --gold-soft:#f7eed6;
+  --violet:#5a3d78; --violet-soft:#ede5f5;
+  --red:#8e2f2f; --red-soft:#f7e3e3;
+  --grid:#e6dfd2;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --maxw:46rem;
+}
+html[data-theme="dark"]{
+  --paper:#16151a; --paper-2:#1e1d24; --ink:#e9e5dd; --ink-2:#bfb8ac; --ink-3:#8d8578;
+  --rule:#2e2c35; --rule-2:#413e4a;
+  --accent:#d99b6c; --accent-soft:#2c2119;
+  --blue:#7fb3d8; --blue-soft:#16222c;
+  --green:#7bc095; --green-soft:#152218;
+  --gold:#d9bb63; --gold-soft:#241f10;
+  --violet:#b295d6; --violet-soft:#1e1828;
+  --red:#e08a8a; --red-soft:#2a1717;
+  --grid:#2a2832;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--serif); font-size:18px; line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+/* ---------- progress bar ---------- */
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:200;transition:width .1s linear}
+/* ---------- layout ---------- */
+#shell{display:flex;min-height:100vh}
+#toc{
+  width:19rem;flex:0 0 19rem;background:var(--paper-2);border-right:1px solid var(--rule);
+  height:100vh;position:sticky;top:0;overflow-y:auto;padding:1.5rem 0 4rem;font-family:var(--sans);font-size:.82rem;
+}
+#toc .brand{padding:0 1.4rem 1rem;border-bottom:1px solid var(--rule);margin-bottom:1rem}
+#toc .brand b{display:block;font-family:var(--serif);font-size:1.15rem;letter-spacing:-.01em}
+#toc .brand span{color:var(--ink-3);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em}
+#toc .xlink{color:var(--accent);font-weight:600;border-bottom:1px solid var(--rule);margin-bottom:.7rem;padding-bottom:.7rem}
+#toc a{display:block;padding:.3rem 1.4rem;color:var(--ink-2);text-decoration:none;border-left:2px solid transparent;line-height:1.4}
+#toc a:hover{color:var(--ink);background:rgba(128,128,128,.07)}
+#toc a.ch{font-weight:650;color:var(--ink);font-size:.88rem;flex:1;padding-right:.4rem}
+#toc a.sec{padding-left:2.1rem;font-size:.79rem}
+#toc a.active{border-left-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+/* collapsible chapter groups */
+.tocgroup{margin-top:.9rem}
+.tochead{display:flex;align-items:flex-start}
+.toccaret{flex:0 0 auto;width:1.9rem;background:none;border:0;cursor:pointer;color:var(--ink-3);
+  font-family:var(--sans);font-size:.7rem;line-height:1.6;padding:.3rem 0 0;transition:transform .18s}
+.toccaret:hover{color:var(--accent)}
+.tocgroup.closed .tocsecs{display:none}
+.tocgroup.closed .toccaret{transform:rotate(-90deg)}
+/* whole-sidebar collapse — page goes full width */
+#toc{transition:width .24s ease, flex-basis .24s ease, transform .24s ease}
+#toc.collapsed{width:0;flex-basis:0;overflow:hidden;border-right-width:0;padding-left:0;padding-right:0}
+main{transition:padding .24s ease}
+.wrap{transition:max-width .24s ease}
+body.toc-collapsed main{padding-left:2.5rem;padding-right:2.5rem}
+body.toc-collapsed .wrap{max-width:68rem}
+body.toc-collapsed .wide{max-width:82rem}
+#menuBtn{display:block;font-weight:600}
+main{flex:1;min-width:0;padding:3.5rem 3rem 8rem;display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:var(--maxw)}
+.wide{max-width:56rem}
+/* ---------- typography ---------- */
+h1,h2,h3,h4{font-family:var(--serif);line-height:1.22;letter-spacing:-.015em;margin:0 0 .6rem}
+.chapter-open{margin:0 0 3rem;padding-bottom:1.6rem;border-bottom:2px solid var(--ink)}
+.chapter-open .kicker{font-family:var(--sans);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.chapter-open h1{font-size:2.9rem;margin:.4rem 0 .5rem}
+.chapter-open p{color:var(--ink-2);font-size:1.05rem;margin:0}
+h2{font-size:1.72rem;margin-top:3.2rem;padding-top:.4rem}
+h3{font-size:1.24rem;margin-top:2.2rem;color:var(--ink)}
+h4{font-size:1.02rem;margin-top:1.6rem;font-family:var(--sans);font-weight:700}
+p{margin:0 0 1.05rem}
+ul,ol{margin:0 0 1.1rem;padding-left:1.4rem}
+li{margin-bottom:.4rem}
+strong{font-weight:650}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.87em;background:var(--paper-2);padding:.1em .35em;border-radius:3px;border:1px solid var(--rule)}
+hr{border:0;border-top:1px solid var(--rule);margin:2.5rem 0}
+.lead{font-size:1.12rem;color:var(--ink-2)}
+/* ---------- callouts ---------- */
+.box{margin:1.6rem 0;padding:1.1rem 1.3rem;border-radius:4px;border-left:3px solid;font-size:.97rem}
+.box>*:last-child{margin-bottom:0}
+.box .lbl{font-family:var(--sans);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:.5rem}
+.def{background:var(--blue-soft);border-color:var(--blue)} .def .lbl{color:var(--blue)}
+.note{background:var(--gold-soft);border-color:var(--gold)} .note .lbl{color:var(--gold)}
+.tip{background:var(--green-soft);border-color:var(--green)} .tip .lbl{color:var(--green)}
+.warn{background:var(--red-soft);border-color:var(--red)} .warn .lbl{color:var(--red)}
+.plain{background:var(--violet-soft);border-color:var(--violet)} .plain .lbl{color:var(--violet)}
+/* ---------- formula ---------- */
+.formula{margin:1.7rem 0;padding:1.2rem 1.3rem;background:var(--paper-2);border:1px solid var(--rule);border-radius:5px;text-align:center}
+.formula .where{margin-top:.9rem;padding-top:.8rem;border-top:1px dashed var(--rule-2);font-family:var(--sans);font-size:.8rem;color:var(--ink-2);text-align:left;line-height:1.6}
+.formula .where b{color:var(--ink);font-weight:600}
+.formula .name{font-family:var(--sans);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:.6rem}
+/* ---------- examples & exercises ---------- */
+.example,.exercise{margin:2rem 0;border:1px solid var(--rule-2);border-radius:6px;overflow:hidden;background:var(--paper-2)}
+.example{border-left:4px solid var(--green)}
+.exercise{border-left:4px solid var(--accent)}
+.example>.hd,.exercise>.hd{padding:.75rem 1.2rem;font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-bottom:1px solid var(--rule)}
+.example>.hd{background:var(--green-soft);color:var(--green)}
+.exercise>.hd{background:var(--accent-soft);color:var(--accent)}
+.example .bd,.exercise .bd{padding:1.15rem 1.3rem;font-size:.97rem}
+.example .bd>*:last-child,.exercise .bd>*:last-child{margin-bottom:0}
+.given{font-family:var(--sans);font-size:.85rem;background:var(--paper);border:1px dashed var(--rule-2);border-radius:4px;padding:.7rem .9rem;margin:.9rem 0}
+.given b{display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.35rem}
+.steps{counter-reset:st;list-style:none;padding-left:0;margin:1rem 0 0}
+.steps>li{counter-increment:st;position:relative;padding-left:2.2rem;margin-bottom:.85rem}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:.1em;width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--accent);color:var(--paper);font-family:var(--sans);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.example .steps>li::before{background:var(--green)}
+.final{margin-top:1.1rem;padding:.7rem 1rem;background:var(--green-soft);border:1px solid var(--green);border-radius:4px;
+  font-family:var(--sans);font-size:.9rem;font-weight:650;color:var(--green)}
+.final::before{content:"Answer  ";font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+/* reveal */
+.reveal-btn{font-family:var(--sans);font-size:.8rem;font-weight:600;padding:.55rem 1.1rem;border-radius:4px;
+  border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;transition:.15s}
+.reveal-btn:hover{background:var(--accent);color:var(--paper)}
+.solution{display:none;margin-top:1.1rem;padding-top:1.1rem;border-top:1px dashed var(--rule-2)}
+.solution.open{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.hint{margin-top:.8rem;font-size:.88rem;color:var(--ink-3);font-style:italic}
+.revealall{font-family:var(--sans);font-size:.76rem;padding:.4rem .8rem;border:1px solid var(--rule-2);background:transparent;
+  color:var(--ink-2);border-radius:4px;cursor:pointer;margin-bottom:1rem}
+.revealall:hover{border-color:var(--ink-3);color:var(--ink)}
+/* ---------- figures ---------- */
+figure{margin:2rem 0;padding:1.1rem;background:var(--paper-2);border:1px solid var(--rule);border-radius:6px}
+figure svg,figure canvas{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-family:var(--sans);font-size:.79rem;color:var(--ink-2);margin-top:.8rem;line-height:1.55;text-align:center}
+figcaption b{color:var(--ink)}
+.controls{display:flex;flex-wrap:wrap;gap:.9rem 1.4rem;align-items:center;margin-top:1rem;padding-top:.9rem;
+  border-top:1px dashed var(--rule-2);font-family:var(--sans);font-size:.78rem}
+.controls label{display:flex;align-items:center;gap:.5rem;color:var(--ink-2)}
+.controls input[type=range]{width:9rem;accent-color:var(--accent)}
+.controls select,.controls button{font-family:var(--sans);font-size:.78rem;padding:.28rem .5rem;border:1px solid var(--rule-2);
+  background:var(--paper);color:var(--ink);border-radius:4px;cursor:pointer}
+.controls .val{font-family:var(--mono);font-weight:600;color:var(--accent);min-width:3.2rem;display:inline-block}
+.readout{display:flex;flex-wrap:wrap;gap:1.4rem;margin-top:.9rem;font-family:var(--sans);font-size:.8rem}
+.readout div{color:var(--ink-3)}
+.readout b{display:block;font-family:var(--mono);font-size:1.02rem;color:var(--ink);font-weight:600}
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:1.6rem 0;border:1px solid var(--rule);border-radius:5px;background:var(--paper-2)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.84rem}
+th,td{padding:.55rem .8rem;text-align:left;border-bottom:1px solid var(--rule)}
+th{background:var(--paper);font-weight:650;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+tbody tr:hover{background:rgba(128,128,128,.06)}
+/* ---------- misc ---------- */
+.toolbar{position:fixed;top:1rem;right:1.2rem;z-index:150;display:flex;gap:.5rem}
+.toolbar button{font-family:var(--sans);font-size:.75rem;padding:.4rem .7rem;border:1px solid var(--rule-2);
+  background:var(--paper-2);color:var(--ink-2);border-radius:4px;cursor:pointer}
+.toolbar button:hover{color:var(--ink);border-color:var(--ink-3)}
+#menuBtn{display:block;font-weight:600;border-color:var(--accent);color:var(--accent)}
+#menuBtn:hover{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+.recap{margin:3rem 0 0;padding:1.4rem 1.5rem;background:var(--paper-2);border:1px solid var(--rule-2);border-radius:6px}
+.recap h4{margin-top:0;color:var(--accent)}
+.recap ul{margin-bottom:0}
+.chip{display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:3px;
+  background:var(--blue-soft);color:var(--blue);margin-right:.35rem}
+@media (max-width:1000px){
+  #toc{position:fixed;left:0;top:0;z-index:180;transform:translateX(-100%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.25)}
+  #toc.open{transform:none}
+  main{padding:4.5rem 1.2rem 6rem}
+  #menuBtn{display:block}
+  body{font-size:17px}
+  .chapter-open h1{font-size:2.1rem}
+}
+@media print{
+  #toc,.toolbar,#progress,.reveal-btn,.revealall,.controls{display:none!important}
+  .solution{display:block!important}
+  main{padding:0}
+  body{font-size:11pt;background:#fff}
+  .example,.exercise,figure{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="toolbar">
+  <button id="menuBtn" onclick="toggleTOC()">☰ Contents</button>
+  <button onclick="toggleTheme()" id="themeBtn">◑ Dark</button>
+  <button onclick="window.print()">⎙ Print</button>
+</div>
+<div id="shell">
+<nav id="toc">
+  <div class="brand"><span>Course Companion</span><b>Statistics</b></div>
+  <a class="xlink" href="/mock-tests.html">Mock tests &rarr;</a>
+  <div id="tocLinks"></div>
+</nav>
+<main>

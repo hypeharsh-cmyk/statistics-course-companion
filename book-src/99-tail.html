@@ -1,0 +1,844 @@
+<section id="appendix" class="wrap wide">
+  <div class="chapter-open">
+    <div class="kicker">Appendix</div>
+    <h1>Statistical Tables</h1>
+    <p>The tables you are allowed in the exam. The Z-table below is computed live, so it is exact to four decimals.</p>
+  </div>
+
+  <h2 id="app-z">A1 · Standard Normal (Z) Table</h2>
+  <p>Each cell is <strong>the area to the LEFT</strong> of $z$, i.e. $P(Z \le z) = \Phi(z)$. Find your $z$ to one decimal down the left column, then the second decimal across the top. Example: $z = 1.96 \Rightarrow$ row <code>1.9</code>, column <code>0.06</code> $\Rightarrow 0.9750$.</p>
+  <div class="tw" id="ztable"></div>
+  <div class="box tip"><span class="lbl">How to use it backwards</span>
+  For a right-tail area, use $P(Z > z) = 1 - \Phi(z)$. For a middle area between $-z$ and $z$, use $2\Phi(z) - 1$. To find the $z$ for a given tail (e.g. 2.5% in the right tail), hunt inside the table for the area $0.9750$ and read off $z = 1.96$.</div>
+
+  <h2 id="app-z0">A1b · Standard Normal — "Area from 0 to z" Table</h2>
+  <p><strong>This is the version your lecture slides use.</strong> Each cell gives $P(0 \le Z \le z)$ — the area between the centre line and $z$. The largest value in this table is about $0.5$, never close to 1. Example: $z = 1.56 \Rightarrow$ row <code>1.5</code>, column <code>0.06</code> $\Rightarrow 0.4406$.</p>
+  <div class="tw" id="ztable0"></div>
+  <div class="box tip"><span class="lbl">Converting between the two tables</span>
+  For positive $z$: &nbsp;$\Phi(z) = 0.5 + \text{(this table)}$ &nbsp;and&nbsp; $\text{this table} = \Phi(z) - 0.5$. That single line is why the slide solutions keep adding and subtracting 0.5 — they are working from this table, not the cumulative one.</div>
+
+  <h2 id="app-t">A2 · Student's <em>t</em> Critical Values</h2>
+  <p>Row = degrees of freedom. Column = area in <strong>one</strong> tail. For a two-tailed test at $\alpha = 0.05$, use the $t_{0.025}$ column.</p>
+  <div class="tw" id="ttable"></div>
+
+  <h2 id="app-formulas">A3 · Every Formula on One Page</h2>
+  <div class="tw" id="formulasheet"></div>
+</section>
+</main>
+</div>
+
+<script>
+/* ============================================================
+   THEME + NAV + REVEAL
+   ============================================================ */
+function toggleTheme(){
+  const h=document.documentElement, d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme', d?'light':'dark');
+  document.getElementById('themeBtn').textContent = d?'◑ Dark':'◐ Light';
+  try{localStorage.setItem('stats-theme', d?'light':'dark')}catch(e){}
+  redrawAll();
+}
+try{ if(localStorage.getItem('stats-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');} }catch(e){}
+
+function C(name){ return getComputedStyle(document.documentElement).getPropertyValue('--'+name).trim(); }
+
+/* Sidebar collapse — the page expands to full width, button brings it back */
+function setTocBtn(collapsed){
+  const b=document.getElementById('menuBtn'); if(!b) return;
+  b.textContent = (window.innerWidth<=1000) ? '☰  Contents'
+                : (collapsed ? '☰  Show contents' : '⟨  Hide contents');
+}
+function toggleTOC(){
+  const t=document.getElementById('toc');
+  if(window.innerWidth<=1000){ t.classList.toggle('open'); return; }
+  const c=t.classList.toggle('collapsed');
+  document.body.classList.toggle('toc-collapsed', c);
+  setTocBtn(c);
+  try{localStorage.setItem('stats-toc', c?'closed':'open')}catch(e){}
+  clearTimeout(window._tocRz); window._tocRz=setTimeout(redrawAll,280);
+}
+(function initToc(){
+  let closed=false;
+  try{ closed = localStorage.getItem('stats-toc')==='closed'; }catch(e){}
+  if(closed && window.innerWidth>1000){
+    document.getElementById('toc').classList.add('collapsed');
+    document.body.classList.add('toc-collapsed');
+  }
+  setTocBtn(closed && window.innerWidth>1000);
+})();
+
+/* Build the table of contents from the document itself, as collapsible groups */
+(function buildTOC(){
+  const box=document.getElementById('tocLinks');
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem('stats-tocgroups')||'{}') }catch(e){}
+  document.querySelectorAll('section[id]').forEach(sec=>{
+    const h1=sec.querySelector('.chapter-open h1'); if(!h1) return;
+    const g=document.createElement('div'); g.className='tocgroup'; g.dataset.for=sec.id;
+    const hd=document.createElement('div'); hd.className='tochead';
+    const car=document.createElement('button'); car.className='toccaret'; car.type='button';
+    car.textContent='▼'; car.setAttribute('aria-label','Toggle '+h1.textContent);
+    const a=document.createElement('a'); a.className='ch'; a.href='#'+sec.id; a.textContent=h1.textContent;
+    hd.appendChild(car); hd.appendChild(a); g.appendChild(hd);
+    const secs=document.createElement('div'); secs.className='tocsecs';
+    sec.querySelectorAll('h2[id]').forEach(h2=>{
+      const s=document.createElement('a'); s.className='sec'; s.href='#'+h2.id; s.textContent=h2.textContent; secs.appendChild(s);
+    });
+    g.appendChild(secs);
+    if(saved[sec.id]==='closed') g.classList.add('closed');
+    car.addEventListener('click',e=>{
+      e.preventDefault();
+      const closed=g.classList.toggle('closed');
+      saved[sec.id]=closed?'closed':'open';
+      try{localStorage.setItem('stats-tocgroups',JSON.stringify(saved))}catch(e2){}
+    });
+    box.appendChild(g);
+  });
+})();
+
+/* Scroll spy + progress bar */
+const spyTargets=[...document.querySelectorAll('section[id], h2[id]')];
+const tocAnchors=[...document.querySelectorAll('#tocLinks a')];
+function onScroll(){
+  const st=window.scrollY, h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(h>0?(st/h*100):0)+'%';
+  let cur=null;
+  for(const t of spyTargets){ if(t.getBoundingClientRect().top<140) cur=t.id; }
+  tocAnchors.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+cur));
+}
+window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+document.querySelectorAll('#tocLinks a').forEach(a=>a.addEventListener('click',()=>{
+  if(window.innerWidth<=1000) document.getElementById('toc').classList.remove('open');
+}));
+
+/* Solution reveal */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.reveal-btn'); if(b){
+    const sol=b.parentElement.querySelector('.solution');
+    if(sol){ const open=sol.classList.toggle('open'); b.textContent=open?'Hide solution':'Reveal solution'; }
+    return;
+  }
+  const ra=e.target.closest('.revealall'); if(ra){
+    const sec=ra.closest('section'); const sols=sec.querySelectorAll('.solution');
+    const anyClosed=[...sols].some(s=>!s.classList.contains('open'));
+    sols.forEach(s=>s.classList.toggle('open',anyClosed));
+    sec.querySelectorAll('.reveal-btn').forEach(b2=>b2.textContent=anyClosed?'Hide solution':'Reveal solution');
+    ra.textContent=anyClosed?'Hide all solutions':'Reveal all solutions';
+  }
+});
+
+/* ============================================================
+   MATH
+   ============================================================ */
+function erf(x){
+  const s=x<0?-1:1; x=Math.abs(x);
+  const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x), y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return s*y;
+}
+const normPdf=(x,m=0,s=1)=>Math.exp(-((x-m)**2)/(2*s*s))/(s*Math.sqrt(2*Math.PI));
+const normCdf=(x,m=0,s=1)=>0.5*(1+erf((x-m)/(s*Math.SQRT2)));
+function normInv(p){
+  if(p<=0)return -Infinity; if(p>=1)return Infinity;
+  const a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00];
+  const b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01];
+  const c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00];
+  const d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  const pl=0.02425; let q,r;
+  if(p<pl){ q=Math.sqrt(-2*Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);}
+  if(p>1-pl){ q=Math.sqrt(-2*Math.log(1-p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);}
+  q=p-0.5; r=q*q;
+  return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+}
+function gammaln(x){
+  const g=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,.1208650973866179e-2,-.5395239384953e-5];
+  let y=x,t=x+5.5; t-=(x+.5)*Math.log(t); let s=1.000000000190015;
+  for(let j=0;j<6;j++) s+=g[j]/++y;
+  return -t+Math.log(2.5066282746310005*s/x);
+}
+const tPdf=(x,v)=>Math.exp(gammaln((v+1)/2)-gammaln(v/2))/Math.sqrt(v*Math.PI)*Math.pow(1+x*x/v,-(v+1)/2);
+function chiPdf(x,k){ if(x<=0)return 0; return Math.exp((k/2-1)*Math.log(x)-x/2-gammaln(k/2)-(k/2)*Math.LN2); }
+function fPdf(x,d1,d2){ if(x<=0)return 0;
+  const lb=gammaln((d1+d2)/2)-gammaln(d1/2)-gammaln(d2/2);
+  return Math.exp(lb+(d1/2)*Math.log(d1/d2)+(d1/2-1)*Math.log(x)-((d1+d2)/2)*Math.log(1+d1*x/d2));
+}
+const fmt=(v,n=4)=>Number(v).toFixed(n);
+
+/* ============================================================
+   CANVAS PLOT HELPER
+   ============================================================ */
+function setup(cv,W,H){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=W*dpr; cv.height=H*dpr; cv.style.width='100%'; cv.style.aspectRatio=W+'/'+H;
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  return ctx;
+}
+function Axes(ctx,o){
+  const {W,H,x0,x1,y0,y1}=o, L=o.left??46, R=o.right??14, T=o.top??14, B=o.bottom??34;
+  const sx=x=>L+(x-x0)/(x1-x0)*(W-L-R), sy=y=>H-B-(y-y0)/(y1-y0)*(H-T-B);
+  const ax={sx,sy,L,R,T,B,W,H,x0,x1,y0,y1};
+  ax.grid=(nx=6,ny=4)=>{ ctx.strokeStyle=C('grid'); ctx.lineWidth=1;
+    for(let i=0;i<=nx;i++){const x=x0+(x1-x0)*i/nx; ctx.beginPath();ctx.moveTo(sx(x),T);ctx.lineTo(sx(x),H-B);ctx.stroke();}
+    for(let i=0;i<=ny;i++){const y=y0+(y1-y0)*i/ny; ctx.beginPath();ctx.moveTo(L,sy(y));ctx.lineTo(W-R,sy(y));ctx.stroke();} };
+  ax.axis=(xlab,ylab,nx=6,fmtx=v=>(+v).toFixed(0))=>{
+    ctx.strokeStyle=C('ink-3'); ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(L,H-B);ctx.lineTo(W-R,H-B);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,H-B);ctx.stroke();
+    ctx.fillStyle=C('ink-3'); ctx.font='11px '+C('sans'); ctx.textAlign='center';
+    for(let i=0;i<=nx;i++){const x=x0+(x1-x0)*i/nx; ctx.fillText(fmtx(x),sx(x),H-B+15);}
+    if(xlab){ctx.fillStyle=C('ink-2');ctx.font='12px '+C('sans');ctx.fillText(xlab,L+(W-L-R)/2,H-4);}
+    if(ylab){ctx.save();ctx.translate(12,T+(H-T-B)/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText(ylab,0,0);ctx.restore();}
+  };
+  ax.curve=(f,color,w=2.2,n=400)=>{ ctx.beginPath();
+    for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,y=f(x); i?ctx.lineTo(sx(x),sy(y)):ctx.moveTo(sx(x),sy(y));}
+    ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineJoin='round';ctx.stroke(); };
+  ax.fill=(f,a,b,color,n=300)=>{ if(b<=a)return; ctx.beginPath(); ctx.moveTo(sx(a),sy(0));
+    for(let i=0;i<=n;i++){const x=a+(b-a)*i/n; ctx.lineTo(sx(x),sy(f(x)));}
+    ctx.lineTo(sx(b),sy(0)); ctx.closePath(); ctx.fillStyle=color; ctx.fill(); };
+  ax.vline=(x,color,label,dash=[5,4])=>{ ctx.save();ctx.setLineDash(dash);ctx.strokeStyle=color;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(sx(x),T);ctx.lineTo(sx(x),H-B);ctx.stroke();ctx.restore();
+    if(label){ctx.fillStyle=color;ctx.font='600 11px '+C('sans');ctx.textAlign='center';ctx.fillText(label,sx(x),T-2);} };
+  ax.text=(x,y,t,color,align='center',size=11,weight='600')=>{ ctx.fillStyle=color;ctx.font=weight+' '+size+'px '+C('sans');
+    ctx.textAlign=align;ctx.fillText(t,sx(x),sy(y)); };
+  return ax;
+}
+
+/* ============================================================
+   FIGURE CATALOGUE
+   ============================================================ */
+const Figs={};
+
+/* --- Normal shape with 68-95-99.7 --- */
+Figs['normal-empirical']=(cv,p)=>{
+  const W=720,H=300,ctx=setup(cv,W,H), m=+(p.mu??0), s=+(p.sigma??1);
+  const ax=Axes(ctx,{W,H,x0:m-4*s,x1:m+4*s,y0:0,y1:normPdf(m,m,s)*1.18});
+  const f=x=>normPdf(x,m,s);
+  const bands=[[3,'0.15%',C('paper-2')],[2,'2.35%',C('violet-soft')],[1,'13.6%',C('blue-soft')]];
+  ax.fill(f,m-3*s,m+3*s,C('grid')); ax.fill(f,m-2*s,m+2*s,C('violet-soft')); ax.fill(f,m-s,m+s,C('blue-soft'));
+  ax.axis('x','density',8,v=>{const k=Math.round((v-m)/s); return k===0?'μ':(k>0?'μ+'+k+'σ':'μ−'+(-k)+'σ');});
+  ax.curve(f,C('blue'),2.4);
+  ax.vline(m,C('accent'),'μ');
+  ctx.textAlign='center';
+  [[0,'68.27%',C('blue')],[1.5,'27.2%',C('violet')],[2.5,'4.3%',C('ink-3')]].forEach(([k,t,col])=>{
+    ctx.fillStyle=col;ctx.font='600 12px '+C('sans');
+    ctx.fillText(t,ax.sx(m+k*s), ax.sy(f(m+k*s))-8);
+  });
+  return 'The Empirical Rule: about <b>68%</b> of the data lies within 1σ of the mean, <b>95%</b> within 2σ, and <b>99.7%</b> within 3σ.';
+};
+
+/* --- Comparing normals --- */
+Figs['normal-compare']=(cv)=>{
+  const W=720,H=280,ctx=setup(cv,W,H);
+  const ax=Axes(ctx,{W,H,x0:-8,x1:12,y0:0,y1:.45});
+  ax.grid(8,4); ax.axis('x','f(x)',10);
+  const sets=[[0,1,C('blue'),'μ=0, σ=1'],[0,2.2,C('accent'),'μ=0, σ=2.2'],[5,1,C('green'),'μ=5, σ=1']];
+  sets.forEach(([m,s,c])=>ax.curve(x=>normPdf(x,m,s),c,2.3));
+  ctx.font='600 11px '+C('sans'); ctx.textAlign='left';
+  sets.forEach(([m,s,c,lab],i)=>{ctx.fillStyle=c; ctx.fillRect(W-150,22+i*18-8,10,3); ctx.fillText(lab,W-134,22+i*18);});
+  return 'μ slides the curve left and right; σ makes it fat and short or thin and tall. The total area is always exactly 1.';
+};
+
+/* --- Uniform --- */
+Figs['uniform']=(cv,p)=>{
+  const W=720,H=260,ctx=setup(cv,W,H), a=+(p.a??2), b=+(p.b??8);
+  const h=1/(b-a), pad=(b-a)*.4;
+  const ax=Axes(ctx,{W,H,x0:a-pad,x1:b+pad,y0:0,y1:h*1.6});
+  ax.grid(8,4); ax.axis('x','f(x)',8,v=>(+v).toFixed(1));
+  ctx.fillStyle=C('blue-soft');
+  ctx.fillRect(ax.sx(a),ax.sy(h),ax.sx(b)-ax.sx(a),ax.sy(0)-ax.sy(h));
+  ctx.strokeStyle=C('blue');ctx.lineWidth=2.4;
+  ctx.beginPath();ctx.moveTo(ax.sx(ax.x0),ax.sy(0));ctx.lineTo(ax.sx(a),ax.sy(0));ctx.lineTo(ax.sx(a),ax.sy(h));
+  ctx.lineTo(ax.sx(b),ax.sy(h));ctx.lineTo(ax.sx(b),ax.sy(0));ctx.lineTo(ax.sx(ax.x1),ax.sy(0));ctx.stroke();
+  ax.text((a+b)/2,h*1.22,'height = 1/(b−a) = '+fmt(h,3),C('blue'));
+  ax.vline((a+b)/2,C('accent'),'mean=(a+b)/2');
+  ctx.fillStyle=C('ink-2');ctx.font='600 11px '+C('sans');ctx.textAlign='center';
+  ctx.fillText('a='+a,ax.sx(a),ax.sy(0)+15); ctx.fillText('b='+b,ax.sx(b),ax.sy(0)+15);
+  return 'Uniform on [a,b]: every value is equally likely, so the density is a flat rectangle of height 1/(b−a). Probability = area = width × height.';
+};
+
+/* --- Exponential --- */
+Figs['exponential']=(cv,p)=>{
+  const W=720,H=280,ctx=setup(cv,W,H), lam=+(p.lambda??0.5);
+  const xmax=6/lam;
+  const ax=Axes(ctx,{W,H,x0:0,x1:xmax,y0:0,y1:lam*1.15});
+  ax.grid(6,4); ax.axis('x','f(x)',6,v=>(+v).toFixed(1));
+  const f=x=>lam*Math.exp(-lam*x);
+  ax.fill(f,0,1/lam,C('accent-soft'));
+  ax.curve(f,C('accent'),2.4);
+  ax.vline(1/lam,C('green'),'mean = 1/λ = '+fmt(1/lam,2));
+  return 'Exponential with rate λ: waiting time between random events. It starts high and decays — short waits are the most likely. Mean = 1/λ, and the shaded area shows P(X ≤ 1/λ) ≈ 0.632.';
+};
+
+/* --- Memoryless --- */
+Figs['memoryless']=(cv,p)=>{
+  const W=720,H=290,ctx=setup(cv,W,H), lam=+(p.lambda??0.4), s=+(p.s??3);
+  const ax=Axes(ctx,{W,H,x0:0,x1:14,y0:0,y1:lam*1.2});
+  ax.grid(7,4); ax.axis('time already waited →','f(x)',7);
+  const f=x=>lam*Math.exp(-lam*x);
+  ax.curve(f,C('rule-2'),1.8);
+  ax.fill(f,s,14,C('blue-soft'));
+  ctx.save();ctx.translate(ax.sx(s)-ax.sx(0),0);
+  ctx.globalAlpha=.95; ax.curve(f,C('accent'),2.4); ctx.restore();
+  ax.vline(s,C('blue'),'you have waited s='+s);
+  ctx.fillStyle=C('accent');ctx.font='600 11px '+C('sans');ctx.textAlign='left';
+  ctx.fillText('the remaining wait (orange) is the SAME shape as a fresh start',ax.sx(s)+8,ax.sy(lam*0.75));
+  return 'Memorylessness: P(X > s+t | X > s) = P(X > t). Having already waited buys you nothing — the clock resets, statistically.';
+};
+
+/* --- Chebyshev --- */
+Figs['chebyshev']=(cv,p)=>{
+  const W=720,H=290,ctx=setup(cv,W,H), k=+(p.k??2);
+  const ax=Axes(ctx,{W,H,x0:-4.5,x1:4.5,y0:0,y1:.46});
+  const f=x=>0.62*normPdf(x,0,1)+0.38*normPdf(x,0,2.1);
+  ax.fill(f,-4.5,-k,C('red-soft')); ax.fill(f,k,4.5,C('red-soft'));
+  ax.fill(f,-k,k,C('green-soft'));
+  ax.axis('distance from mean, in units of σ','density',9,v=>(+v).toFixed(0)+'σ');
+  ax.curve(f,C('ink-2'),2.2);
+  ax.vline(-k,C('red'),'−'+k+'σ'); ax.vline(k,C('red'),'+'+k+'σ');
+  ctx.fillStyle=C('green');ctx.font='600 12px '+C('sans');ctx.textAlign='center';
+  ctx.fillText('at least '+fmt(1-1/(k*k),3)+' of ALL data',ax.sx(0),ax.sy(.40));
+  ctx.fillStyle=C('red');ctx.font='600 11px '+C('sans');
+  ctx.fillText('at most '+fmt(1/(k*k),3),ax.sx(3.1),ax.sy(.13));
+  return 'Chebyshev\'s inequality: whatever the shape of the distribution, at most 1/k² of the data can sit more than k standard deviations from the mean. It is weak, but it is <b>always</b> true.';
+};
+
+/* --- Sampling distribution / CLT static --- */
+Figs['sampling-dist']=(cv,p)=>{
+  const W=720,H=300,ctx=setup(cv,W,H), s=+(p.sigma??10), m=+(p.mu??50);
+  const ax=Axes(ctx,{W,H,x0:m-3.2*s,x1:m+3.2*s,y0:0,y1:normPdf(m,m,s/Math.sqrt(30))*1.12});
+  ax.grid(8,4); ax.axis('value','density',8,v=>(+v).toFixed(0));
+  [[1,C('rule-2'),'population (n=1)'],[4,C('gold'),'n=4'],[16,C('blue'),'n=16'],[30,C('green'),'n=30']].forEach(([n,c])=>{
+    ax.curve(x=>normPdf(x,m,s/Math.sqrt(n)),c,2.2);
+  });
+  ax.vline(m,C('accent'),'μ='+m);
+  ctx.font='600 11px '+C('sans'); ctx.textAlign='left';
+  [['population (n=1)',C('rule-2')],['n = 4',C('gold')],['n = 16',C('blue')],['n = 30',C('green')]].forEach(([lab,c],i)=>{
+    ctx.fillStyle=c; ctx.fillRect(W-130,26+i*17-8,10,3); ctx.fillText(lab,W-114,26+i*17);
+  });
+  return 'The sampling distribution of x̄ keeps the same centre μ but its spread shrinks as σ/√n. Bigger samples = sample means huddle tighter around the truth.';
+};
+
+/* --- t vs z --- */
+Figs['t-vs-z']=(cv)=>{
+  const W=720,H=280,ctx=setup(cv,W,H);
+  const ax=Axes(ctx,{W,H,x0:-4.5,x1:4.5,y0:0,y1:.44});
+  ax.grid(9,4); ax.axis('t / z','density',9,v=>(+v).toFixed(0));
+  ax.curve(x=>tPdf(x,2),C('red'),2,300);
+  ax.curve(x=>tPdf(x,5),C('gold'),2,300);
+  ax.curve(x=>tPdf(x,30),C('green'),2,300);
+  ax.curve(x=>normPdf(x),C('blue'),2.6,300);
+  ctx.font='600 11px '+C('sans');ctx.textAlign='left';
+  [['normal (z)',C('blue')],['t, df=30',C('green')],['t, df=5',C('gold')],['t, df=2',C('red')]].forEach(([l,c],i)=>{
+    ctx.fillStyle=c;ctx.fillRect(W-120,24+i*17-8,10,3);ctx.fillText(l,W-104,24+i*17);});
+  return 'The t-distribution is a normal curve that has been squashed down in the middle and fattened in the tails. Fewer degrees of freedom = fatter tails = wider intervals. By df ≈ 30 it is almost exactly normal.';
+};
+
+/* --- CI coverage --- */
+Figs['ci-coverage']=(cv,p)=>{
+  const W=720,H=330,ctx=setup(cv,W,H), N=+(p.n??25), conf=+(p.conf??0.95);
+  const mu=50,sig=10,n=25,se=sig/Math.sqrt(n), z=normInv(1-(1-conf)/2);
+  let seed=7; const rnd=()=>{seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff;};
+  const ax=Axes(ctx,{W,H,x0:mu-4*se,x1:mu+4*se,y0:0,y1:N+1,left:30,bottom:32});
+  ax.axis('sample mean x̄ and its interval','',6,v=>(+v).toFixed(0));
+  ctx.strokeStyle=C('accent');ctx.lineWidth=2;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(ax.sx(mu),ax.T);ctx.lineTo(ax.sx(mu),H-ax.B);ctx.stroke();ctx.setLineDash([]);
+  let miss=0;
+  for(let i=0;i<N;i++){
+    const u1=Math.max(rnd(),1e-9),u2=rnd();
+    const xb=mu+se*Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+    const lo=xb-z*se,hi=xb+z*se, covers=lo<=mu&&mu<=hi; if(!covers)miss++;
+    const y=ax.sy(i+1);
+    ctx.strokeStyle=covers?C('green'):C('red'); ctx.lineWidth=2.4;
+    ctx.beginPath();ctx.moveTo(ax.sx(lo),y);ctx.lineTo(ax.sx(hi),y);ctx.stroke();
+    ctx.beginPath();ctx.arc(ax.sx(xb),y,2.6,0,7);ctx.fillStyle=covers?C('green'):C('red');ctx.fill();
+  }
+  ctx.fillStyle=C('accent');ctx.font='600 11px '+C('sans');ctx.textAlign='center';
+  ctx.fillText('true μ = 50',ax.sx(mu),ax.T-2);
+  return 'What "'+Math.round(conf*100)+'% confident" actually means: '+(N-miss)+' of these '+N+' intervals caught the true μ, '+miss+' missed it (red). The parameter never moves — the intervals do.';
+};
+
+/* --- chi-square --- */
+Figs['chisq']=(cv,p)=>{
+  const W=720,H=280,ctx=setup(cv,W,H), df=+(p.df??10);
+  const ax=Axes(ctx,{W,H,x0:0,x1:Math.max(30,df*3),y0:0,y1:.16});
+  ax.grid(6,4); ax.axis('χ²','density',6);
+  [[4,C('gold')],[10,C('blue')],[20,C('green')]].forEach(([k,c])=>ax.curve(x=>chiPdf(x,k),c,2.2));
+  ctx.font='600 11px '+C('sans');ctx.textAlign='left';
+  [['df = 4',C('gold')],['df = 10',C('blue')],['df = 20',C('green')]].forEach(([l,c],i)=>{
+    ctx.fillStyle=c;ctx.fillRect(W-110,24+i*17-8,10,3);ctx.fillText(l,W-94,24+i*17);});
+  return 'The chi-square distribution is used for variances. It cannot go below zero and it is right-skewed, so its two tails are NOT symmetric — you must look up the left and right critical values separately.';
+};
+
+/* --- F distribution --- */
+Figs['fdist']=(cv,p)=>{
+  const W=720,H=270,ctx=setup(cv,W,H), d1=+(p.d1??10), d2=+(p.d2??12);
+  const ax=Axes(ctx,{W,H,x0:0,x1:4,y0:0,y1:1.05});
+  ax.grid(8,4); ax.axis('F','density',8,v=>(+v).toFixed(1));
+  ax.curve(x=>fPdf(x,d1,d2),C('violet'),2.4);
+  ax.fill(x=>fPdf(x,d1,d2),2.75,4,C('red-soft'));
+  ax.vline(2.75,C('red'),'critical F');
+  return 'The F-distribution compares two variances (F = s₁²/s₂²). It is right-skewed and starts at 0. If the two variances are equal, F sits near 1.';
+};
+
+/* --- Type I / Type II errors --- */
+Figs['errors']=(cv,p)=>{
+  const W=720,H=300,ctx=setup(cv,W,H);
+  const m0=0,m1=+(p.shift??2.6),s=1, crit=+(p.crit??1.645);
+  const ax=Axes(ctx,{W,H,x0:-4,x1:m1+4,y0:0,y1:.46});
+  const f0=x=>normPdf(x,m0,s), f1=x=>normPdf(x,m1,s);
+  ax.fill(f0,crit,m1+4,C('red-soft'));
+  ax.fill(f1,-4,crit,C('violet-soft'));
+  ax.axis('test statistic','density',8,v=>(+v).toFixed(0));
+  ax.curve(f0,C('blue'),2.3); ax.curve(f1,C('green'),2.3);
+  ax.vline(crit,C('ink'),'critical value');
+  ctx.font='600 12px '+C('sans');ctx.textAlign='center';
+  ctx.fillStyle=C('red');ctx.fillText('α',ax.sx(crit+.55),ax.sy(.035));
+  ctx.fillStyle=C('violet');ctx.fillText('β',ax.sx(crit-.55),ax.sy(.035));
+  ctx.font='600 11px '+C('sans');
+  ctx.fillStyle=C('blue');ctx.fillText('world where H₀ is true',ax.sx(m0),ax.sy(.425));
+  ctx.fillStyle=C('green');ctx.fillText('world where Hₐ is true',ax.sx(m1),ax.sy(.425));
+  return '<b>α</b> (red) = rejecting H₀ when it was actually true — a false alarm, Type I. <b>β</b> (purple) = failing to reject H₀ when Hₐ was true — a miss, Type II. Sliding the critical value left shrinks β but grows α. <b>Power = 1 − β</b>.';
+};
+
+/* --- Rejection region shapes --- */
+Figs['tails']=(cv,p)=>{
+  const W=720,H=250,ctx=setup(cv,W,H), a=+(p.alpha??0.05);
+  const panels=[['Left-tailed','Hₐ: μ < μ₀'],['Right-tailed','Hₐ: μ > μ₀'],['Two-tailed','Hₐ: μ ≠ μ₀']];
+  panels.forEach((pn,i)=>{
+    const x0=i*(W/3), w=W/3;
+    const ax=Axes(ctx,{W:w,H,x0:-4,x1:4,y0:0,y1:.45,left:10,right:10,top:34,bottom:28});
+    const S=(f)=>({sx:x=>x0+ax.sx(x),sy:ax.sy});
+    const shift=S();
+    const f=x=>normPdf(x);
+    const draw=(a1,b1)=>{ctx.beginPath();ctx.moveTo(shift.sx(a1),shift.sy(0));
+      for(let k=0;k<=200;k++){const x=a1+(b1-a1)*k/200;ctx.lineTo(shift.sx(x),shift.sy(f(x)));}
+      ctx.lineTo(shift.sx(b1),shift.sy(0));ctx.closePath();ctx.fillStyle=C('red-soft');ctx.fill();};
+    if(i===0) draw(-4,normInv(a));
+    if(i===1) draw(normInv(1-a),4);
+    if(i===2){ draw(-4,normInv(a/2)); draw(normInv(1-a/2),4); }
+    ctx.beginPath();
+    for(let k=0;k<=300;k++){const x=-4+8*k/300; k?ctx.lineTo(shift.sx(x),shift.sy(f(x))):ctx.moveTo(shift.sx(x),shift.sy(f(x)));}
+    ctx.strokeStyle=C('blue');ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(shift.sx(-4),shift.sy(0));ctx.lineTo(shift.sx(4),shift.sy(0));
+    ctx.strokeStyle=C('ink-3');ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=C('ink');ctx.font='700 12px '+C('sans');ctx.textAlign='center';
+    ctx.fillText(pn[0],x0+w/2,20);
+    ctx.fillStyle=C('ink-3');ctx.font='11px '+C('sans');ctx.fillText(pn[1],x0+w/2,34);
+    ctx.fillStyle=C('red');ctx.font='600 11px '+C('sans');
+    if(i===0)ctx.fillText('α='+a,shift.sx(-2.4),shift.sy(.055));
+    if(i===1)ctx.fillText('α='+a,shift.sx(2.4),shift.sy(.055));
+    if(i===2){ctx.fillText('α/2',shift.sx(-2.7),shift.sy(.055));ctx.fillText('α/2',shift.sx(2.7),shift.sy(.055));}
+    if(i<2){ctx.strokeStyle=C('rule');ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x0+w,40);ctx.lineTo(x0+w,H-20);ctx.stroke();}
+  });
+  return 'The alternative hypothesis decides where the rejection region lives. With a two-tailed test the same α gets split in half between the two ends, which is why its critical value (1.96) is further out than the one-tailed one (1.645).';
+};
+
+/* --- scatter patterns by r --- */
+Figs['scatter-r']=(cv)=>{
+  const W=720,H=250,ctx=setup(cv,W,H);
+  const rs=[0.95,0.6,0.0,-0.85];
+  let seed=91; const rnd=()=>{seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff;};
+  const nrm=()=>Math.sqrt(-2*Math.log(Math.max(rnd(),1e-9)))*Math.cos(2*Math.PI*rnd());
+  rs.forEach((r,i)=>{
+    const x0=i*(W/4)+12, w=W/4-24, h=H-70, y0=44;
+    ctx.strokeStyle=C('rule');ctx.lineWidth=1;ctx.strokeRect(x0,y0,w,h);
+    for(let k=0;k<45;k++){
+      const a=nrm(), b=r*a+Math.sqrt(Math.max(1-r*r,0))*nrm();
+      const px=x0+w/2+a*w/7, py=y0+h/2-b*h/7;
+      if(px<x0||px>x0+w||py<y0||py>y0+h) continue;
+      ctx.beginPath();ctx.arc(px,py,2.4,0,7);
+      ctx.fillStyle=r>0?C('blue'):(r===0?C('ink-3'):C('accent'));ctx.globalAlpha=.75;ctx.fill();ctx.globalAlpha=1;
+    }
+    ctx.fillStyle=C('ink');ctx.font='700 13px '+C('sans');ctx.textAlign='center';
+    ctx.fillText('r = '+r.toFixed(2),x0+w/2,24);
+    ctx.fillStyle=C('ink-3');ctx.font='10px '+C('sans');
+    ctx.fillText(['strong +','moderate +','none','strong −'][i],x0+w/2,38);
+  });
+  return 'r measures how tightly the points hug a straight line, and in which direction. r = +1 is a perfect upward line, 0 is no linear relationship, −1 is a perfect downward line. r says nothing about how steep the line is.';
+};
+
+/* --- SST / SSR / SSE decomposition --- */
+Figs['sst-decomp']=(cv)=>{
+  const W=720,H=320,ctx=setup(cv,W,H);
+  const pts=[[1,3.1],[2,3.9],[3,6.2],[4,6.4],[5,8.6],[6,9.1],[7,11.4],[8,11.9]];
+  const n=pts.length, sx=pts.reduce((a,p)=>a+p[0],0), sy=pts.reduce((a,p)=>a+p[1],0);
+  const mx=sx/n, my=sy/n;
+  const b=pts.reduce((a,p)=>a+(p[0]-mx)*(p[1]-my),0)/pts.reduce((a,p)=>a+(p[0]-mx)**2,0);
+  const a0=my-b*mx;
+  const ax=Axes(ctx,{W,H,x0:0,x1:9,y0:0,y1:14});
+  ax.grid(9,7); ax.axis('x','y',9);
+  ctx.strokeStyle=C('gold');ctx.lineWidth=1.6;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ax.sx(0),ax.sy(my));ctx.lineTo(ax.sx(9),ax.sy(my));ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle=C('blue');ctx.lineWidth=2.4;
+  ctx.beginPath();ctx.moveTo(ax.sx(0),ax.sy(a0));ctx.lineTo(ax.sx(9),ax.sy(a0+b*9));ctx.stroke();
+  pts.forEach(([x,y])=>{
+    const yh=a0+b*x;
+    ctx.strokeStyle=C('red');ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(ax.sx(x),ax.sy(y));ctx.lineTo(ax.sx(x),ax.sy(yh));ctx.stroke();
+    ctx.beginPath();ctx.arc(ax.sx(x),ax.sy(y),4,0,7);ctx.fillStyle=C('ink');ctx.fill();
+  });
+  ctx.fillStyle=C('gold');ctx.font='600 11px '+C('sans');ctx.textAlign='left';
+  ctx.fillText('ȳ (the "no-information" guess)',ax.sx(.15),ax.sy(my)-6);
+  ctx.fillStyle=C('blue');ctx.fillText('ŷ = a + bx (the fitted line)',ax.sx(5.4),ax.sy(a0+b*5.4)+22);
+  ctx.fillStyle=C('red');ctx.fillText('red gaps = residuals → SSE',ax.sx(.15),ax.sy(12.9));
+  return 'Total variation <b>SST</b> = how far the points sit from the flat line ȳ. <b>SSE</b> = the red gaps still left after the fitted line does its work. <b>SSR</b> = the part the line explained. SST = SSR + SSE, and R² = SSR/SST.';
+};
+
+/* ============================================================
+   INTERACTIVE 1 — NORMAL PROBABILITY EXPLORER
+   ============================================================ */
+Figs['i-normal']=(cv,p,fig)=>{
+  const m0=+(p.mu??100), s0=+(p.sigma??15);
+  const st=fig._st||(fig._st={mu:m0,sigma:s0,lo:m0-s0,hi:m0+s0,mode:'lt'});
+  const W=720,H=310,ctx=setup(cv,W,H);
+  const {mu,sigma}=st, f=x=>normPdf(x,mu,sigma);
+  const ax=Axes(ctx,{W,H,x0:mu-4*sigma,x1:mu+4*sigma,y0:0,y1:f(mu)*1.15});
+  ax.grid(8,4);
+  let a,b,prob;
+  if(st.mode==='lt'){a=mu-4*sigma;b=st.hi;prob=normCdf(b,mu,sigma);}
+  else if(st.mode==='gt'){a=st.lo;b=mu+4*sigma;prob=1-normCdf(a,mu,sigma);}
+  else {a=Math.min(st.lo,st.hi);b=Math.max(st.lo,st.hi);prob=normCdf(b,mu,sigma)-normCdf(a,mu,sigma);}
+  ax.fill(f,a,b,C('blue-soft'));
+  ax.axis('x','density',8,v=>(+v).toFixed(0));
+  ax.curve(f,C('blue'),2.5);
+  ax.vline(mu,C('ink-3'),'μ='+mu,[3,3]);
+  if(st.mode!=='gt') ax.vline(st.hi,C('accent'),'x='+fmt(st.hi,1));
+  if(st.mode!=='lt') ax.vline(st.lo,C('green'),'x='+fmt(st.lo,1));
+  ctx.fillStyle=C('blue');ctx.font='700 20px '+C('sans');ctx.textAlign='center';
+  ctx.fillText(fmt(prob,4),ax.sx(mu),ax.sy(f(mu)*0.45));
+  ctx.font='11px '+C('sans');ctx.fillStyle=C('ink-2');
+  ctx.fillText('shaded probability',ax.sx(mu),ax.sy(f(mu)*0.45)+16);
+  const zl=(st.lo-mu)/sigma, zh=(st.hi-mu)/sigma;
+  fig.querySelector('.readout').innerHTML=
+    '<div>z for lower x<b>'+fmt(zl,3)+'</b></div>'+
+    '<div>z for upper x<b>'+fmt(zh,3)+'</b></div>'+
+    '<div>probability<b>'+fmt(prob,4)+'</b></div>'+
+    '<div>as a percentage<b>'+fmt(prob*100,2)+'%</b></div>';
+  return 'Move the sliders and watch the area change. This is exactly what the Z-table does — it converts your x into z = (x − μ)/σ and reports the shaded area.';
+};
+Figs['i-normal'].controls=(fig,p)=>{
+  const m=+(p.mu??100), s=+(p.sigma??15);
+  const lo=(m-4*s), hi=(m+4*s), step=Math.max(0.1,Math.round(s/10*10)/100);
+  return `
+  <label>μ <input type="range" data-k="mu" min="${m-4*s}" max="${m+4*s}" step="${step}" value="${m}"><span class="val" data-v="mu">${m}</span></label>
+  <label>σ <input type="range" data-k="sigma" min="${(s/5).toFixed(2)}" max="${(s*2.5).toFixed(2)}" step="${step}" value="${s}"><span class="val" data-v="sigma">${s}</span></label>
+  <label>lower x <input type="range" data-k="lo" min="${lo}" max="${hi}" step="${step}" value="${m-s}"><span class="val" data-v="lo">${m-s}</span></label>
+  <label>upper x <input type="range" data-k="hi" min="${lo}" max="${hi}" step="${step}" value="${m+s}"><span class="val" data-v="hi">${m+s}</span></label>
+  <label>area <select data-k="mode"><option value="lt">P(X &lt; upper)</option><option value="gt">P(X &gt; lower)</option><option value="between">P(lower &lt; X &lt; upper)</option></select></label>`;
+};
+
+/* ============================================================
+   INTERACTIVE 2 — CENTRAL LIMIT THEOREM MACHINE
+   ============================================================ */
+Figs['i-clt']=(cv,p,fig)=>{
+  const st=fig._st||(fig._st={pop:'exp',n:5,means:[],seed:12345});
+  const W=720,H=330,ctx=setup(cv,W,H);
+  const rnd=()=>{st.seed=(st.seed*1103515245+12345)&0x7fffffff; return st.seed/0x7fffffff;};
+  const pops={
+    exp:{name:'Exponential (very skewed)',draw:()=>-Math.log(Math.max(rnd(),1e-9))/0.5,mu:2,sd:2,x0:0,x1:8},
+    uni:{name:'Uniform (flat)',draw:()=>rnd()*10,mu:5,sd:10/Math.sqrt(12),x0:0,x1:10},
+    bi:{name:'Bimodal (two humps)',draw:()=>rnd()<0.5?2+rnd()*1.4:7+rnd()*1.4,mu:5.2,sd:2.45,x0:0,x1:10},
+    norm:{name:'Normal',draw:()=>5+1.6*Math.sqrt(-2*Math.log(Math.max(rnd(),1e-9)))*Math.cos(2*Math.PI*rnd()),mu:5,sd:1.6,x0:0,x1:10}
+  };
+  const P=pops[st.pop];
+  const half=W/2-8;
+  /* left: population */
+  {
+    const ctxL=ctx; const ax=Axes(ctxL,{W:half,H:H-10,x0:P.x0,x1:P.x1,y0:0,y1:1,left:34,bottom:38,top:30});
+    const bins=new Array(28).fill(0); let s2=st.seed; const r2=()=>{s2=(s2*1103515245+12345)&0x7fffffff;return s2/0x7fffffff;};
+    const save=st.seed; st.seed=777;
+    for(let i=0;i<4000;i++){const v=P.draw(); const b=Math.floor((v-P.x0)/(P.x1-P.x0)*28); if(b>=0&&b<28)bins[b]++;}
+    st.seed=save;
+    const mx=Math.max(...bins)||1;
+    bins.forEach((c,i)=>{
+      const w=(half-34-10)/28, x=34+i*w, h=(c/mx)*(H-10-38-30);
+      ctxL.fillStyle=C('rule-2'); ctxL.fillRect(x,H-10-38-h,w-1,h);
+    });
+    ctxL.fillStyle=C('ink');ctxL.font='700 12px '+C('sans');ctxL.textAlign='center';
+    ctxL.fillText('THE POPULATION',half/2,18);
+    ctxL.fillStyle=C('ink-3');ctxL.font='11px '+C('sans');
+    ctxL.fillText(P.name,half/2,H-10-8);
+  }
+  /* right: sampling distribution of the mean */
+  {
+    const off=W/2+8, w0=W-off-10;
+    const se=P.sd/Math.sqrt(st.n);
+    const lo=P.mu-4*se, hi=P.mu+4*se;
+    const bins=new Array(30).fill(0);
+    st.means.forEach(m=>{const b=Math.floor((m-lo)/(hi-lo)*30); if(b>=0&&b<30)bins[b]++;});
+    const total=st.means.length||1, mx=Math.max(...bins,1);
+    const top=30,bot=48, plotH=H-10-bot-top;
+    bins.forEach((c,i)=>{
+      const w=w0/30, x=off+i*w, h=(c/mx)*plotH;
+      ctx.fillStyle=C('blue'); ctx.globalAlpha=.8; ctx.fillRect(x,H-10-bot-h,w-1,h); ctx.globalAlpha=1;
+    });
+    /* overlay theoretical normal */
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const x=lo+(hi-lo)*i/200, y=normPdf(x,P.mu,se);
+      const peak=normPdf(P.mu,P.mu,se);
+      const px=off+(x-lo)/(hi-lo)*w0, py=H-10-bot-(y/peak)*plotH*(Math.max(...bins)>0?1:1);
+      i?ctx.lineTo(px,py):ctx.moveTo(px,py);
+    }
+    ctx.strokeStyle=C('accent');ctx.lineWidth=2.4;ctx.stroke();
+    ctx.strokeStyle=C('ink-3');ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(off,H-10-bot);ctx.lineTo(off+w0,H-10-bot);ctx.stroke();
+    ctx.fillStyle=C('ink');ctx.font='700 12px '+C('sans');ctx.textAlign='center';
+    ctx.fillText('MEANS OF '+st.means.length+' SAMPLES (n='+st.n+')',off+w0/2,18);
+    ctx.fillStyle=C('accent');ctx.font='11px '+C('sans');
+    ctx.fillText('orange = the normal the CLT predicts',off+w0/2,H-10-8);
+    const obs=st.means.length? st.means.reduce((a,b)=>a+b,0)/st.means.length : NaN;
+    const sd=st.means.length>1? Math.sqrt(st.means.reduce((a,b)=>a+(b-obs)**2,0)/(st.means.length-1)) : NaN;
+    fig.querySelector('.readout').innerHTML=
+      '<div>population μ<b>'+fmt(P.mu,3)+'</b></div>'+
+      '<div>mean of the x̄\'s<b>'+(isNaN(obs)?'—':fmt(obs,3))+'</b></div>'+
+      '<div>predicted σ/√n<b>'+fmt(se,3)+'</b></div>'+
+      '<div>observed spread<b>'+(isNaN(sd)?'—':fmt(sd,3))+'</b></div>';
+  }
+  ctx.strokeStyle=C('rule');ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(W/2,24);ctx.lineTo(W/2,H-20);ctx.stroke();
+  return 'Press <b>Draw 100 samples</b> a few times. However lumpy or skewed the population on the left is, the averages on the right pile up into a normal curve centred on μ with spread σ/√n. That is the Central Limit Theorem, and it is why the whole rest of this course works.';
+};
+Figs['i-clt'].controls=()=>`
+  <label>population <select data-k="pop">
+    <option value="exp">Exponential (skewed)</option><option value="uni">Uniform (flat)</option>
+    <option value="bi">Bimodal (two humps)</option><option value="norm">Normal</option></select></label>
+  <label>sample size n <input type="range" data-k="n" min="1" max="50" step="1" value="5"><span class="val" data-v="n">5</span></label>
+  <button data-act="draw">Draw 100 samples</button>
+  <button data-act="reset">Reset</button>`;
+Figs['i-clt'].act=(fig,act)=>{
+  const st=fig._st; if(!st) return;
+  if(act==='reset'){st.means=[];return;}
+  if(act==='draw'){
+    const rnd=()=>{st.seed=(st.seed*1103515245+12345)&0x7fffffff; return st.seed/0x7fffffff;};
+    const pops={exp:()=>-Math.log(Math.max(rnd(),1e-9))/0.5,uni:()=>rnd()*10,
+      bi:()=>rnd()<0.5?2+rnd()*1.4:7+rnd()*1.4,
+      norm:()=>5+1.6*Math.sqrt(-2*Math.log(Math.max(rnd(),1e-9)))*Math.cos(2*Math.PI*rnd())};
+    const d=pops[st.pop];
+    for(let k=0;k<100;k++){let s=0;for(let i=0;i<st.n;i++)s+=d();st.means.push(s/st.n);}
+    if(st.means.length>4000) st.means=st.means.slice(-4000);
+  }
+};
+
+/* ============================================================
+   INTERACTIVE 3 — REGRESSION SANDBOX (draggable points)
+   ============================================================ */
+Figs['i-regress']=(cv,p,fig)=>{
+  const st=fig._st||(fig._st={pts:[[1,2.2],[2,3.0],[3,4.6],[4,4.9],[5,6.4],[6,7.5],[7,7.9],[8,9.6]],drag:-1,showRes:true});
+  const W=720,H=340,ctx=setup(cv,W,H);
+  const ax=Axes(ctx,{W,H,x0:0,x1:10,y0:0,y1:12});
+  fig._ax=ax;
+  ax.grid(10,6); ax.axis('x  (independent variable)','y  (dependent variable)',10);
+  const pts=st.pts, n=pts.length;
+  const mx=pts.reduce((a,q)=>a+q[0],0)/n, my=pts.reduce((a,q)=>a+q[1],0)/n;
+  const Sxy=pts.reduce((a,q)=>a+(q[0]-mx)*(q[1]-my),0);
+  const Sxx=pts.reduce((a,q)=>a+(q[0]-mx)**2,0);
+  const Syy=pts.reduce((a,q)=>a+(q[1]-my)**2,0);
+  const b=Sxx?Sxy/Sxx:0, a0=my-b*mx;
+  const r=(Sxx&&Syy)?Sxy/Math.sqrt(Sxx*Syy):0;
+  const SSE=pts.reduce((s,q)=>s+(q[1]-(a0+b*q[0]))**2,0);
+  const R2=Syy?1-SSE/Syy:0;
+  ctx.strokeStyle=C('gold');ctx.lineWidth=1.4;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ax.sx(0),ax.sy(my));ctx.lineTo(ax.sx(10),ax.sy(my));ctx.stroke();ctx.setLineDash([]);
+  if(st.showRes) pts.forEach(([x,y])=>{
+    ctx.strokeStyle=C('red');ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(ax.sx(x),ax.sy(y));ctx.lineTo(ax.sx(x),ax.sy(a0+b*x));ctx.stroke();});
+  ctx.strokeStyle=C('blue');ctx.lineWidth=2.8;
+  ctx.beginPath();ctx.moveTo(ax.sx(0),ax.sy(a0));ctx.lineTo(ax.sx(10),ax.sy(a0+b*10));ctx.stroke();
+  pts.forEach(([x,y],i)=>{
+    ctx.beginPath();ctx.arc(ax.sx(x),ax.sy(y),6,0,7);
+    ctx.fillStyle=i===st.drag?C('accent'):C('ink');ctx.fill();
+    ctx.strokeStyle=C('paper');ctx.lineWidth=2;ctx.stroke();});
+  ctx.fillStyle=C('blue');ctx.font='700 13px '+C('sans');ctx.textAlign='left';
+  ctx.fillText('ŷ = '+fmt(a0,3)+' + '+fmt(b,3)+'x',ax.L+10,ax.T+18);
+  fig.querySelector('.readout').innerHTML=
+    '<div>slope b<b>'+fmt(b,4)+'</b></div>'+
+    '<div>intercept a<b>'+fmt(a0,4)+'</b></div>'+
+    '<div>correlation r<b>'+fmt(r,4)+'</b></div>'+
+    '<div>R²<b>'+fmt(R2,4)+'</b></div>'+
+    '<div>SSE<b>'+fmt(SSE,3)+'</b></div>';
+  return '<b>Drag any dot.</b> The blue least-squares line re-fits instantly and r, R² and SSE update with it. Try dragging one point far away from the others — watch a single outlier drag the whole line and wreck R².';
+};
+Figs['i-regress'].controls=()=>`
+  <label><input type="checkbox" data-k="showRes" checked> show residuals</label>
+  <button data-act="reset">Reset points</button>
+  <button data-act="outlier">Add an outlier</button>`;
+Figs['i-regress'].act=(fig,act)=>{
+  const st=fig._st; if(!st)return;
+  if(act==='reset') st.pts=[[1,2.2],[2,3.0],[3,4.6],[4,4.9],[5,6.4],[6,7.5],[7,7.9],[8,9.6]];
+  if(act==='outlier') st.pts=[...st.pts,[9,1.2]];
+};
+Figs['i-regress'].pointer=(fig,type,x,y)=>{
+  const st=fig._st, ax=fig._ax; if(!st||!ax) return false;
+  const inv=(px,py)=>[ax.x0+(px-ax.L)/(ax.W-ax.L-ax.R)*(ax.x1-ax.x0), ax.y0+(ax.H-ax.B-py)/(ax.H-ax.T-ax.B)*(ax.y1-ax.y0)];
+  if(type==='down'){
+    let best=-1,bd=1e9;
+    st.pts.forEach(([px,py],i)=>{const d=(ax.sx(px)-x)**2+(ax.sy(py)-y)**2; if(d<bd){bd=d;best=i;}});
+    if(bd<400) st.drag=best; return st.drag>=0;
+  }
+  if(type==='move'&&st.drag>=0){
+    const [ux,uy]=inv(x,y);
+    st.pts[st.drag]=[Math.max(0.2,Math.min(9.8,ux)),Math.max(0.2,Math.min(11.6,uy))]; return true;
+  }
+  if(type==='up'){ const was=st.drag>=0; st.drag=-1; return was; }
+  return false;
+};
+
+/* ============================================================
+   INTERACTIVE 4 — HYPOTHESIS TEST LAB
+   ============================================================ */
+Figs['i-test']=(cv,p,fig)=>{
+  const st=fig._st||(fig._st={alpha:0.05,tail:'two',stat:2.1});
+  const W=720,H=320,ctx=setup(cv,W,H);
+  const f=x=>normPdf(x);
+  const ax=Axes(ctx,{W,H,x0:-4.2,x1:4.2,y0:0,y1:.47});
+  const a=st.alpha;
+  let cL=null,cR=null,pval;
+  if(st.tail==='two'){cL=normInv(a/2);cR=normInv(1-a/2);pval=2*(1-normCdf(Math.abs(st.stat)));}
+  else if(st.tail==='right'){cR=normInv(1-a);pval=1-normCdf(st.stat);}
+  else {cL=normInv(a);pval=normCdf(st.stat);}
+  if(cL!==null) ax.fill(f,-4.2,cL,C('red-soft'));
+  if(cR!==null) ax.fill(f,cR,4.2,C('red-soft'));
+  ax.grid(8,4);
+  ax.axis('test statistic (z)','density',8,v=>(+v).toFixed(0));
+  ax.curve(f,C('blue'),2.5);
+  if(cL!==null) ax.vline(cL,C('red'),'critical '+fmt(cL,3));
+  if(cR!==null) ax.vline(cR,C('red'),'critical '+fmt(cR,3));
+  const rejected = (cL!==null&&st.stat<cL)||(cR!==null&&st.stat>cR);
+  ctx.strokeStyle=rejected?C('red'):C('green');ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ax.sx(st.stat),ax.sy(0));ctx.lineTo(ax.sx(st.stat),ax.sy(.44));ctx.stroke();
+  ctx.beginPath();ctx.arc(ax.sx(st.stat),ax.sy(.44),5,0,7);ctx.fillStyle=rejected?C('red'):C('green');ctx.fill();
+  ctx.font='700 13px '+C('sans');ctx.textAlign='center';
+  ctx.fillStyle=rejected?C('red'):C('green');
+  ctx.fillText(rejected?'REJECT H₀':'FAIL TO REJECT H₀', ax.sx(0), ax.T+16);
+  fig.querySelector('.readout').innerHTML=
+    '<div>test statistic<b>'+fmt(st.stat,3)+'</b></div>'+
+    '<div>critical value(s)<b>'+(st.tail==='two'?'±'+fmt(cR,3):fmt(cL!==null?cL:cR,3))+'</b></div>'+
+    '<div>p-value<b>'+fmt(pval,4)+'</b></div>'+
+    '<div>decision<b style="color:'+(rejected?C('red'):C('green'))+'">'+(rejected?'reject H₀':'keep H₀')+'</b></div>';
+  return 'Two ways to reach the same verdict. <b>Critical-value method:</b> is the green/red marker inside the shaded rejection zone? <b>p-value method:</b> is p &lt; α? They always agree. Drag α up and watch the rejection zone grow — you reject more easily, but you make more false alarms.';
+};
+Figs['i-test'].controls=()=>`
+  <label>α <input type="range" data-k="alpha" min="0.001" max="0.2" step="0.001" value="0.05"><span class="val" data-v="alpha">0.05</span></label>
+  <label>test <select data-k="tail"><option value="two">two-tailed</option><option value="right">right-tailed</option><option value="left">left-tailed</option></select></label>
+  <label>your statistic <input type="range" data-k="stat" min="-4" max="4" step="0.01" value="2.1"><span class="val" data-v="stat">2.10</span></label>`;
+
+/* ============================================================
+   FIGURE BOOTSTRAP
+   ============================================================ */
+const allFigs=[];
+function mountFigures(){
+  document.querySelectorAll('figure[data-fig]').forEach(fig=>{
+    const name=fig.dataset.fig, fn=Figs[name];
+    const cap=fig.querySelector('figcaption');
+    if(!fn){ if(cap) cap.innerHTML='<em>(figure "'+name+'" not found)</em>'; return; }
+    const cv=document.createElement('canvas'); fig.prepend(cv);
+    const params={...fig.dataset};
+    if(fn.controls){
+      const c=document.createElement('div'); c.className='controls'; c.innerHTML=fn.controls(fig,params); fig.appendChild(c);
+      const ro=document.createElement('div'); ro.className='readout'; fig.appendChild(ro);
+      c.addEventListener('input',e=>{
+        const k=e.target.dataset.k; if(!k) return;
+        const st=fig._st||(fig._st={});
+        st[k]= e.target.type==='checkbox'? e.target.checked : (isNaN(+e.target.value)? e.target.value : +e.target.value);
+        const v=c.querySelector('[data-v="'+k+'"]'); if(v) v.textContent= (typeof st[k]==='number'? (Math.abs(st[k])<1?st[k].toFixed(3):st[k].toFixed(st[k]%1?2:0)) : st[k]);
+        render(fig,cv,params,cap);
+      });
+      c.addEventListener('click',e=>{
+        const act=e.target.dataset.act; if(!act||!fn.act) return;
+        fn.act(fig,act); render(fig,cv,params,cap);
+      });
+    } else if(fn.pointer===undefined && (name.startsWith('i-'))){
+      const ro=document.createElement('div'); ro.className='readout'; fig.appendChild(ro);
+    }
+    if(fn.pointer){
+      if(!fig.querySelector('.readout')){const ro=document.createElement('div');ro.className='readout';fig.appendChild(ro);}
+      const rel=e=>{const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;
+        return [(t.clientX-r.left)*(720/r.width),(t.clientY-r.top)*(720/r.width)];};
+      const down=e=>{const [x,y]=rel(e); if(fn.pointer(fig,'down',x,y)){e.preventDefault();render(fig,cv,params,cap);}};
+      const move=e=>{const [x,y]=rel(e); if(fn.pointer(fig,'move',x,y)){e.preventDefault();render(fig,cv,params,cap);}};
+      const up=e=>{ if(fn.pointer(fig,'up',0,0)) render(fig,cv,params,cap); };
+      cv.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
+      cv.addEventListener('touchstart',down,{passive:false}); cv.addEventListener('touchmove',move,{passive:false}); cv.addEventListener('touchend',up);
+      cv.style.cursor='grab';
+    }
+    allFigs.push({fig,cv,params,cap});
+    render(fig,cv,params,cap);
+  });
+}
+function render(fig,cv,params,cap){
+  const fn=Figs[fig.dataset.fig];
+  const p={...params, ...(fig._st||{})};
+  const auto=fn(cv,p,fig);
+  if(cap && !cap.dataset.custom && auto) cap.innerHTML=auto;
+}
+function redrawAll(){ allFigs.forEach(o=>render(o.fig,o.cv,o.params,o.cap)); }
+window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(redrawAll,150)});
+
+/* ============================================================
+   APPENDIX TABLES
+   ============================================================ */
+(function ztable(){
+  let h='<table><thead><tr><th>z</th>';
+  for(let c=0;c<10;c++) h+='<th class="num">0.0'+c+'</th>';
+  h+='</tr></thead><tbody>';
+  for(let r=-34;r<=34;r++){
+    const z=r/10;
+    h+='<tr><th class="num">'+z.toFixed(1)+'</th>';
+    for(let c=0;c<10;c++){ const zz=z+(z<0?-c/100:c/100); h+='<td class="num">'+normCdf(zz).toFixed(4)+'</td>'; }
+    h+='</tr>';
+  }
+  document.getElementById('ztable').innerHTML=h+'</tbody></table>';
+})();
+
+(function ztable0(){
+  let h='<table><thead><tr><th>z</th>';
+  for(let c=0;c<10;c++) h+='<th class="num">0.0'+c+'</th>';
+  h+='</tr></thead><tbody>';
+  for(let r=0;r<=34;r++){
+    const z=r/10;
+    h+='<tr><th class="num">'+z.toFixed(1)+'</th>';
+    for(let c=0;c<10;c++){ const zz=z+c/100; h+='<td class="num">'+(normCdf(zz)-0.5).toFixed(4)+'</td>'; }
+    h+='</tr>';
+  }
+  document.getElementById('ztable0').innerHTML=h+'</tbody></table>';
+})();
+
+(function ttable(){
+  const rows=[[1,3.078,6.314,12.706,31.821,63.657],[2,1.886,2.920,4.303,6.965,9.925],[3,1.638,2.353,3.182,4.541,5.841],
+  [4,1.533,2.132,2.776,3.747,4.604],[5,1.476,2.015,2.571,3.365,4.032],[6,1.440,1.943,2.447,3.143,3.707],
+  [7,1.415,1.895,2.365,2.998,3.499],[8,1.397,1.860,2.306,2.896,3.355],[9,1.383,1.833,2.262,2.821,3.250],
+  [10,1.372,1.812,2.228,2.764,3.169],[11,1.363,1.796,2.201,2.718,3.106],[12,1.356,1.782,2.179,2.681,3.055],
+  [13,1.350,1.771,2.160,2.650,3.012],[14,1.345,1.761,2.145,2.624,2.977],[15,1.341,1.753,2.131,2.602,2.947],
+  [16,1.337,1.746,2.120,2.583,2.921],[17,1.333,1.740,2.110,2.567,2.898],[18,1.330,1.734,2.101,2.552,2.878],
+  [19,1.328,1.729,2.093,2.539,2.861],[20,1.325,1.725,2.086,2.528,2.845],[21,1.323,1.721,2.080,2.518,2.831],
+  [22,1.321,1.717,2.074,2.508,2.819],[23,1.319,1.714,2.069,2.500,2.807],[24,1.318,1.711,2.064,2.492,2.797],
+  [25,1.316,1.708,2.060,2.485,2.787],[26,1.315,1.706,2.056,2.479,2.779],[27,1.314,1.703,2.052,2.473,2.771],
+  [28,1.313,1.701,2.048,2.467,2.763],[29,1.311,1.699,2.045,2.462,2.756],[30,1.310,1.697,2.042,2.457,2.750],
+  [40,1.303,1.684,2.021,2.423,2.704],[60,1.296,1.671,2.000,2.390,2.660],[120,1.289,1.658,1.980,2.358,2.617],
+  ['∞',1.282,1.645,1.960,2.326,2.576]];
+  let h='<table><thead><tr><th>df</th><th class="num">t₀.₁₀</th><th class="num">t₀.₀₅</th><th class="num">t₀.₀₂₅</th><th class="num">t₀.₀₁</th><th class="num">t₀.₀₀₅</th></tr></thead><tbody>';
+  rows.forEach(r=>{h+='<tr><th class="num">'+r[0]+'</th>'+r.slice(1).map(v=>'<td class="num">'+v.toFixed(3)+'</td>').join('')+'</tr>';});
+  document.getElementById('ttable').innerHTML=h+'</tbody></table>';
+})();
+
+/* Formula sheet, generated from the chapters' .formula blocks */
+(function sheet(){
+  const rows=[];
+  document.querySelectorAll('section[id] .formula').forEach(f=>{
+    const sec=f.closest('section'); const h=sec.querySelector('.chapter-open h1');
+    const nm=f.querySelector('.name'); const body=f.cloneNode(true);
+    body.querySelectorAll('.where,.name').forEach(e=>e.remove());
+    rows.push([h?h.textContent:'',nm?nm.textContent:'—',body.innerHTML.trim()]);
+  });
+  if(!rows.length){document.getElementById('formulasheet').innerHTML='<p style="padding:1rem">No formula blocks found.</p>';return;}
+  let h='<table><thead><tr><th>Chapter</th><th>What it is</th><th>Formula</th></tr></thead><tbody>';
+  rows.forEach(r=>{h+='<tr><td style="font-size:.78rem;color:var(--ink-3)">'+r[0]+'</td><td style="font-weight:600">'+r[1]+'</td><td>'+r[2]+'</td></tr>';});
+  document.getElementById('formulasheet').innerHTML=h+'</tbody></table>';
+})();
+
+mountFigures();
+</script>
+</body>
+</html>

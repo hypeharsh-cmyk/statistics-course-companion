@@ -1,0 +1,322 @@
+<div class="pane" id="pane-p2">
+<div class="sheet">
+  <section id="p2" class="wrap" data-paper="p2" data-title="Mock Test 2">
+
+  <div class="examhead">
+    <div class="inst">IIFT Kakinada · IPM 2025–30 · Second Semester</div>
+    <h1>Mock Test 2 — Introductory Statistics (MST 02)<span class="pill std">Exam level</span></h1>
+    <div class="meta">Time: 2 Hours 30 Minutes · Max Marks: 50 · No negative marking</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Instructions</span>
+    Answer all eight questions with full steps, in order, without skipping working. Write every final
+    answer correct to four decimal places and underline it. A scientific non-programmable calculator
+    and statistical tables are allowed — the <b>Tables</b> tab has the Z, t and χ² tables you need.
+    There is <b>no negative marking</b>: an attempt with the right method earns method marks even if the
+    arithmetic slips, so never leave a part blank. Where a distribution is not stated, make a
+    reasonable statistical assumption and justify it.
+  </div>
+
+  <div class="timerbar">
+    <div class="clock" data-clock>2:30:00</div>
+    <button class="btn primary" data-act="start">Start paper</button>
+    <button class="btn" data-act="pause" disabled>Pause</button>
+    <button class="btn" data-act="submit" disabled>Finish &amp; see solutions</button>
+  </div>
+
+  <div class="exercise" data-q="1" data-max="5">
+    <div class="hd">Question 1 — Normal distribution <span class="mk">5 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Classification into divisions — the end-term's own Q1 pattern</div>
+      <p>In an examination it is laid down that a student passes if he secures 35 percent or more
+      marks. He is placed in the first, second or third division according as he secures 60% or more
+      marks, between 45% and 60% marks, and marks between 35% and 45% respectively. It is noticed
+      from the result that 20% of the students failed in the examination, whereas 10% of them secured
+      70% or more marks.</p>
+      <p>Calculate the percentage of students placed in the first division and in the second division.
+      (Assume the normal distribution of marks.)</p>
+      <p class="hint">Hint: the two facts you are given are the two percentages, not μ and σ. Recover
+      μ and σ first, then every division is just a band.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Translate the two facts into z-values.</b> 20% failed means $P(X &lt; 35) = 0.20$, so
+          $z_1 = -0.84$. And 10% scored 70 or more means $P(X &gt; 70) = 0.10$, i.e.
+          $P(X &lt; 70) = 0.90$, so $z_2 = 1.28$.</li>
+          <li><b>Two standardising equations, two unknowns.</b>
+          $$\frac{35-\mu}{\sigma} = -0.84 \qquad \frac{70-\mu}{\sigma} = 1.28$$</li>
+          <li><b>Subtract to eliminate μ.</b> $\dfrac{70-35}{\sigma} = 1.28-(-0.84) = 2.12$, so
+          $$\sigma = \frac{35}{2.12} = 16.5094$$</li>
+          <li><b>Back-substitute for μ.</b>
+          $\mu = 35 + 0.84(16.5094) = 35 + 13.8679 = 48.8679$.</li>
+          <li><b>First division is $X \ge 60$.</b>
+          $z = \dfrac{60-48.8679}{16.5094} = \dfrac{11.1321}{16.5094} = 0.67$, so
+          $$P(X \ge 60) = 1 - \Phi(0.67) = 1 - 0.7486 = 0.2514$$</li>
+          <li><b>Second division is $45 \le X &lt; 60$.</b>
+          $z_{45} = \dfrac{45-48.8679}{16.5094} = -0.23$, and $\Phi(-0.23) = 0.4090$. So
+          $$P(45 \le X &lt; 60) = 0.7486 - 0.4090 = 0.3396$$</li>
+          <li><b>Sense-check.</b> Failed 20%, third division $= 0.4090-0.2000 = 20.90\%$, second
+          33.96%, first 25.14% — these sum to 100%, as they must.</li>
+        </ol>
+        <div class="final">μ = 48.8679, σ = 16.5094 · first division = 25.14% · second division = 33.96%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="2" data-max="5">
+    <div class="hd">Question 2 — Uniform distribution and Chebyshev <span class="mk">5 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">A bound that ignores the shape, against the truth</div>
+      <p>The waiting time $X$ (in minutes) for a shuttle bus is uniformly distributed over the
+      interval $[0, 10]$.</p>
+      <p>Using Chebyshev's inequality, find an upper bound for $P\{|X-\mu| \ge 4\}$. Compute the exact
+      probability from the uniform distribution and comment on the difference.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Mean and variance of a uniform.</b> For $X \sim U(a,b)$ with $a = 0$, $b = 10$:
+          $$\mu = \frac{a+b}{2} = 5 \qquad \sigma^2 = \frac{(b-a)^2}{12} = \frac{100}{12} = 8.3333$$
+          so $\sigma = 2.8868$ minutes.</li>
+          <li><b>Apply Chebyshev.</b> With $c = 4$:
+          $$P\{|X-5| \ge 4\} \le \frac{\sigma^2}{c^2} = \frac{8.3333}{16} = 0.5208$$
+          Equivalently $c = k\sigma$ gives $k = \dfrac{4}{2.8868} = 1.3856$ and
+          $\dfrac{1}{k^2} = 0.5208$.</li>
+          <li><b>Exact probability.</b> $|X-5| \ge 4$ means $X \le 1$ or $X \ge 9$. For a uniform on
+          $[0,10]$ the density is $\dfrac{1}{10}$, so
+          $$P = \frac{1-0}{10} + \frac{10-9}{10} = 0.1 + 0.1 = 0.2000$$</li>
+          <li><b>Comment.</b> The true probability 0.2000 is far below the Chebyshev ceiling 0.5208.
+          The bound is valid but very loose here, because Chebyshev must cover every distribution with
+          this mean and variance, including heavy-tailed ones. The uniform has no tails at all beyond
+          its endpoints, so it sits comfortably inside the guarantee.</li>
+        </ol>
+        <div class="final">Chebyshev bound = 0.5208 · exact = 0.2000 · the bound holds and is loose</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="3" data-max="6">
+    <div class="hd">Question 3 — Sampling distribution of $\bar{X}$ <span class="mk">2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Central Limit Theorem applied to a sample mean</div>
+      <p>According to a manufacturer, a certain brand of battery lasts on average 500 hours. Assume the
+      population standard deviation is 64 hours. Suppose a random sample of 64 batteries is taken.</p>
+      <p><b>a.</b> What is the probability that the sample mean is more than 512 hours?</p>
+      <p><b>b.</b> What is the probability that the sample mean is less than 494 hours?</p>
+      <p><b>c.</b> What is the probability that the sample mean is between 490 and 516 hours?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Standard error first.</b> $n = 64 \ge 30$, so by the Central Limit Theorem $\bar{X}$ is
+          approximately normal with
+          $$\sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}} = \frac{64}{\sqrt{64}} = \frac{64}{8} = 8$$</li>
+          <li><b>(a)</b> $z = \dfrac{512-500}{8} = 1.50$. From the table $\Phi(1.50) = 0.9332$, so
+          $P(\bar{X} &gt; 512) = 1 - 0.9332 = 0.0668$.</li>
+          <li><b>(b)</b> $z = \dfrac{494-500}{8} = -0.75$, giving
+          $P(\bar{X} &lt; 494) = \Phi(-0.75) = 0.2266$.</li>
+          <li><b>(c)</b> $z_1 = \dfrac{490-500}{8} = -1.25$ and $z_2 = \dfrac{516-500}{8} = 2.00$.
+          Then $P = \Phi(2.00) - \Phi(-1.25) = 0.9772 - 0.1056 = 0.8716$.</li>
+        </ol>
+        <div class="final">a. 0.0668 · b. 0.2266 · c. 0.8716</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="4" data-max="6">
+    <div class="hd">Question 4 — Confidence interval for μ <span class="mk">6 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">σ unknown, small sample — the t-distribution</div>
+      <p>Let $\{2,\ 4,\ 6,\ 8,\ 10,\ 12,\ 14\}$ be the set of collected random sample values from a
+      $N(\mu, \sigma^2)$ distribution, where both $\mu$ and $\sigma^2$ are unknown.</p>
+      <p>Find the 95% confidence interval for $\mu$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Sample mean.</b> $\sum x = 56$, $n = 7$, so $\bar{x} = \dfrac{56}{7} = 8$.</li>
+          <li><b>Sample variance.</b> The deviations are $-6, -4, -2, 0, 2, 4, 6$ and their squares are
+          $36, 16, 4, 0, 4, 16, 36$, summing to $\sum(x-\bar{x})^2 = 112$. Therefore
+          $$s^2 = \frac{112}{7-1} = 18.6667 \qquad s = \sqrt{18.6667} = 4.3205$$</li>
+          <li><b>Choose the tool.</b> σ is unknown and $n = 7$ is small, so use $t$ with
+          $n-1 = 6$ degrees of freedom.</li>
+          <li><b>Critical value.</b> For 95% two-sided, $t_{0.025,\,6} = 2.447$.</li>
+          <li><b>Standard error and margin.</b>
+          $\dfrac{s}{\sqrt{n}} = \dfrac{4.3205}{\sqrt{7}} = 1.6330$, so the margin of error is
+          $2.447 \times 1.6330 = 3.9959$.</li>
+          <li><b>Assemble.</b> $8 \pm 3.9959$.</li>
+        </ol>
+        <div class="final">95% CI for μ = (4.0041, 11.9959)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="5" data-max="7">
+    <div class="hd">Question 5 — Test for a proportion <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">p-value method, one-tailed</div>
+      <p>A political candidate claimed that more than 60% of the voters in a constituency support her.
+      A random sample of 400 voters showed that 260 of them support her.</p>
+      <p>Test the claim of the candidate at 5% level of significance by using the p-value method.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> The claim contains "more than", which has no equality in it, so the
+          claim becomes the alternative:
+          $$H_0: p \le 0.60 \qquad H_1: p &gt; 0.60$$</li>
+          <li><b>Sample proportion.</b> $\hat{p} = \dfrac{260}{400} = 0.6500$.</li>
+          <li><b>Standard error under $H_0$.</b> Use the hypothesised $p_0 = 0.60$:
+          $$\sigma_{\hat{p}} = \sqrt{\frac{p_0(1-p_0)}{n}} = \sqrt{\frac{0.60 \times 0.40}{400}}
+          = \sqrt{0.0006} = 0.0245$$</li>
+          <li><b>Test statistic.</b>
+          $z = \dfrac{0.6500 - 0.60}{0.0245} = \dfrac{0.0500}{0.0245} = 2.04$.</li>
+          <li><b>p-value.</b> Right-tailed, so the p-value is the right tail:
+          $P(Z &gt; 2.04) = 1 - 0.9793 = 0.0207$.</li>
+          <li><b>Decide.</b> $0.0207 &lt; 0.05$, so reject $H_0$ at the 5% level.</li>
+          <li><b>Conclude in words.</b> There is sufficient evidence at the 5% level that more than 60%
+          of voters support the candidate. The claim is supported by the sample.</li>
+        </ol>
+        <div class="final">z = 2.0412 · p-value = 0.0207 &lt; 0.05 · reject H₀, the claim is supported</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="6" data-max="6">
+    <div class="hd">Question 6 — Test for a population variance <span class="mk">6 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Chi-square test, two-tailed</div>
+      <p>The fill volumes (in millilitres, measured as deviations from the nominal value) of 8 randomly
+      chosen bottles are given below.</p>
+      <div class="tw"><table><tbody><tr>
+        <td class="num">25</td><td class="num">28</td><td class="num">30</td><td class="num">27</td>
+        <td class="num">32</td><td class="num">29</td><td class="num">26</td><td class="num">31</td>
+      </tr></tbody></table></div>
+      <p>Can we say that the population variance of the distribution of fill volumes, from which the
+      above sample of 8 bottles was drawn, is equal to 2 square millilitres? Test an appropriate
+      hypothesis at 5% level.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> Two-tailed, because the question asks whether it equals 2:
+          $$H_0: \sigma^2 = 2 \qquad H_1: \sigma^2 \ne 2$$</li>
+          <li><b>Sample mean.</b> $\sum x = 228$, so $\bar{x} = \dfrac{228}{8} = 28.5$.</li>
+          <li><b>Sum of squared deviations.</b> The deviations are
+          $-3.5, -0.5, 1.5, -1.5, 3.5, 0.5, -2.5, 2.5$ and their squares are
+          $12.25, 0.25, 2.25, 2.25, 12.25, 0.25, 6.25, 6.25$, so $\sum(x-\bar{x})^2 = 42$ and
+          $s^2 = \dfrac{42}{7} = 6$.</li>
+          <li><b>Test statistic.</b>
+          $$\chi^2 = \frac{(n-1)s^2}{\sigma_0^2} = \frac{42}{2} = 21.0000
+          \qquad \text{with } df = 7$$</li>
+          <li><b>Critical values.</b> Two-tailed at 5%:
+          $\chi^2_{0.975,\,7} = 1.690$ and $\chi^2_{0.025,\,7} = 16.013$.</li>
+          <li><b>Decide.</b> $21.0000 &gt; 16.013$, so the statistic falls in the right rejection
+          region. Reject $H_0$.</li>
+          <li><b>Conclude.</b> At the 5% level there is sufficient evidence that the population variance
+          of fill volumes is not equal to 2 square millilitres; the sample suggests it is larger.</li>
+        </ol>
+        <div class="final">χ² = 21.0000, df = 7 · 21.0000 &gt; 16.013 · reject H₀</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="7" data-max="7">
+    <div class="hd">Question 7 — Spearman rank correlation <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Ranking two variables and measuring agreement</div>
+      <p>Find the rank correlation coefficient between the price and the demand from the data given
+      below.</p>
+      <div class="tw"><table>
+        <tbody>
+          <tr><th>Price (Rs.)</th>
+            <td class="num">10</td><td class="num">15</td><td class="num">20</td><td class="num">25</td>
+            <td class="num">30</td><td class="num">35</td><td class="num">40</td><td class="num">45</td>
+            <td class="num">50</td><td class="num">55</td></tr>
+          <tr><th>Demand (units)</th>
+            <td class="num">95</td><td class="num">88</td><td class="num">91</td><td class="num">80</td>
+            <td class="num">75</td><td class="num">78</td><td class="num">65</td><td class="num">70</td>
+            <td class="num">58</td><td class="num">55</td></tr>
+        </tbody>
+      </table></div>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Rank each row separately.</b> Rank 1 goes to the smallest value. There are no ties, so
+          no correction factor is needed. Price is already in increasing order, so $R_x = 1$ to $10$.</li>
+          <li><b>Build the working table.</b>
+          <div class="tw"><table>
+            <thead><tr><th>Price</th><th>Demand</th><th class="num">$R_x$</th><th class="num">$R_y$</th>
+              <th class="num">$d$</th><th class="num">$d^2$</th></tr></thead>
+            <tbody>
+              <tr><td class="num">10</td><td class="num">95</td><td class="num">1</td><td class="num">10</td><td class="num">−9</td><td class="num">81</td></tr>
+              <tr><td class="num">15</td><td class="num">88</td><td class="num">2</td><td class="num">8</td><td class="num">−6</td><td class="num">36</td></tr>
+              <tr><td class="num">20</td><td class="num">91</td><td class="num">3</td><td class="num">9</td><td class="num">−6</td><td class="num">36</td></tr>
+              <tr><td class="num">25</td><td class="num">80</td><td class="num">4</td><td class="num">7</td><td class="num">−3</td><td class="num">9</td></tr>
+              <tr><td class="num">30</td><td class="num">75</td><td class="num">5</td><td class="num">5</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">35</td><td class="num">78</td><td class="num">6</td><td class="num">6</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">40</td><td class="num">65</td><td class="num">7</td><td class="num">3</td><td class="num">4</td><td class="num">16</td></tr>
+              <tr><td class="num">45</td><td class="num">70</td><td class="num">8</td><td class="num">4</td><td class="num">4</td><td class="num">16</td></tr>
+              <tr><td class="num">50</td><td class="num">58</td><td class="num">9</td><td class="num">2</td><td class="num">7</td><td class="num">49</td></tr>
+              <tr><td class="num">55</td><td class="num">55</td><td class="num">10</td><td class="num">1</td><td class="num">9</td><td class="num">81</td></tr>
+              <tr><th colspan="5">$\sum d^2$</th><th class="num">324</th></tr>
+            </tbody>
+          </table></div></li>
+          <li><b>Apply the formula.</b> With $n = 10$, $n(n^2-1) = 990$:
+          $$r = 1 - \frac{6\sum d^2}{n(n^2-1)} = 1 - \frac{6(324)}{990} = 1 - \frac{1944}{990}
+          = 1 - 1.9636 = -0.9636$$</li>
+          <li><b>Interpret.</b> A very strong negative rank correlation, exactly what economics
+          predicts: as price rises through the ranks, demand falls through the ranks almost perfectly.</li>
+        </ol>
+        <div class="final">r = −0.9636 (very strong negative rank correlation)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="8" data-max="8">
+    <div class="hd">Question 8 — Regression and correlation <span class="mk">2+2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Recovering everything from two regression lines</div>
+      <p>In a partially destroyed laboratory record of an analysis of bivariate data, the following
+      results only are legible.</p>
+      <div class="box def"><span class="lbl">Legible</span>
+      $\operatorname{Var}(X) = 16$, and the two regression lines are
+      $$6X + 5Y - 240 = 0 \qquad \text{and} \qquad 15X + 8Y - 465 = 0$$</div>
+      <p><b>a.</b> The mean values of $X$ and $Y$.</p>
+      <p><b>b.</b> Which line is which, with justification.</p>
+      <p><b>c.</b> The coefficient of correlation between $X$ and $Y$.</p>
+      <p><b>d.</b> The standard deviation of $Y$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Both lines pass through $(\bar{x}, \bar{y})$.</b> Solve
+          $6\bar{x} + 5\bar{y} = 240$ and $15\bar{x} + 8\bar{y} = 465$ simultaneously. Multiply the
+          first by 15 and the second by 6:
+          $$90\bar{x} + 75\bar{y} = 3600 \qquad 90\bar{x} + 48\bar{y} = 2790$$
+          Subtracting, $27\bar{y} = 810$, so $\bar{y} = 30$. Then
+          $6\bar{x} = 240 - 5(30) = 90$, giving $\bar{x} = 15$.</li>
+          <li><b>(b) Test the assignment with $r^2 = b_{yx}\,b_{xy} \le 1$.</b>
+          Take the first line as $Y$ on $X$: $5Y = 240 - 6X$ gives $b_{yx} = -\dfrac{6}{5} = -1.2$.
+          Take the second as $X$ on $Y$: $15X = 465 - 8Y$ gives $b_{xy} = -\dfrac{8}{15} = -0.5333$.
+          Then $r^2 = (-1.2)(-0.5333) = 0.64 \le 1$ — valid.</li>
+          <li><b>Check the other way round fails.</b> If the first were $X$ on $Y$ then
+          $b_{xy} = -\dfrac{5}{6}$, and the second as $Y$ on $X$ gives $b_{yx} = -\dfrac{15}{8}$, so
+          $r^2 = \dfrac{5}{6} \times \dfrac{15}{8} = 1.5625 &gt; 1$, which is impossible.</li>
+          <li><b>(c) Correlation.</b> $r = \pm\sqrt{0.64} = \pm 0.8$. Both slopes are negative, so $r$
+          takes the negative sign: $r = -0.8000$.</li>
+          <li><b>(d) Standard deviation of Y.</b> $\operatorname{Var}(X) = 16$ gives $\sigma_x = 4$.
+          From $b_{yx} = r\dfrac{\sigma_y}{\sigma_x}$:
+          $$-1.2 = -0.8 \times \frac{\sigma_y}{4} \;\Rightarrow\;
+          \sigma_y = \frac{-1.2 \times 4}{-0.8} = 6.0000$$</li>
+        </ol>
+        <div class="final">a. x̄ = 15, ȳ = 30 · b. 6X+5Y−240=0 is Y on X · c. r = −0.8000 · d. σ_y = 6.0000</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard" data-score>
+    <h3>Paper 2 score</h3>
+    <div class="bigscore"><span data-total>—</span><small> / 50</small></div>
+    <p class="legend">Finish the paper to unlock the solutions, then award yourself marks question by
+    question. No negative marking: give yourself the method marks you earned even where the final
+    number came out wrong.</p>
+  </div>
+
+  </section>
+</div>
+</div>

@@ -1,0 +1,13 @@
+node_modules/
+public/
+.wrangler/
+.DS_Store
+
+# Tooling scratch
+.playwright-mcp/
+session-handoff/
+.mcp.json
+
+# Course material that is not ours to republish: the 58 scanned lecture slides
+# were only ever an OCR source for Chapter 4 and are not needed to build the site.
+module6-slides/

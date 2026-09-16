@@ -1,0 +1,314 @@
+<div class="pane on" id="pane-p1">
+<div class="sheet">
+  <section id="p1" class="wrap" data-paper="p1" data-title="Mock Test 1">
+
+  <div class="examhead">
+    <div class="inst">IIFT Kakinada · IPM 2025–30 · Second Semester</div>
+    <h1>Mock Test 1 — Introductory Statistics (MST 02)<span class="pill std">Exam level</span></h1>
+    <div class="meta">Time: 2 Hours 30 Minutes · Max Marks: 50 · No negative marking</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Instructions</span>
+    Answer all eight questions with full steps, in order, without skipping working. Write every final
+    answer correct to four decimal places and underline it. A scientific non-programmable calculator
+    and statistical tables are allowed — the <b>Tables</b> tab has the Z, t and χ² tables you need.
+    There is <b>no negative marking</b>: an attempt with the right method earns method marks even if the
+    arithmetic slips, so never leave a part blank. Where a distribution is not stated, make a
+    reasonable statistical assumption and justify it.
+  </div>
+
+  <div class="timerbar">
+    <div class="clock" data-clock>2:30:00</div>
+    <button class="btn primary" data-act="start">Start paper</button>
+    <button class="btn" data-act="pause" disabled>Pause</button>
+    <button class="btn" data-act="submit" disabled>Finish &amp; see solutions</button>
+  </div>
+
+  <div class="exercise" data-q="1" data-max="5">
+    <div class="hd">Question 1 — Normal distribution <span class="mk">5 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Working backwards from percentages to μ and σ</div>
+      <p>The daily wages of workers in a large factory are normally distributed. It is found that
+      10% of the workers earn less than ₹200 per day, while 20% of them earn more than ₹500 per day.</p>
+      <p>Find the mean and the standard deviation of the daily wage, and hence the percentage of
+      workers earning between ₹300 and ₹400 per day.</p>
+      <p class="hint">Hint: each percentage gives you one z-value. Two z-values, two unknowns.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Turn each percentage into a z.</b> $P(X &lt; 200) = 0.10$, so the area to the left is
+          0.10 and from the Z-table $z_1 = -1.28$. $P(X &gt; 500) = 0.20$ means $P(X &lt; 500) = 0.80$,
+          so $z_2 = 0.84$.</li>
+          <li><b>Write the two standardising equations.</b>
+          $$\frac{200-\mu}{\sigma} = -1.28 \qquad \frac{500-\mu}{\sigma} = 0.84$$</li>
+          <li><b>Subtract to kill μ.</b> $\dfrac{500-200}{\sigma} = 0.84-(-1.28) = 2.12$, so
+          $\sigma = \dfrac{300}{2.12} = 141.5094$.</li>
+          <li><b>Back-substitute for μ.</b> $\mu = 200 + 1.28(141.5094) = 381.1321$.</li>
+          <li><b>Now the band 300 to 400.</b>
+          $z_{300} = \dfrac{300-381.1321}{141.5094} = -0.57$ and
+          $z_{400} = \dfrac{400-381.1321}{141.5094} = 0.13$.</li>
+          <li><b>Read the table and subtract.</b> $\Phi(0.13) = 0.5517$, $\Phi(-0.57) = 0.2843$, so
+          $P = 0.5517 - 0.2843 = 0.2674$.</li>
+        </ol>
+        <div class="final">μ = ₹381.1321 · σ = ₹141.5094 · 26.74% of workers earn between ₹300 and ₹400</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="2" data-max="5">
+    <div class="hd">Question 2 — Chebyshev's inequality <span class="mk">5 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Bounding a probability with no distribution assumed</div>
+      <p>A fair spinner is marked 1, 2, 3, 4, 5 and each number is equally likely. Let $X$ be the
+      number obtained in one spin, with mean $\mu$.</p>
+      <p>Show that Chebyshev's inequality gives $P\{|X-\mu| \ge 2\} \le 0.5$, and compare this bound
+      with the exact probability. Comment on what the comparison shows.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Mean.</b> $\mu = E(X) = \dfrac{1+2+3+4+5}{5} = 3$.</li>
+          <li><b>Variance.</b> $E(X^2) = \dfrac{1+4+9+16+25}{5} = \dfrac{55}{5} = 11$, so
+          $\sigma^2 = E(X^2) - \mu^2 = 11 - 9 = 2$ and $\sigma = \sqrt{2} = 1.4142$.</li>
+          <li><b>Apply Chebyshev.</b> In the form $P\{|X-\mu| \ge c\} \le \dfrac{\sigma^2}{c^2}$ with
+          $c = 2$:
+          $$P\{|X-3| \ge 2\} \le \frac{2}{2^2} = \frac{2}{4} = 0.5000$$</li>
+          <li><b>Exact probability.</b> $|X-3| \ge 2$ happens only when $X = 1$ or $X = 5$, so the exact
+          probability is $\dfrac{2}{5} = 0.4000$.</li>
+          <li><b>Comment.</b> $0.4000 \le 0.5000$, so the inequality holds. The bound is correct but
+          loose — that is the price of using only μ and σ and assuming nothing about the shape of the
+          distribution. Chebyshev never promises a tight answer, only a guaranteed ceiling.</li>
+        </ol>
+        <div class="final">Chebyshev bound = 0.5000 · exact = 0.4000 · the bound holds and is loose</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="3" data-max="6">
+    <div class="hd">Question 3 — Sampling distribution of $\bar{X}$ <span class="mk">2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Central Limit Theorem applied to a sample mean</div>
+      <p>A café serves on average 240 customers per day. Assume the population standard deviation is
+      45 customers. A random sample of 36 days is taken.</p>
+      <p><b>a.</b> What is the probability that the sample mean is more than 252 customers?</p>
+      <p><b>b.</b> What is the probability that the sample mean is less than 231 customers?</p>
+      <p><b>c.</b> What is the probability that the sample mean is between 234 and 249 customers?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Standard error first — it is used in all three parts.</b> $n = 36 \ge 30$, so by the
+          Central Limit Theorem $\bar{X}$ is approximately normal with
+          $$\sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}} = \frac{45}{\sqrt{36}} = \frac{45}{6} = 7.5$$</li>
+          <li><b>(a)</b> $z = \dfrac{252-240}{7.5} = 1.60$. From the table $\Phi(1.60) = 0.9452$, so
+          $P(\bar{X} &gt; 252) = 1 - 0.9452 = 0.0548$.</li>
+          <li><b>(b)</b> $z = \dfrac{231-240}{7.5} = -1.20$, giving
+          $P(\bar{X} &lt; 231) = \Phi(-1.20) = 0.1151$.</li>
+          <li><b>(c)</b> $z_1 = \dfrac{234-240}{7.5} = -0.80$ and $z_2 = \dfrac{249-240}{7.5} = 1.20$.
+          Then $P = \Phi(1.20) - \Phi(-0.80) = 0.8849 - 0.2119 = 0.6730$.</li>
+        </ol>
+        <div class="final">a. 0.0548 · b. 0.1151 · c. 0.6730</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="4" data-max="6">
+    <div class="hd">Question 4 — Confidence interval for μ <span class="mk">6 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">σ unknown, small sample — the t-distribution</div>
+      <p>Let $\{12,\ 15,\ 11,\ 18,\ 14,\ 16,\ 13,\ 17\}$ be a random sample drawn from a
+      $N(\mu, \sigma^2)$ distribution, where both $\mu$ and $\sigma^2$ are unknown.</p>
+      <p>Find the 95% confidence interval for $\mu$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Sample mean.</b> $\sum x = 116$, $n = 8$, so $\bar{x} = \dfrac{116}{8} = 14.5$.</li>
+          <li><b>Sample variance.</b> The deviations are $-2.5, 0.5, -3.5, 3.5, -0.5, 1.5, -1.5, 2.5$
+          and their squares sum to $\sum(x-\bar{x})^2 = 42$. Therefore
+          $$s^2 = \frac{42}{8-1} = 6 \qquad s = \sqrt{6} = 2.4495$$</li>
+          <li><b>Choose the tool.</b> σ is unknown and $n = 8$ is small, so use $t$ with
+          $n-1 = 7$ degrees of freedom, not $z$.</li>
+          <li><b>Critical value.</b> For 95% two-sided, $t_{0.025,\,7} = 2.365$.</li>
+          <li><b>Standard error and margin.</b>
+          $\dfrac{s}{\sqrt{n}} = \dfrac{2.4495}{\sqrt{8}} = 0.8660$, so the margin of error is
+          $2.365 \times 0.8660 = 2.0482$.</li>
+          <li><b>Assemble.</b> $14.5 \pm 2.0482$.</li>
+        </ol>
+        <div class="final">95% CI for μ = (12.4518, 16.5482)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="5" data-max="7">
+    <div class="hd">Question 5 — Test for a proportion <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">p-value method, one-tailed</div>
+      <p>An online pharmacy claimed that at least 85% of its orders are delivered within 24 hours.
+      However, a random sample of 250 orders showed that only 198 were delivered within 24 hours.</p>
+      <p>Test the claim of the pharmacy at 5% level of significance by using the p-value method.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> The claim is the status quo, so it goes in $H_0$. The sample is below
+          the claim, so the alternative points left:
+          $$H_0: p \ge 0.85 \qquad H_1: p &lt; 0.85$$</li>
+          <li><b>Sample proportion.</b> $\hat{p} = \dfrac{198}{250} = 0.7920$.</li>
+          <li><b>Standard error under $H_0$.</b> Always use the hypothesised $p_0$, never $\hat{p}$:
+          $$\sigma_{\hat{p}} = \sqrt{\frac{p_0(1-p_0)}{n}} = \sqrt{\frac{0.85 \times 0.15}{250}}
+          = \sqrt{0.00051} = 0.0226$$</li>
+          <li><b>Test statistic.</b>
+          $z = \dfrac{0.7920 - 0.85}{0.022583} = \dfrac{-0.0580}{0.022583} = -2.5683$,
+          which you look up as $-2.57$.</li>
+          <li><b>p-value.</b> Left-tailed, so the p-value is the whole left tail:
+          $P(Z &lt; -2.57) = 0.0051$.</li>
+          <li><b>Decide.</b> $0.0051 &lt; 0.05$, so reject $H_0$ at the 5% level.</li>
+          <li><b>Conclude in words.</b> There is sufficient evidence at the 5% level that fewer than
+          85% of orders arrive within 24 hours. The pharmacy's claim is not supported.</li>
+        </ol>
+        <div class="final">z = −2.5683 · p-value = 0.0051 &lt; 0.05 · reject H₀, the claim is not supported</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="6" data-max="6">
+    <div class="hd">Question 6 — Test for a population variance <span class="mk">6 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Chi-square test, two-tailed</div>
+      <p>The marks obtained by 10 students in a class test are given below.</p>
+      <div class="tw"><table><tbody><tr>
+        <td class="num">12</td><td class="num">15</td><td class="num">17</td><td class="num">14</td>
+        <td class="num">16</td><td class="num">13</td><td class="num">18</td><td class="num">15</td>
+        <td class="num">14</td><td class="num">16</td>
+      </tr></tbody></table></div>
+      <p>Can we say that the population variance of the distribution of marks, from which the above
+      sample of 10 students was drawn, is equal to 2? Test an appropriate hypothesis at 5% level.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> "Is it equal to 2" is a two-tailed question:
+          $$H_0: \sigma^2 = 2 \qquad H_1: \sigma^2 \ne 2$$</li>
+          <li><b>Sample mean.</b> $\sum x = 150$, so $\bar{x} = \dfrac{150}{10} = 15$.</li>
+          <li><b>Sum of squared deviations.</b> The deviations are
+          $-3, 0, 2, -1, 1, -2, 3, 0, -1, 1$ and their squares are
+          $9, 0, 4, 1, 1, 4, 9, 0, 1, 1$, so $\sum(x-\bar{x})^2 = 30$ and
+          $s^2 = \dfrac{30}{9} = 3.3333$.</li>
+          <li><b>Test statistic.</b>
+          $$\chi^2 = \frac{(n-1)s^2}{\sigma_0^2} = \frac{30}{2} = 15.0000
+          \qquad \text{with } df = 9$$</li>
+          <li><b>Critical values.</b> Two-tailed at 5% splits α into 0.025 each side:
+          $\chi^2_{0.975,\,9} = 2.700$ and $\chi^2_{0.025,\,9} = 19.023$.</li>
+          <li><b>Decide.</b> $2.700 &lt; 15.0000 &lt; 19.023$, so the statistic falls in the acceptance
+          region. Do not reject $H_0$.</li>
+          <li><b>Conclude.</b> At the 5% level there is no evidence against the claim that the
+          population variance of marks equals 2.</li>
+        </ol>
+        <div class="final">χ² = 15.0000, df = 9 · acceptance region (2.700, 19.023) · do not reject H₀</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="7" data-max="7">
+    <div class="hd">Question 7 — Spearman rank correlation <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Ranking two variables and measuring agreement</div>
+      <p>Find the rank correlation coefficient between the hours of revision and the marks scored,
+      from the data given below.</p>
+      <div class="tw"><table>
+        <tbody>
+          <tr><th>Revision hours</th>
+            <td class="num">12</td><td class="num">20</td><td class="num">8</td><td class="num">25</td>
+            <td class="num">15</td><td class="num">30</td><td class="num">18</td><td class="num">10</td>
+            <td class="num">22</td><td class="num">28</td></tr>
+          <tr><th>Marks scored</th>
+            <td class="num">41</td><td class="num">59</td><td class="num">55</td><td class="num">77</td>
+            <td class="num">63</td><td class="num">68</td><td class="num">50</td><td class="num">46</td>
+            <td class="num">72</td><td class="num">84</td></tr>
+        </tbody>
+      </table></div>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Rank each row separately.</b> Rank 1 goes to the smallest value. There are no ties,
+          so no correction factor is needed.</li>
+          <li><b>Build the working table.</b>
+          <div class="tw"><table>
+            <thead><tr><th>Hours</th><th>Marks</th><th class="num">$R_x$</th><th class="num">$R_y$</th>
+              <th class="num">$d$</th><th class="num">$d^2$</th></tr></thead>
+            <tbody>
+              <tr><td class="num">12</td><td class="num">41</td><td class="num">3</td><td class="num">1</td><td class="num">2</td><td class="num">4</td></tr>
+              <tr><td class="num">20</td><td class="num">59</td><td class="num">6</td><td class="num">5</td><td class="num">1</td><td class="num">1</td></tr>
+              <tr><td class="num">8</td><td class="num">55</td><td class="num">1</td><td class="num">4</td><td class="num">−3</td><td class="num">9</td></tr>
+              <tr><td class="num">25</td><td class="num">77</td><td class="num">8</td><td class="num">9</td><td class="num">−1</td><td class="num">1</td></tr>
+              <tr><td class="num">15</td><td class="num">63</td><td class="num">4</td><td class="num">6</td><td class="num">−2</td><td class="num">4</td></tr>
+              <tr><td class="num">30</td><td class="num">68</td><td class="num">10</td><td class="num">7</td><td class="num">3</td><td class="num">9</td></tr>
+              <tr><td class="num">18</td><td class="num">50</td><td class="num">5</td><td class="num">3</td><td class="num">2</td><td class="num">4</td></tr>
+              <tr><td class="num">10</td><td class="num">46</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">22</td><td class="num">72</td><td class="num">7</td><td class="num">8</td><td class="num">−1</td><td class="num">1</td></tr>
+              <tr><td class="num">28</td><td class="num">84</td><td class="num">9</td><td class="num">10</td><td class="num">−1</td><td class="num">1</td></tr>
+              <tr><th colspan="5">$\sum d^2$</th><th class="num">34</th></tr>
+            </tbody>
+          </table></div></li>
+          <li><b>Apply the formula.</b> With $n = 10$, $n(n^2-1) = 10 \times 99 = 990$:
+          $$r = 1 - \frac{6\sum d^2}{n(n^2-1)} = 1 - \frac{6(34)}{990} = 1 - \frac{204}{990}
+          = 1 - 0.2061 = 0.7939$$</li>
+          <li><b>Interpret.</b> A strong positive rank correlation: students who put in more revision
+          hours generally ranked higher in marks, though the agreement is not perfect.</li>
+        </ol>
+        <div class="final">r = 0.7939 (strong positive rank correlation)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" data-q="8" data-max="8">
+    <div class="hd">Question 8 — Regression and correlation <span class="mk">2+2+2+2 marks</span></div>
+    <div class="bd">
+      <div class="qmeta">Recovering everything from two regression lines</div>
+      <p>In a partially destroyed laboratory record of an analysis of bivariate data, the following
+      results only are legible.</p>
+      <div class="box def"><span class="lbl">Legible</span>
+      $\operatorname{Var}(X) = 25$, and the two regression lines are
+      $$24X - 25Y + 260 = 0 \qquad \text{and} \qquad 8X - 3Y = 20$$</div>
+      <p><b>a.</b> The mean values of $X$ and $Y$.</p>
+      <p><b>b.</b> Which line is which, with justification.</p>
+      <p><b>c.</b> The coefficient of correlation between $X$ and $Y$.</p>
+      <p><b>d.</b> The standard deviation of $Y$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) Both regression lines pass through $(\bar{x}, \bar{y})$.</b> So solve them
+          simultaneously. From the second, $8\bar{x} = 3\bar{y} + 20$, i.e.
+          $\bar{x} = \dfrac{3\bar{y}+20}{8}$. Substituting into the first:
+          $$24\left(\frac{3\bar{y}+20}{8}\right) - 25\bar{y} + 260 = 0
+          \;\Rightarrow\; 3(3\bar{y}+20) - 25\bar{y} + 260 = 0$$
+          $$9\bar{y} + 60 - 25\bar{y} + 260 = 0 \;\Rightarrow\; -16\bar{y} = -320
+          \;\Rightarrow\; \bar{y} = 20$$
+          and then $\bar{x} = \dfrac{3(20)+20}{8} = \dfrac{80}{8} = 10$.</li>
+          <li><b>(b) Test the assignment with $r^2 = b_{yx}\,b_{xy} \le 1$.</b>
+          Take the first line as $Y$ on $X$: $25Y = 24X + 260$ gives $b_{yx} = \dfrac{24}{25} = 0.96$.
+          Take the second as $X$ on $Y$: $8X = 3Y + 20$ gives $b_{xy} = \dfrac{3}{8} = 0.375$.
+          Then $r^2 = 0.96 \times 0.375 = 0.36 \le 1$ — valid.</li>
+          <li><b>Check the other way round fails.</b> If the first were $X$ on $Y$ then
+          $b_{xy} = \dfrac{25}{24}$, and the second as $Y$ on $X$ gives $b_{yx} = \dfrac{8}{3}$, so
+          $r^2 = \dfrac{25}{24} \times \dfrac{8}{3} = 2.7778 &gt; 1$, which is impossible. The first
+          assignment is therefore the correct one.</li>
+          <li><b>(c) Correlation.</b> $r = \pm\sqrt{0.36} = \pm 0.6$. Both slopes are positive, so $r$
+          takes the positive sign: $r = 0.6000$.</li>
+          <li><b>(d) Standard deviation of Y.</b> $\operatorname{Var}(X) = 25$ gives $\sigma_x = 5$.
+          From $b_{yx} = r\dfrac{\sigma_y}{\sigma_x}$:
+          $$0.96 = 0.6 \times \frac{\sigma_y}{5} \;\Rightarrow\; \sigma_y = \frac{0.96 \times 5}{0.6}
+          = 8.0000$$</li>
+        </ol>
+        <div class="final">a. x̄ = 10, ȳ = 20 · b. 24X−25Y+260=0 is Y on X · c. r = 0.6000 · d. σ_y = 8.0000</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard" data-score>
+    <h3>Paper 1 score</h3>
+    <div class="bigscore"><span data-total>—</span><small> / 50</small></div>
+    <p class="legend">Finish the paper to unlock the solutions, then award yourself marks question by
+    question. No negative marking: give yourself the method marks you earned even where the final
+    number came out wrong.</p>
+  </div>
+
+  </section>
+</div>
+</div>

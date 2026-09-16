@@ -1,0 +1,509 @@
+<div class="pane" id="pane-tables">
+<div class="sheet" id="tables">
+  <div class="examhead">
+    <div class="inst">Permitted in the examination</div>
+    <h1>Statistical Tables</h1>
+    <div class="meta">Standard normal · Student's t · Chi-square</div>
+  </div>
+
+  <h2 id="tbl-z">Standard normal — area to the LEFT of z</h2>
+  <p class="tblnote">Each cell is $\Phi(z) = P(Z \le z)$. Find the row for the first decimal, then the
+  column for the second. For a right-tail area use $1 - \Phi(z)$.</p>
+  <div class="tw" id="ztable"></div>
+
+  <h2 id="tbl-t">Student's t — upper-tail critical values</h2>
+  <p class="tblnote">The column heading is the area in ONE tail. For a two-sided 95% interval use the
+  $t_{0.025}$ column; for a two-sided 99% interval use $t_{0.005}$.</p>
+  <div class="tw" id="ttable"></div>
+
+  <h2 id="tbl-chi">Chi-square — critical values</h2>
+  <p class="tblnote">The heading $\chi^2_{0.050}$ means the area to the RIGHT of that value is 0.050.
+  For a two-tailed test at 5% you need the $\chi^2_{0.975}$ and $\chi^2_{0.025}$ columns.</p>
+  <div class="tw" id="chitable"></div>
+</div>
+</div>
+
+<div class="pane" id="pane-results">
+<div class="sheet">
+  <div class="examhead">
+    <div class="inst">Progress</div>
+    <h1>Results</h1>
+    <div class="meta" id="resultsWho"></div>
+  </div>
+  <div id="myResults"></div>
+  <h2 id="res-all">Everyone on this device</h2>
+  <p class="tblnote">Each candidate's answers and marks are stored separately in this browser. Open the
+  site on another device and that device keeps its own set.</p>
+  <div id="allResults"></div>
+  <div class="box tip"><span class="lbl">Sharing a result</span>
+    Use <b>Print</b> in the top bar to save a finished paper, with your answers and the solutions, as a
+    PDF. That is the simplest way to send an attempt to someone else.
+  </div>
+</div>
+</div>
+
+</div>
+
+<script>
+/* ============================================================
+   MATH — normal CDF, used only to generate the Z-table
+   ============================================================ */
+function erf(x){
+  const s=x<0?-1:1; x=Math.abs(x);
+  const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x), y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return s*y;
+}
+const Phi = z => 0.5*(1+erf(z/Math.SQRT2));
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+const LS = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+const K_USERS='stats-mock-users', K_ACTIVE='stats-mock-active';
+const stateKey = u => 'stats-mock-state:'+u;
+/* Papers are whatever paper sections the build dropped in — never a fixed list, so adding a
+   paper5.html needs no edit here. Order follows document order, which the build sorts numerically. */
+const PAPER_SECTIONS=[...document.querySelectorAll('section[data-paper]')];
+const PAPERS=PAPER_SECTIONS.map(s=>s.dataset.paper);
+const DURATION=9000;
+
+function blankPaper(){ return {started:false,running:false,remaining:DURATION,submitted:false,
+  answers:{},marks:{},peeked:[],finishedAt:null}; }
+function blankState(){ const s={}; PAPERS.forEach(p=>s[p]=blankPaper()); return s; }
+
+let USER=null, STATE=null, ticker=null;
+
+function loadState(){
+  STATE = LS.get(stateKey(USER), null) || blankState();
+  PAPERS.forEach(p=>{ if(!STATE[p]) STATE[p]=blankPaper(); });
+  PAPERS.forEach(p=>{
+    const st=STATE[p];
+    if(st.running && st.resumedAt){
+      const gone=Math.floor((Date.now()-st.resumedAt)/1000);
+      st.remaining=Math.max(0,st.remaining-gone);
+      st.resumedAt=Date.now();
+      if(st.remaining===0){ st.running=false; st.submitted=true; }
+    }
+  });
+}
+function saveState(){ if(USER) LS.set(stateKey(USER), STATE); }
+
+/* ============================================================
+   GATE — who is sitting the paper
+   ============================================================ */
+const gate=document.getElementById('gate'), app=document.getElementById('app');
+
+function users(){ return LS.get(K_USERS,[]); }
+function renderGate(){
+  const list=document.getElementById('whoList'), us=users();
+  list.innerHTML='';
+  if(!us.length){ list.innerHTML='<span class="legend">No candidates yet — add one below.</span>'; }
+  us.forEach(u=>{
+    const b=document.createElement('button');
+    b.innerHTML='<span>'+u+'</span><span class="x" data-del="'+u+'" title="Remove">&times;</span>';
+    b.addEventListener('click',e=>{
+      if(e.target.dataset.del){
+        e.stopPropagation();
+        if(confirm('Remove '+u+' and delete their saved answers and marks from this device?')){
+          LS.set(K_USERS, users().filter(x=>x!==u));
+          LS.del(stateKey(u));
+          renderGate();
+        }
+        return;
+      }
+      signIn(u);
+    });
+    list.appendChild(b);
+  });
+  const n=us.length;
+  document.getElementById('gateNote').textContent =
+    n>=5 ? 'Five candidates saved on this device — remove one to add another.'
+         : 'This device has '+n+' of 5 candidate slots used.';
+  document.getElementById('addWho').disabled = n>=5;
+}
+function addUser(){
+  const inp=document.getElementById('newName');
+  const name=inp.value.trim().slice(0,24);
+  if(!name) { inp.focus(); return; }
+  const us=users();
+  if(us.length>=5){ alert('This device already holds five candidates. Remove one first.'); return; }
+  if(us.some(u=>u.toLowerCase()===name.toLowerCase())){ signIn(us.find(u=>u.toLowerCase()===name.toLowerCase())); return; }
+  us.push(name); LS.set(K_USERS,us); inp.value=''; signIn(name);
+}
+function signIn(u){
+  USER=u; LS.set(K_ACTIVE,u); loadState();
+  document.getElementById('chip').textContent=u;
+  gate.hidden=true; app.hidden=false;
+  PAPERS.forEach(renderPaper);
+  renderResults();
+  startTicker();
+}
+function signOut(){
+  stopTicker(); saveState(); USER=null; STATE=null;
+  LS.del(K_ACTIVE);
+  app.hidden=true; gate.hidden=false; renderGate();
+}
+document.getElementById('addWho').addEventListener('click',addUser);
+document.getElementById('newName').addEventListener('keydown',e=>{ if(e.key==='Enter') addUser(); });
+document.getElementById('switchUser').addEventListener('click',()=>{ saveState(); signOut(); });
+
+/* ============================================================
+   TABS
+   ============================================================ */
+/* Build the tab strip from the papers actually present, then the two fixed panes. */
+(function buildTabs(){
+  const bar=document.getElementById('tabs');
+  PAPER_SECTIONS.forEach((sec,i)=>{
+    const b=document.createElement('button');
+    b.className='tab'+(i===0?' on':'');
+    b.dataset.pane=sec.dataset.paper;
+    b.textContent=sec.dataset.title || ('Paper '+(i+1));
+    bar.appendChild(b);
+  });
+  [['tables','Tables'],['results','Results']].forEach(([pane,label])=>{
+    const b=document.createElement('button');
+    b.className='tab'; b.dataset.pane=pane; b.textContent=label; bar.appendChild(b);
+  });
+  document.querySelectorAll('.pane').forEach((p,i)=>
+    p.classList.toggle('on', p.id==='pane-'+PAPERS[0]));
+})();
+
+document.getElementById('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t) return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+t.dataset.pane));
+  if(t.dataset.pane==='results') renderResults();
+  window.scrollTo(0,0);
+});
+
+/* ============================================================
+   PAPER RENDERING — inject answer boxes and mark rows once
+   ============================================================ */
+function paperSection(p){ return document.querySelector('section[data-paper="'+p+'"]'); }
+
+function buildPaper(p){
+  const sec=paperSection(p);
+  sec.querySelectorAll('.exercise').forEach(ex=>{
+    const q=ex.dataset.q, max=+ex.dataset.max, bd=ex.querySelector('.bd');
+    const btn=bd.querySelector('.reveal-btn'), sol=bd.querySelector('.solution');
+
+    const ab=document.createElement('div');
+    ab.className='ansblock';
+    const lab=document.createElement('label');
+    lab.setAttribute('for',p+'-ans-'+q);
+    lab.textContent='Your final answer and key steps';
+    const ta=document.createElement('textarea');
+    ta.className='ans'; ta.id=p+'-ans-'+q; ta.dataset.q=q;
+    ta.placeholder='Work on paper, then record your final answer here so it is locked in before you look.';
+    ab.appendChild(lab); ab.appendChild(ta);
+    bd.insertBefore(ab,btn);
+
+    const mr=document.createElement('div');
+    mr.className='markrow'; mr.hidden=true;
+    mr.innerHTML='<label for="'+p+'-mk-'+q+'">Marks you earned</label>'+
+      '<input type="number" id="'+p+'-mk-'+q+'" data-mk="'+q+'" min="0" max="'+max+'" step="0.5">'+
+      '<span class="of">out of '+max+'</span>';
+    sol.parentNode.insertBefore(mr,sol.nextSibling);
+
+    ta.addEventListener('input',()=>{ STATE[p].answers[q]=ta.value; saveState(); });
+    mr.querySelector('input').addEventListener('input',e=>{
+      let v=e.target.value===''?null:Math.max(0,Math.min(max,+e.target.value));
+      if(v!==null && e.target.value!==String(v)) e.target.value=v;
+      STATE[p].marks[q]=v; saveState(); renderScore(p);
+    });
+  });
+}
+
+function renderPaper(p){
+  const sec=paperSection(p), st=STATE[p];
+  sec.querySelectorAll('.exercise').forEach(ex=>{
+    const q=ex.dataset.q, bd=ex.querySelector('.bd');
+    const ta=bd.querySelector('textarea.ans');
+    const btn=bd.querySelector('.reveal-btn');
+    const sol=bd.querySelector('.solution');
+    const mr=bd.querySelector('.markrow');
+    if(ta) ta.value=st.answers[q]||'';
+    if(ta) ta.readOnly=!!st.submitted;
+    const open=st.submitted || st.peeked.indexOf(q)>=0;
+    sol.classList.toggle('open',open);
+    btn.textContent=open?'Hide solution':'Reveal solution';
+    mr.hidden=!open;
+    const inp=mr.querySelector('input');
+    if(inp) inp.value = st.marks[q]==null?'':st.marks[q];
+    let pill=ex.querySelector('.hd .pill.peek');
+    if(st.peeked.indexOf(q)>=0 && !st.submitted && !pill){
+      pill=document.createElement('span'); pill.className='pill peek'; pill.textContent='Peeked';
+      ex.querySelector('.hd').appendChild(pill);
+    }
+  });
+  renderClock(p); renderScore(p); renderControls(p);
+}
+
+function renderControls(p){
+  const sec=paperSection(p), st=STATE[p];
+  const start=sec.querySelector('[data-act="start"]');
+  const pause=sec.querySelector('[data-act="pause"]');
+  const sub=sec.querySelector('[data-act="submit"]');
+  if(st.submitted){
+    start.hidden=true; pause.hidden=true; sub.hidden=true;
+  }else{
+    start.hidden=false; pause.hidden=false; sub.hidden=false;
+    start.textContent = st.started ? (st.running?'Running':'Resume') : 'Start paper';
+    start.disabled = st.running;
+    pause.disabled = !st.running;
+    sub.disabled = !st.started;
+  }
+}
+
+function fmt(s){
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
+  return h+':'+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+function renderClock(p){
+  const el=paperSection(p).querySelector('[data-clock]'), st=STATE[p];
+  el.textContent=fmt(st.remaining);
+  el.classList.toggle('warn', !st.submitted && st.remaining<=600 && st.remaining>0);
+  el.classList.toggle('done', !!st.submitted);
+  if(st.submitted) el.textContent='Time used '+fmt(DURATION-st.remaining);
+}
+function renderScore(p){
+  const sec=paperSection(p), st=STATE[p];
+  const card=sec.querySelector('[data-score] [data-total]');
+  const vals=Object.values(st.marks).filter(v=>typeof v==='number');
+  card.textContent = vals.length? vals.reduce((a,b)=>a+b,0) : '—';
+}
+
+document.addEventListener('click',e=>{
+  const act=e.target.closest('[data-act]');
+  if(act){
+    const sec=act.closest('section[data-paper]'); if(!sec) return;
+    const p=sec.dataset.paper, st=STATE[p];
+    if(act.dataset.act==='start'){
+      st.started=true; st.running=true; st.resumedAt=Date.now();
+    }else if(act.dataset.act==='pause'){
+      st.running=false; st.resumedAt=null;
+    }else if(act.dataset.act==='submit'){
+      if(!confirm('Finish this paper and reveal all solutions? You will not be able to change your answers.')) return;
+      st.running=false; st.submitted=true; st.resumedAt=null; st.finishedAt=Date.now();
+    }
+    saveState(); renderPaper(p); renderResults();
+    return;
+  }
+  const rb=e.target.closest('.reveal-btn');
+  if(rb){
+    const sec=rb.closest('section[data-paper]'); if(!sec) return;
+    const p=sec.dataset.paper, st=STATE[p];
+    const ex=rb.closest('.exercise'), q=ex.dataset.q;
+    const sol=ex.querySelector('.solution'), mr=ex.querySelector('.markrow');
+    const isOpen=sol.classList.contains('open');
+    if(!isOpen && !st.submitted){
+      if(!confirm('This paper is still unfinished. Reveal just this solution? The question will be flagged as peeked.')) return;
+      if(st.peeked.indexOf(q)<0) st.peeked.push(q);
+      saveState();
+    }
+    sol.classList.toggle('open',!isOpen);
+    rb.textContent=!isOpen?'Hide solution':'Reveal solution';
+    mr.hidden=isOpen;
+    renderPaper(p);
+    return;
+  }
+});
+
+function startTicker(){
+  stopTicker();
+  ticker=setInterval(()=>{
+    let dirty=false;
+    PAPERS.forEach(p=>{
+      const st=STATE[p];
+      if(st.running && !st.submitted){
+        st.remaining=Math.max(0,st.remaining-1);
+        renderClock(p);
+        if(st.remaining===0){
+          st.running=false; st.submitted=true; st.finishedAt=Date.now();
+          renderPaper(p); renderResults();
+          alert('Time is up for '+ (paperSection(p).dataset.title) + '. Solutions are now unlocked.');
+        }
+        dirty=true;
+      }
+    });
+    if(dirty && Date.now()%5000<1100) saveState();
+  },1000);
+}
+function stopTicker(){ if(ticker) clearInterval(ticker); ticker=null; }
+window.addEventListener('beforeunload',saveState);
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) saveState(); });
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function totalFor(st){
+  const vals=Object.values(st.marks).filter(v=>typeof v==='number');
+  return vals.length? vals.reduce((a,b)=>a+b,0) : null;
+}
+function statusOf(st){
+  if(st.submitted) return 'Finished';
+  if(st.started) return st.running? 'In progress' : 'Paused';
+  return 'Not started';
+}
+function renderResults(){
+  if(!USER) return;
+  document.getElementById('resultsWho').textContent='Signed in as '+USER;
+  const titles={p1:'Mock Test 1',p2:'Mock Test 2',p3:'Mock Test 3'};
+  let h='<div class="tw"><table><thead><tr><th>Paper</th><th>Status</th><th class="num">Score</th>'+
+        '<th class="num">Percent</th><th class="num">Time used</th><th class="num">Peeked</th></tr></thead><tbody>';
+  PAPERS.forEach(p=>{
+    const st=STATE[p], t=totalFor(st);
+    h+='<tr><td>'+titles[p]+'</td><td>'+statusOf(st)+'</td>'+
+       '<td class="num">'+(t==null?'—':t+' / 50')+'</td>'+
+       '<td class="num">'+(t==null?'—':(t/50*100).toFixed(1)+'%')+'</td>'+
+       '<td class="num">'+(st.started?fmt(DURATION-st.remaining):'—')+'</td>'+
+       '<td class="num">'+(st.peeked.length||'—')+'</td></tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('myResults').innerHTML=h;
+
+  const us=users();
+  let a='<div class="tw"><table><thead><tr><th>Candidate</th><th class="num">Test 1</th>'+
+        '<th class="num">Test 2</th><th class="num">Test 3</th><th class="num">Total</th></tr></thead><tbody>';
+  us.forEach(u=>{
+    const s = u===USER ? STATE : (LS.get(stateKey(u),null)||blankState());
+    let sum=0, any=false;
+    let row='<tr><td>'+(u===USER?'<b>'+u+'</b>':u)+'</td>';
+    PAPERS.forEach(p=>{
+      const st=s[p]||blankPaper(), t=totalFor(st);
+      if(t!=null){ sum+=t; any=true; }
+      row+='<td class="num">'+(t==null?'—':t)+'</td>';
+    });
+    row+='<td class="num">'+(any?sum+' / 150':'—')+'</td></tr>';
+    a+=row;
+  });
+  a+='</tbody></table></div>';
+  document.getElementById('allResults').innerHTML=a;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+(function ztable(){
+  let h='<table><thead><tr><th>z</th>';
+  for(let c=0;c<10;c++) h+='<th class="num">0.0'+c+'</th>';
+  h+='</tr></thead><tbody>';
+  for(let i=-34;i<=34;i++){
+    const z=i/10;
+    h+='<tr><th class="num">'+z.toFixed(1)+'</th>';
+    for(let c=0;c<10;c++){
+      const zz = z<0 ? z-c/100 : z+c/100;
+      h+='<td class="num">'+Phi(zz).toFixed(4)+'</td>';
+    }
+    h+='</tr>';
+  }
+  document.getElementById('ztable').innerHTML=h+'</tbody></table>';
+})();
+
+(function ttable(){
+  const rows=[[1,3.078,6.314,12.706,31.821,63.657],[2,1.886,2.920,4.303,6.965,9.925],
+  [3,1.638,2.353,3.182,4.541,5.841],[4,1.533,2.132,2.776,3.747,4.604],
+  [5,1.476,2.015,2.571,3.365,4.032],[6,1.440,1.943,2.447,3.143,3.707],
+  [7,1.415,1.895,2.365,2.998,3.499],[8,1.397,1.860,2.306,2.896,3.355],
+  [9,1.383,1.833,2.262,2.821,3.250],[10,1.372,1.812,2.228,2.764,3.169],
+  [11,1.363,1.796,2.201,2.718,3.106],[12,1.356,1.782,2.179,2.681,3.055],
+  [13,1.350,1.771,2.160,2.650,3.012],[14,1.345,1.761,2.145,2.624,2.977],
+  [15,1.341,1.753,2.131,2.602,2.947],[16,1.337,1.746,2.120,2.583,2.921],
+  [17,1.333,1.740,2.110,2.567,2.898],[18,1.330,1.734,2.101,2.552,2.878],
+  [19,1.328,1.729,2.093,2.539,2.861],[20,1.325,1.725,2.086,2.528,2.845],
+  [21,1.323,1.721,2.080,2.518,2.831],[22,1.321,1.717,2.074,2.508,2.819],
+  [23,1.319,1.714,2.069,2.500,2.807],[24,1.318,1.711,2.064,2.492,2.797],
+  [25,1.316,1.708,2.060,2.485,2.787],[26,1.315,1.706,2.056,2.479,2.779],
+  [27,1.314,1.703,2.052,2.473,2.771],[28,1.313,1.701,2.048,2.467,2.763],
+  [29,1.311,1.699,2.045,2.462,2.756],[30,1.310,1.697,2.042,2.457,2.750],
+  [40,1.303,1.684,2.021,2.423,2.704],[60,1.296,1.671,2.000,2.390,2.660],
+  [120,1.289,1.658,1.980,2.358,2.617],['∞',1.282,1.645,1.960,2.326,2.576]];
+  let h='<table><thead><tr><th>df</th><th class="num">t₀.₁₀</th><th class="num">t₀.₀₅</th>'+
+        '<th class="num">t₀.₀₂₅</th><th class="num">t₀.₀₁</th><th class="num">t₀.₀₀₅</th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    h+='<tr><th class="num">'+r[0]+'</th>'+
+      r.slice(1).map(v=>'<td class="num">'+v.toFixed(3)+'</td>').join('')+'</tr>';
+  });
+  document.getElementById('ttable').innerHTML=h+'</tbody></table>';
+})();
+
+(function chitable(){
+  const rows=[[1,0.000,0.000,0.001,0.004,0.016,2.706,3.841,5.024,6.635,7.879],
+  [2,0.010,0.020,0.051,0.103,0.211,4.605,5.991,7.378,9.210,10.597],
+  [3,0.072,0.115,0.216,0.352,0.584,6.251,7.815,9.348,11.345,12.838],
+  [4,0.207,0.297,0.484,0.711,1.064,7.779,9.488,11.143,13.277,14.860],
+  [5,0.412,0.554,0.831,1.145,1.610,9.236,11.070,12.833,15.086,16.750],
+  [6,0.676,0.872,1.237,1.635,2.204,10.645,12.592,14.449,16.812,18.548],
+  [7,0.989,1.239,1.690,2.167,2.833,12.017,14.067,16.013,18.475,20.278],
+  [8,1.344,1.646,2.180,2.733,3.490,13.362,15.507,17.535,20.090,21.955],
+  [9,1.735,2.088,2.700,3.325,4.168,14.684,16.919,19.023,21.666,23.589],
+  [10,2.156,2.558,3.247,3.940,4.865,15.987,18.307,20.483,23.209,25.188],
+  [11,2.603,3.053,3.816,4.575,5.578,17.275,19.675,21.920,24.725,26.757],
+  [12,3.074,3.571,4.404,5.226,6.304,18.549,21.026,23.337,26.217,28.300],
+  [13,3.565,4.107,5.009,5.892,7.042,19.812,22.362,24.736,27.688,29.819],
+  [14,4.075,4.660,5.629,6.571,7.790,21.064,23.685,26.119,29.141,31.319],
+  [15,4.601,5.229,6.262,7.261,8.547,22.307,24.996,27.488,30.578,32.801],
+  [16,5.142,5.812,6.908,7.962,9.312,23.542,26.296,28.845,32.000,34.267],
+  [17,5.697,6.408,7.564,8.672,10.085,24.769,27.587,30.191,33.409,35.718],
+  [18,6.265,7.015,8.231,9.390,10.865,25.989,28.869,31.526,34.805,37.156],
+  [19,6.844,7.633,8.907,10.117,11.651,27.204,30.144,32.852,36.191,38.582],
+  [20,7.434,8.260,9.591,10.851,12.443,28.412,31.410,34.170,37.566,39.997],
+  [21,8.034,8.897,10.283,11.591,13.240,29.615,32.671,35.479,38.932,41.401],
+  [22,8.643,9.542,10.982,12.338,14.041,30.813,33.924,36.781,40.289,42.796],
+  [23,9.260,10.196,11.689,13.091,14.848,32.007,35.172,38.076,41.638,44.181],
+  [24,9.886,10.856,12.401,13.848,15.659,33.196,36.415,39.364,42.980,45.559],
+  [25,10.520,11.524,13.120,14.611,16.473,34.382,37.652,40.646,44.314,46.928],
+  [26,11.160,12.198,13.844,15.379,17.292,35.563,38.885,41.923,45.642,48.290],
+  [27,11.808,12.879,14.573,16.151,18.114,36.741,40.113,43.195,46.963,49.645],
+  [28,12.461,13.565,15.308,16.928,18.939,37.916,41.337,44.461,48.278,50.993],
+  [29,13.121,14.256,16.047,17.708,19.768,39.087,42.557,45.722,49.588,52.336],
+  [30,13.787,14.953,16.791,18.493,20.599,40.256,43.773,46.979,50.892,53.672],
+  [40,20.707,22.164,24.433,26.509,29.051,51.805,55.758,59.342,63.691,66.766],
+  [50,27.991,29.707,32.357,34.764,37.689,63.167,67.505,71.420,76.154,79.490],
+  [60,35.534,37.485,40.482,43.188,46.459,74.397,79.082,83.298,88.379,91.952],
+  [70,43.275,45.442,48.758,51.739,55.329,85.527,90.531,95.023,100.425,104.215],
+  [80,51.172,53.540,57.153,60.391,64.278,96.578,101.879,106.629,112.329,116.321],
+  [90,59.196,61.754,65.647,69.126,73.291,107.565,113.145,118.136,124.116,128.299],
+  [100,67.328,70.065,74.222,77.929,82.358,118.498,124.342,129.561,135.807,140.169]];
+  const hd=['χ²₀.₉₉₅','χ²₀.₉₉₀','χ²₀.₉₇₅','χ²₀.₉₅₀','χ²₀.₉₀₀','χ²₀.₁₀₀','χ²₀.₀₅₀','χ²₀.₀₂₅','χ²₀.₀₁₀','χ²₀.₀₀₅'];
+  let h='<table><thead><tr><th>df</th>'+hd.map(x=>'<th class="num">'+x+'</th>').join('')+
+        '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    h+='<tr><th class="num">'+r[0]+'</th>'+
+      r.slice(1).map(v=>'<td class="num">'+v.toFixed(3)+'</td>').join('')+'</tr>';
+  });
+  document.getElementById('chitable').innerHTML=h+'</tbody></table>';
+})();
+
+/* ============================================================
+   CHROME — theme and print
+   ============================================================ */
+const themeBtn=document.getElementById('themeBtn');
+function syncThemeBtn(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  themeBtn.textContent=dark?'Light':'Dark';
+}
+themeBtn.addEventListener('click',()=>{
+  const h=document.documentElement, dark=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme', dark?'light':'dark');
+  try{ localStorage.setItem('stats-theme', dark?'light':'dark'); }catch(e){}
+  syncThemeBtn();
+});
+syncThemeBtn();
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+PAPERS.forEach(buildPaper);
+const last=LS.get(K_ACTIVE,null);
+if(last && users().indexOf(last)>=0){ signIn(last); }
+else { renderGate(); gate.hidden=false; }
+</script>
+</body>
+</html>

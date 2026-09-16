@@ -1,0 +1,432 @@
+<section id="ch4" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Chapter 4</div>
+    <h1>Hypothesis Testing</h1>
+    <p>By the end of this chapter you can set up H₀ and Hₐ correctly, choose the right test statistic, find the rejection region, compute a p-value, and write the conclusion in the words an examiner wants.</p>
+  </div>
+
+  <p class="lead">Chapter 3 asked "what is the parameter, roughly?" This chapter asks a sharper question: "someone claims the parameter is 50 — does my sample give me the right to call that claim wrong?" It is a formal procedure for disagreeing with a number, and it has a fixed shape you can learn once and reuse for means, proportions and variances alike.</p>
+
+  <h2 id="ch4-s1">4.1 · What a hypothesis is</h2>
+
+  <div class="box def"><span class="lbl">Definition</span>
+  A <strong>hypothesis</strong> is a claim or statement about a numerical property of a population — a population parameter such as the mean $\mu$, the proportion $P$, or the variance $\sigma^2$.</div>
+
+  <div class="box note"><span class="lbl">Notes from the slides — types of hypotheses</span>
+  <ul>
+    <li><strong>Research hypotheses:</strong> an assertion or conjecture about a population parameter arising from practical, scientific, or managerial questions.</li>
+    <li><strong>Statistical hypotheses:</strong> formal statements about population parameters expressed in mathematical terms ($H_0$ and $H_1$).</li>
+    <li>Examples of research hypotheses: a new drug is more effective than the current market standard; the mean assembly time for a new process is less than 50 minutes; the proportion of defective items produced by a machine is less than 0.03.</li>
+    <li>Statistical hypotheses are stated in terms of population parameters, not sample statistics, and are evaluated using sample data to determine whether there is sufficient evidence to reject the initial assumption.</li>
+  </ul></div>
+
+  <h3>The two hypotheses</h3>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li><strong>Null Hypothesis ($H_0$):</strong> a statement of no difference, no effect, or status quo. It states the belief or baseline assumption about a population parameter. It is assumed to be true until proven otherwise, and may be rejected or failed to be rejected based on sample evidence.</li>
+    <li><strong>Alternative Hypothesis ($H_a$ or $H_1$):</strong> the opposite of the null. It represents what the researcher tries to support or gather evidence for — it carries the burden of proof.</li>
+    <li><strong>Rule for the equality sign:</strong> the equality sign ($=$, $\le$, or $\ge$) ALWAYS belongs in the null hypothesis. The alternative hypothesis NEVER contains an equality sign — it uses $\neq$, $>$, or $<$.</li>
+    <li>$H_0$ refers to a specified parameter value, not a sample statistic. Example: $H_0: \mu = 100$ is correct; $H_0: \bar{X} = 100$ is <em>incorrect</em>.</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">The courtroom, which is the whole idea in one picture</span>
+  $H_0$ is "the defendant is innocent". We start by assuming it, not because we believe it, but because it is the position that must be <em>disproved</em>. The prosecution ($H_a$) carries the burden of proof. If the evidence is weak we do not declare the defendant innocent — we say "not guilty", meaning we failed to prove otherwise. That is exactly the difference between <em>rejecting</em> $H_0$ and <em>failing to reject</em> it.</div>
+
+  <div class="box warn"><span class="lbl">Never write "accept H₀"</span>
+  <p>The two legal verdicts are <em>guilty</em> and <em>not guilty</em> — never <em>innocent</em>. Likewise your two statistical verdicts are <strong>reject $H_0$</strong> and <strong>fail to reject $H_0$</strong>.</p>
+  <p>"Fail to reject" means the evidence was not strong enough, which is not at all the same as proving $H_0$ true. Writing "accept $H_0$" is one of the few phrases that reliably loses marks even when every number above it is right.</p></div>
+
+  <div class="box tip"><span class="lbl">Setting up the hypotheses — a method that always works</span>
+  <ol>
+    <li>Find the claim being <em>tested or challenged</em>, and write it with an equals sign. That is your $H_0$.</li>
+    <li>Ask what the question wants <em>evidence for</em>. That is your $H_a$.</li>
+    <li>Check: does $H_a$ contain $\neq$, $>$ or $<$? Does $H_0$ carry the equality? If not, you have them the wrong way round.</li>
+  </ol>
+  <p>Example from the slides — testing if the population mean equals 50: &nbsp; $H_0: \mu = 50$ &nbsp; versus &nbsp; $H_a: \mu \neq 50$.</p></div>
+
+  <h2 id="ch4-s2">4.2 · One-tailed and two-tailed tests</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li><strong>Two-tailed test:</strong> used when $H_a$ specifies a non-directional difference ($\neq$). The rejection region is divided into both tails of the sampling distribution.</li>
+    <li><strong>One-tailed test:</strong> used when $H_a$ specifies a directional difference ($>$ or $<$). The rejection region is located entirely in one tail — right-tail for $>$, left-tail for $<$.</li>
+  </ul></div>
+
+  <figure data-fig="tails" data-alpha="0.05"><figcaption></figcaption></figure>
+
+  <div class="tw"><table>
+    <thead><tr><th>Type</th><th>Hypotheses</th><th>Critical region</th><th>p-value</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Right / upper tail</strong></td><td>$H_0: \mu \le \mu_0$ vs $H_a: \mu > \mu_0$</td><td>$Z > Z_\alpha$</td><td>$P(Z > Z_{calc})$</td></tr>
+      <tr><td><strong>Left / lower tail</strong></td><td>$H_0: \mu \ge \mu_0$ vs $H_a: \mu < \mu_0$</td><td>$Z < -Z_\alpha$</td><td>$P(Z < Z_{calc})$</td></tr>
+      <tr><td><strong>Two tail</strong></td><td>$H_0: \mu = \mu_0$ vs $H_a: \mu \neq \mu_0$</td><td>$Z < -Z_{\alpha/2}$ or $Z > Z_{\alpha/2}$</td><td>$2 \times P(Z > |Z_{calc}|)$</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box warn"><span class="lbl">The α/2 trap</span>
+  A two-tailed test splits α between the two ends, so each tail gets only α/2. At $\alpha = 0.05$ the two-tailed critical value is <strong>1.96</strong>, but the one-tailed value is <strong>1.645</strong>. Using 1.645 for a two-tailed test makes you reject far too easily. Decide which test you are running <em>before</em> you look up any value.</div>
+
+  <h2 id="ch4-s3">4.3 · The six steps</h2>
+
+  <div class="box note"><span class="lbl">Steps in Testing Hypotheses — from the slides</span>
+  <ol>
+    <li>State the null hypothesis ($H_0$) and the alternative hypothesis ($H_a$).</li>
+    <li>Select the level of significance ($\alpha$) and sample size ($n$).</li>
+    <li>Determine the appropriate test statistic and sampling distribution.</li>
+    <li>Determine the critical value(s) and define the decision rule (or rejection region).</li>
+    <li>Collect sample data, compute the sample statistic and the test statistic value.</li>
+    <li>Make the statistical decision (reject $H_0$ or fail to reject $H_0$) and state the conclusion in managerial terms.</li>
+  </ol></div>
+
+  <div class="box note"><span class="lbl">Note — the hypothesis testing process</span>
+  Assume $H_0$ is true → take a random sample → compute the test statistic → compare the test statistic with the critical value (or the p-value with $\alpha$) → make the decision to reject or not reject $H_0$.</div>
+
+  <div class="box tip"><span class="lbl">Write out all six steps in the exam</span>
+  Structured method marks are the easiest marks in this chapter. Even if your arithmetic slips, a visible $H_0$/$H_a$, a stated α, a named test statistic, a stated critical value and a written conclusion will collect most of the credit. Step 6 in <em>words</em> — about the actual pizzas or batteries, not about "the null hypothesis" — is the one students most often skip.</div>
+
+  <h2 id="ch4-s4">4.4 · Significance, the rejection region, and why we reject</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li><strong>Reason for rejecting $H_0$:</strong> if the sample statistic is unlikely to occur given that $H_0$ is true, we reject $H_0$. "Unlikely" means the test statistic falls in the critical/rejection region, where the probability of occurrence under $H_0$ is very small ($\le \alpha$).</li>
+    <li><strong>Level of significance, $\alpha$:</strong> defines the probability of making a Type I error (rejecting $H_0$ when $H_0$ is true). Commonly chosen values are $\alpha = 0.05$, $0.01$ or $0.10$. It is set by the researcher <em>prior to</em> data collection.</li>
+    <li><strong>Critical region (rejection region):</strong> the set of values of the test statistic for which the null hypothesis is rejected.</li>
+    <li><strong>Non-rejection region:</strong> the set of values for which $H_0$ is not rejected.</li>
+    <li><strong>Critical value(s):</strong> the boundary value(s) separating the rejection region from the non-rejection region.</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">The logic, in one sentence</span>
+  Assume the claim is true, then ask: <em>if it really were true, how freakish would my sample be?</em> If the answer is "so freakish it would happen less than 5% of the time", we stop believing the claim. It is proof by contradiction, run on probabilities instead of certainties.</div>
+
+  <div class="box warn"><span class="lbl">α is chosen BEFORE you see the data</span>
+  Picking α after seeing your test statistic — nudging it from 0.05 to 0.10 so the result "works" — destroys the meaning of the whole procedure. The slides are explicit: α is set by the researcher prior to data collection.</div>
+
+  <h2 id="ch4-s5">4.5 · The two errors, and the power of a test</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li><strong>Type I error:</strong> occurs when a true null hypothesis is rejected. Probability $= \alpha$.</li>
+    <li><strong>Type II error:</strong> occurs when a false null hypothesis is not rejected. Probability $= \beta$.</li>
+    <li>You cannot commit both errors simultaneously in a single decision.</li>
+    <li>Reducing $\alpha$ increases $\beta$ for a fixed sample size $n$.</li>
+    <li>Increasing sample size $n$ reduces both $\alpha$ and $\beta$ risks.</li>
+  </ul></div>
+
+  <h3>Outcomes and Probabilities</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Decision</th><th>$H_0$ is <strong>true</strong></th><th>$H_0$ is <strong>false</strong> ($H_a$ true)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Do not reject $H_0$</strong></td><td>Correct decision &nbsp;($1-\alpha$)</td><td>Type II error &nbsp;($\beta$)</td></tr>
+      <tr><td><strong>Reject $H_0$</strong></td><td>Type I error &nbsp;($\alpha$)</td><td>Correct decision — <strong>Power</strong> &nbsp;($1-\beta$)</td></tr>
+    </tbody>
+  </table></div>
+
+  <figure data-fig="errors" data-shift="2.6" data-crit="1.645"><figcaption></figcaption></figure>
+
+  <div class="box plain"><span class="lbl">Two ways to be wrong, in plain words</span>
+  <strong>Type I</strong> is a <em>false alarm</em>: the fire alarm goes off with no fire. <strong>Type II</strong> is a <em>miss</em>: there is a fire and the alarm stays silent. Make the alarm more sensitive and you get fewer misses but more false alarms. Make it less sensitive and the reverse. The only way to improve both at once is a better detector — which in statistics means a bigger sample.</div>
+
+  <div class="box def"><span class="lbl">The courtroom example, from the slides</span>
+  <p>$H_0$: the defendant is innocent &nbsp;vs&nbsp; $H_a$: the defendant is guilty.</p>
+  <ul>
+    <li><strong>Type I error:</strong> convicting an innocent person (rejecting a true $H_0$).</li>
+    <li><strong>Type II error:</strong> acquitting a guilty person (failing to reject a false $H_0$).</li>
+    <li>The judicial system prioritises minimising Type I error — protecting innocent people — by setting a very high standard of proof ("beyond a reasonable doubt"), and accepts a higher Type II error risk as the price.</li>
+    <li>In industrial quality control the same trade-off appears as <strong>producer's risk</strong> (Type I — rejecting a good batch) versus <strong>consumer's risk</strong> (Type II — accepting a bad batch).</li>
+  </ul></div>
+
+  <div class="formula">
+    <div class="name">Power of the test</div>
+    $$ \text{Power} = 1 - \beta = P(\text{Reject } H_0 \mid H_0 \text{ is false}) $$
+    <div class="where"><b>β</b> the probability of a Type II error · <b>Power</b> the probability of correctly rejecting a false null — a test's ability to detect a real effect</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  Power increases as the sample size $n$ increases, as $\alpha$ increases, or as the true parameter moves further from the hypothesised value. There is an inverse relationship between $\alpha$ and $\beta$: as $\alpha$ decreases, $\beta$ increases and vice versa, assuming the sample size $n$ remains constant.</div>
+
+  <h2 id="ch4-s6">4.6 · The p-value approach</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li><strong>p-value:</strong> the probability of obtaining a test statistic as extreme as, or more extreme than, the observed value, assuming $H_0$ is true. Also known as the observed level of significance.</li>
+    <li><strong>Decision rule:</strong> reject $H_0$ if p-value $< \alpha$; fail to reject $H_0$ if p-value $\ge \alpha$.</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  The p-value answers: <em>"if the claim were true, how often would I see a sample at least this extreme?"</em> A p-value of 0.002 means "twice in a thousand" — so either something very unusual happened, or the claim is wrong. A p-value of 0.40 means "four times in ten", which is nothing remarkable at all.</div>
+
+  <div class="box tip"><span class="lbl">"If p is low, H₀ must go"</span>
+  Compare the p-value directly against α. Small p, reject. And note how the tail affects the computation: a two-tailed p-value is <strong>doubled</strong>, because "as extreme" includes both directions.</div>
+
+  <div class="box warn"><span class="lbl">What a p-value is NOT</span>
+  It is <strong>not</strong> the probability that $H_0$ is true. It is a probability computed <em>assuming $H_0$ is true</em> — you cannot turn it around. Nor does a small p-value mean the effect is <em>large</em>; with a big enough sample, a trivially small difference can produce a tiny p-value.</div>
+
+  <p>The two methods below always give the same verdict. Drag α and the test statistic and watch both readouts move together — the marker crossing into the shaded zone happens at exactly the moment the p-value drops below α.</p>
+
+  <figure data-fig="i-test"><figcaption></figcaption></figure>
+
+  <h2 id="ch4-s7">4.7 · Testing a mean when σ is known — the Z test</h2>
+
+  <div class="box def"><span class="lbl">Assumptions</span>
+  Population standard deviation $\sigma$ is known · the population is normally distributed, OR the sample size $n \ge 30$ (by the Central Limit Theorem).</div>
+
+  <div class="formula">
+    <div class="name">Z test for a mean, σ² known</div>
+    $$ Z = \frac{\bar{X} - \mu_0}{\dfrac{\sigma}{\sqrt{n}}} $$
+    <div class="where"><b>x̄</b> the sample mean · <b>μ₀</b> the value claimed in H₀ · <b>σ/√n</b> the standard error · degrees of freedom: not applicable, $Z \sim N(0,1)$</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Decision rule — critical value approach</span>
+  <ul>
+    <li><strong>Two-tailed</strong> ($H_a: \mu \neq \mu_0$): reject $H_0$ if $|Z_{calc}| > Z_{\alpha/2}$.</li>
+    <li><strong>Right-tailed</strong> ($H_a: \mu > \mu_0$): reject $H_0$ if $Z_{calc} > Z_\alpha$.</li>
+    <li><strong>Left-tailed</strong> ($H_a: \mu < \mu_0$): reject $H_0$ if $Z_{calc} < -Z_\alpha$.</li>
+  </ul></div>
+
+  <div class="box plain"><span class="lbl">Read the formula as a sentence</span>
+  "How far is my sample mean from the claim, measured in standard errors?" A Z of 3 means the sample landed three standard errors away from what the claim predicted — a long way, in a world where 95% of samples land within about two.</div>
+
+  <h2 id="ch4-s8">4.8 · Testing a mean when σ is unknown — the t test</h2>
+
+  <div class="box def"><span class="lbl">Assumptions</span>
+  Population standard deviation $\sigma$ is unknown, so the sample standard deviation $S$ replaces it · the population is normally distributed (or $n \ge 30$).</div>
+
+  <div class="formula">
+    <div class="name">t test for a mean, σ² unknown</div>
+    $$ t = \frac{\bar{X} - \mu_0}{\dfrac{S}{\sqrt{n}}} \qquad \text{with } df = n-1 $$
+    <div class="where">identical in shape to the Z test — only <b>S</b> replaces σ, and the critical value now comes from the t table with n−1 degrees of freedom</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Decision rule</span>
+  Compare the computed $t$ with the critical value at $df = n-1$:
+  <ul>
+    <li><strong>Two-tailed:</strong> reject $H_0$ if $|t| > t_{\alpha/2,\,n-1}$.</li>
+    <li><strong>Right-tailed:</strong> reject $H_0$ if $t > t_{\alpha,\,n-1}$.</li>
+    <li><strong>Left-tailed:</strong> reject $H_0$ if $t < -t_{\alpha,\,n-1}$.</li>
+  </ul></div>
+
+  <div class="box tip"><span class="lbl">The one question that picks the test</span>
+  <strong>Was the standard deviation given as a population fact, or computed from the sample?</strong> "It is known from past records that σ = 5" → Z. "The sample had a standard deviation of 5" → t. Everything else about the two procedures is identical.</div>
+
+  <figure data-fig="t-vs-z"><figcaption></figcaption></figure>
+
+  <h2 id="ch4-s9">4.9 · Testing a proportion</h2>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Tests of the population proportion evaluate claims regarding a population proportion $P$, using the sample proportion $\hat{p} = \frac{X}{n}$, where $X$ is the number of successes in $n$ trials.</li>
+    <li><strong>Conditions:</strong> the sampling distribution of $\hat{p}$ is approximately normal if $nP_0 \ge 5$ and $n(1-P_0) \ge 5$.</li>
+    <li>Hypotheses: $H_0: P = P_0$ versus $H_a: P \neq P_0$ (or $P > P_0$, or $P < P_0$).</li>
+  </ul></div>
+
+  <div class="formula">
+    <div class="name">Z test for a proportion</div>
+    $$ Z = \frac{\hat{p} - P_0}{\sqrt{\dfrac{P_0(1-P_0)}{n}}} $$
+    <div class="where"><b>p̂</b> the sample proportion · <b>P₀</b> the proportion claimed in H₀ · degrees of freedom: not applicable, $Z \sim N(0,1)$</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">Use P₀ in the denominator, not p̂</span>
+  <p>This is the single most common slip in proportion <em>tests</em>, and it is the one place this chapter differs from Chapter 3.</p>
+  <ul>
+    <li><strong>Testing</strong> (this chapter): the standard error uses $P_0$ — the value from $H_0$ — because the whole calculation is done in the world where $H_0$ is true.</li>
+    <li><strong>Confidence interval</strong> (Chapter 3): the standard error uses $\hat{p}$, because there is no claimed value to assume.</li>
+  </ul></div>
+
+  <h2 id="ch4-s10">4.10 · Testing a variance</h2>
+
+  <p>As in Chapter 3, questions about spread use the chi-square distribution — and again the two cases differ by whether the population mean is known.</p>
+
+  <h3>Case I — population mean μ is known</h3>
+  <div class="box def"><span class="lbl">Conditions</span>
+  The population is normally distributed and the population mean $\mu$ is <strong>known</strong>. Hypotheses: $H_0: \sigma^2 = \sigma_0^2$ versus $H_a: \sigma^2 \neq \sigma_0^2$ (or $>$, or $<$).</div>
+
+  <div class="formula">
+    <div class="name">Chi-square test for a variance, μ known</div>
+    $$ \chi^{2} = \frac{\sum_{i=1}^{n}(X_i - \mu)^{2}}{\sigma_0^{2}} \qquad \text{with } df = n $$
+    <div class="where"><b>Σ(Xᵢ−μ)²</b> squared deviations from the <em>known</em> mean · <b>σ₀²</b> the variance claimed in H₀ · <b>df = n</b>, since no degree of freedom is lost estimating the mean</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Decision rules (df = n)</span>
+  <ul>
+    <li><strong>Right-tail</strong> ($H_a: \sigma^2 > \sigma_0^2$): reject $H_0$ if $\chi^2 > \chi^2_{n,\,\alpha}$.</li>
+    <li><strong>Left-tail</strong> ($H_a: \sigma^2 < \sigma_0^2$): reject $H_0$ if $\chi^2 < \chi^2_{n,\,1-\alpha}$.</li>
+    <li><strong>Two-tail</strong> ($H_a: \sigma^2 \neq \sigma_0^2$): reject $H_0$ if $\chi^2 > \chi^2_{n,\,\alpha/2}$ or $\chi^2 < \chi^2_{n,\,1-\alpha/2}$.</li>
+  </ul></div>
+
+  <h3>Case II — population mean μ is unknown</h3>
+  <div class="box def"><span class="lbl">Conditions</span>
+  The population is normally distributed and $\mu$ is <strong>unknown</strong>, estimated by the sample mean $\bar{X}$.</div>
+
+  <div class="formula">
+    <div class="name">Chi-square test for a variance, μ unknown</div>
+    $$ \chi^{2} = \frac{(n-1)S^{2}}{\sigma_0^{2}} = \frac{\sum_{i=1}^{n}(X_i-\bar{X})^{2}}{\sigma_0^{2}} \qquad \text{with } df = n-1 $$
+    <div class="where"><b>S²</b> the sample variance · <b>df = n − 1</b>, because one degree of freedom is lost estimating μ with x̄</div>
+  </div>
+
+  <div class="box def"><span class="lbl">Decision rules (df = n − 1)</span>
+  <ul>
+    <li><strong>Right-tail:</strong> reject $H_0$ if $\chi^2_{n-1} > \chi^2_{n-1,\,\alpha}$.</li>
+    <li><strong>Left-tail:</strong> reject $H_0$ if $\chi^2_{n-1} < \chi^2_{n-1,\,1-\alpha}$.</li>
+    <li><strong>Two-tail:</strong> reject $H_0$ if $\chi^2_{n-1} > \chi^2_{n-1,\,\alpha/2}$ or $\chi^2_{n-1} < \chi^2_{n-1,\,1-\alpha/2}$.</li>
+  </ul></div>
+
+  <figure data-fig="chisq" data-df="16"><figcaption></figcaption></figure>
+
+  <div class="box warn"><span class="lbl">Two separate lookups, again</span>
+  Because the chi-square curve is skewed, a two-tailed variance test needs <strong>two different critical values</strong> — you cannot use $\pm$ one number. Look up $\chi^2_{\alpha/2}$ for the right boundary and $\chi^2_{1-\alpha/2}$ for the left one, from the chi-square table supplied in your exam.</div>
+
+  <h2 id="ch4-s11">4.11 · Choosing the test — one table for the whole chapter</h2>
+
+  <div class="tw"><table>
+    <thead><tr><th>Testing a claim about…</th><th>When</th><th>Statistic</th><th>Formula</th><th>df</th></tr></thead>
+    <tbody>
+      <tr><td>Mean $\mu$</td><td>σ known; normal or $n \ge 30$</td><td><span class="chip">Z</span></td><td>$\dfrac{\bar{X}-\mu_0}{\sigma/\sqrt{n}}$</td><td>—</td></tr>
+      <tr><td>Mean $\mu$</td><td>σ unknown, only $S$</td><td><span class="chip">t</span></td><td>$\dfrac{\bar{X}-\mu_0}{S/\sqrt{n}}$</td><td>$n-1$</td></tr>
+      <tr><td>Proportion $P$</td><td>$nP_0 \ge 5$ and $n(1-P_0) \ge 5$</td><td><span class="chip">Z</span></td><td>$\dfrac{\hat{p}-P_0}{\sqrt{P_0(1-P_0)/n}}$</td><td>—</td></tr>
+      <tr><td>Variance $\sigma^2$</td><td>μ known</td><td><span class="chip">χ²</span></td><td>$\dfrac{\sum(X_i-\mu)^2}{\sigma_0^2}$</td><td>$n$</td></tr>
+      <tr><td>Variance $\sigma^2$</td><td>μ unknown</td><td><span class="chip">χ²</span></td><td>$\dfrac{(n-1)S^2}{\sigma_0^2}$</td><td>$n-1$</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box tip"><span class="lbl">A worked template you can copy for any question</span>
+  <ol>
+    <li><strong>$H_0$ and $H_a$</strong> — parameter, not statistic; equality goes in $H_0$.</li>
+    <li><strong>α and n</strong> — and decide one- or two-tailed <em>now</em>.</li>
+    <li><strong>Test statistic</strong> — pick the row from the table above; state why.</li>
+    <li><strong>Critical value</strong> — state the table value exactly, e.g. "$z_{0.025} = 1.96$".</li>
+    <li><strong>Compute</strong> — substitute, show the arithmetic, get a number.</li>
+    <li><strong>Decide and conclude</strong> — reject / fail to reject, then a sentence about the real-world thing.</li>
+  </ol></div>
+
+  <h2 id="ch4-s12">4.12 · The deck's worked example — computing α and β directly</h2>
+
+  <p>Sections 4.4 and 4.5 defined α and β as areas under curves. This example, taken straight from your slides, computes both of them exactly from a binomial distribution instead — which makes the two error probabilities much more concrete than any picture can.</p>
+
+  <div class="example">
+    <div class="hd">Worked example 1 — the biased coin (Type I and Type II error)</div>
+    <div class="bd">
+      <p>To test whether a coin is unbiased, it is tossed 5 times. The null hypothesis of unbiasedness is rejected if and only if more than 4 heads are obtained. Find the (i) critical region, (ii) probability of Type I error, (iii) probability of Type II error, when the corresponding probability of getting a head is 0.2.</p>
+      <div class="given"><b>Given</b> n = 5 tosses · reject H₀ only if more than 4 heads · under H₀ the coin is fair · under H₁ the probability of a head is 0.2</div>
+
+      <ol class="steps">
+        <li><b>State the hypothesis.</b> The coin being unbiased means $H_0: p = \frac{1}{2}$.</li>
+        <li><b>Model the count.</b> Let $X$ be the number of heads in five tosses. Under $H_0$ it is binomial:
+        $$P(X = x \mid H_0) = \binom{n}{x}p^{x}q^{n-x} = \binom{5}{x}\left(\tfrac{1}{2}\right)^{x}\left(\tfrac{1}{2}\right)^{5-x} = \binom{5}{x}\left(\tfrac{1}{2}\right)^{5} = \tfrac{1}{32}\binom{5}{x}$$
+        for $x = 0, 1, \dots, 5$.</li>
+        <li><b>(i) The critical region.</b> We reject $H_0$ if more than 4 heads are obtained, and the only value above 4 is 5. So the critical region is $X = 5$.</li>
+        <li><b>(ii) Type I error.</b> This is rejecting $H_0$ while $H_0$ is true, so compute the probability of landing in the critical region <em>with a fair coin</em>:
+        $$\alpha = P(\text{Reject } H_0 \mid H_0) = P(X = 5 \mid p = \tfrac{1}{2}) = \tfrac{1}{32}\binom{5}{5} = \tfrac{1}{32} = 0.03125$$</li>
+        <li><b>(iii) Type II error.</b> This is failing to reject $H_0$ while $H_1$ is true, so now use $p = 0.2$ — and it is easier to compute the rejection probability and subtract:
+        $$\beta = P(\text{Accept } H_0 \mid H_1) = 1 - P(\text{Reject } H_0 \mid H_1) = 1 - P(X = 5 \mid p = 0.2)$$
+        $$= 1 - \binom{5}{5}(0.2)^{5} = 1 - 0.00032 = 0.99968$$</li>
+      </ol>
+      <div class="final">(i) X = 5 &nbsp;·&nbsp; (ii) α = 0.03125 &nbsp;·&nbsp; (iii) β = 0.99968</div>
+
+      <div class="box plain" style="margin-top:1.2rem"><span class="lbl">Read those two numbers together — this is the lesson</span>
+      <p>α is a tiny 3.1%: this test almost never convicts a fair coin. But β is a catastrophic <strong>99.97%</strong>: if the coin really only lands heads 20% of the time, this test will fail to notice essentially <em>every single time</em>.</p>
+      <p>Its power is $1 - \beta = 0.00032$. The rule "reject only on 5 heads out of 5" is so cautious that it is almost incapable of detecting anything — and note that a coin biased <em>towards tails</em> produces fewer heads, which this right-tailed rule can never flag at all. Driving α down to near zero pushed β to near one, exactly as section 4.5 warned.</p></div>
+    </div>
+  </div>
+
+  <h2 id="ch4-exercises">4.13 · Practice questions</h2>
+  <p>These come from the setup examples in your slide deck. Getting $H_0$ and $H_a$ right is worth doing slowly — every later step inherits the mistake.</p>
+  <button class="revealall">Reveal all solutions</button>
+
+  <div class="exercise">
+    <div class="hd">Question 1 — stating the hypotheses</div>
+    <div class="bd">
+      <p>A manufacturer is filling 40 oz. packages with flour. The company wants the package contents to average 40 ounces. State the null and alternative hypotheses.</p>
+      <div class="given"><b>Given</b> target fill = 40 ounces · the company cares about deviation in <em>either</em> direction</div>
+      <p class="hint">Hint: the equality always goes in $H_0$. Would over-filling also be a problem, or only under-filling? That decides whether $H_a$ uses $\neq$ or $<$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>The claim being tested is that the process is on target, which carries the equality: $H_0: \mu = 40$ oz.</li>
+          <li>The company wants to detect any departure from 40 — packages that are too full waste flour, packages that are too light short the customer. So the alternative is non-directional.</li>
+          <li>$H_a: \mu \neq 40$ oz.</li>
+          <li>Because $H_a$ uses $\neq$, this is a <strong>two-tailed</strong> test, and α is split between both tails.</li>
+        </ol>
+        <div class="final">H₀: μ = 40 oz &nbsp;·&nbsp; Hₐ: μ ≠ 40 oz &nbsp;(two-tailed)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 2 — parameter, not statistic</div>
+    <div class="bd">
+      <p>The average number of TV sets in U.S. homes is claimed to be equal to three.</p>
+      <p>a) State $H_0$ and $H_a$ for testing this claim.<br>
+         b) Your classmate writes $H_0: \bar{X} = 3$. Explain why that is wrong.</p>
+      <div class="given"><b>Given</b> the claimed average is 3 TV sets per home</div>
+      <p class="hint">Hint for (b): which of $\mu$ and $\bar{X}$ do you already know the value of once you have taken your sample?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a)</b> The claim carries the equality, so $H_0: \mu = 3$, and its opposite is $H_1: \mu \neq 3$ — the average number of TV sets is <em>not</em> equal to three.</li>
+          <li><b>(b)</b> A hypothesis is always a statement about a <strong>population parameter</strong>, never about a sample statistic.</li>
+          <li>$\bar{X}$ is computed directly from your own sample — you can simply look at it, so there is nothing to test and nothing uncertain about it. If your sample gave $\bar{X} = 2.8$, then $\bar{X} = 2.8$ is a fact, not a hypothesis.</li>
+          <li>$\mu$ is the unknown quantity out in the population. That is the only thing a test can be about.</li>
+        </ol>
+        <div class="final">(a) H₀: μ = 3 · H₁: μ ≠ 3 &nbsp;·&nbsp; (b) hypotheses are about the unknown parameter μ, never the observed statistic X̄</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 3 — one-tailed or two-tailed?</div>
+    <div class="bd">
+      <p>For each pair of hypotheses below, say whether the test is one-tailed or two-tailed, and if one-tailed, which tail holds the rejection region.</p>
+      <p>a) &nbsp;$H_0: \mu \ge 40$ &nbsp;versus&nbsp; $H_a: \mu < 40$<br>
+         b) &nbsp;$H_0: P \le 0.18$ &nbsp;versus&nbsp; $H_a: P > 0.18$<br>
+         c) &nbsp;$H_0: \mu = 12$ &nbsp;versus&nbsp; $H_a: \mu \neq 12$</p>
+      <p class="hint">Hint: look only at the sign in $H_a$. It points at the rejection region.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a)</b> $H_a$ uses $<$, a direction, so it is <strong>one-tailed</strong> — specifically <strong>left-tailed</strong>. Reject $H_0$ if the test statistic falls below $-Z_\alpha$.</li>
+          <li><b>(b)</b> $H_a$ uses $>$, so it is <strong>one-tailed, right-tailed</strong>. Reject $H_0$ if the statistic exceeds $+Z_\alpha$. Note this one is about a proportion, so the statistic is $Z = \frac{\hat{p}-P_0}{\sqrt{P_0(1-P_0)/n}}$ with $P_0 = 0.18$.</li>
+          <li><b>(c)</b> $H_a$ uses $\neq$, no direction, so it is <strong>two-tailed</strong>. Reject if $|Z| > Z_{\alpha/2}$ — and remember α is split, so at 5% the critical value is 1.96, not 1.645.</li>
+          <li>Notice in (a) and (b) that $H_0$ carries $\ge$ and $\le$: the equality is still on the null side, exactly as the rule requires.</li>
+        </ol>
+        <div class="final">(a) one-tailed, left &nbsp;·&nbsp; (b) one-tailed, right &nbsp;·&nbsp; (c) two-tailed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 4 — the logic of rejection</div>
+    <div class="bd">
+      <p>A claim states that the population mean age is 50, so $H_0: \mu = 50$. A random sample is selected and the sample mean age turns out to be $\bar{X} = 20$. Explain, in the language of sampling distributions, why this leads us to reject $H_0$.</p>
+      <div class="given"><b>Given</b> $H_0: \mu = 50$ · observed $\bar{X} = 20$</div>
+      <p class="hint">Hint: assume H₀ is true, then ask where 20 sits on the sampling distribution of x̄ centred at 50.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Assume $H_0$ is true.</b> Then the sampling distribution of $\bar{X}$ is centred at $\mu = 50$, with spread $\sigma/\sqrt{n}$.</li>
+          <li><b>Locate the observation.</b> A sample mean of 20 sits far out in the left tail of that distribution.</li>
+          <li><b>Ask the key question.</b> If the population mean really were 50, how likely is it that a random sample would average only 20? Very unlikely — that value lies in the rejection region, where the probability of occurrence under $H_0$ is $\le \alpha$.</li>
+          <li><b>Draw the conclusion.</b> Since it is unlikely we would get a sample mean of this value if in fact 50 were the population mean, we reject the null hypothesis that $\mu = 50$.</li>
+          <li>Note the form of the argument: we never proved $\mu \neq 50$ directly. We showed that assuming $\mu = 50$ makes our data absurd — proof by contradiction, run on probabilities.</li>
+        </ol>
+        <div class="final">Reject H₀: a sample mean of 20 is too improbable under a distribution centred at 50</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box tip"><span class="lbl">Where to find more numerical practice</span>
+  Your module 6 deck is heavy on the framework and light on fully-worked numerical tests. Two complete hypothesis tests <em>are</em> worked end-to-end in your correlation deck, and both follow the six-step template exactly: <a href="#ch5-exercises">Chapter 5, Question 1</a> (a t-test for a correlation coefficient) and <a href="#ch5-exercises">Question 5</a> (a t-test plus confidence interval for a regression slope).</div>
+
+  <div class="recap">
+    <h4>Chapter recap</h4>
+    <ul>
+      <li><strong>$H_0$ holds the equality</strong> ($=, \le, \ge$); $H_a$ never does ($\neq, >, <$). Both are about <em>parameters</em>, never about $\bar{x}$.</li>
+      <li><strong>Reject or fail to reject</strong> — never "accept $H_0$".</li>
+      <li><strong>The direction of $H_a$ sets the tails</strong>, and a two-tailed test splits α in half (1.96, not 1.645, at 5%).</li>
+      <li><strong>Type I (α)</strong> is a false alarm; <strong>Type II (β)</strong> is a miss. They trade off at fixed $n$; only a bigger sample improves both. <strong>Power $= 1-\beta$.</strong></li>
+      <li><strong>p-value:</strong> if p &lt; α, reject. Double it for a two-tailed test. It is not the probability that $H_0$ is true.</li>
+      <li><strong>Pick the statistic from one question:</strong> mean with σ known → Z; mean with σ unknown → t (df $= n-1$); proportion → Z with $P_0$ inside the standard error; variance → χ² (df $= n$ if μ known, $n-1$ if not).</li>
+      <li><strong>Always finish in words</strong> about the real situation — step 6 is worth marks on its own.</li>
+    </ul>
+  </div>
+</section>

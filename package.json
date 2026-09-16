@@ -1,0 +1,13 @@
+{
+  "name": "statistics-visual-textbook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive statistics textbook, built as a single self-contained HTML page.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "sync": "node build.mjs && node -e \"require('fs').copyFileSync('public/index.html','statistics-book.html')\"",
+    "dev": "npm run build && npx --yes serve public -l 4173",
+    "deploy": "npm run build && npx --yes wrangler pages deploy public"
+  }
+}

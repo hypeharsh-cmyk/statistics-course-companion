@@ -1,0 +1,434 @@
+<section id="ch1" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Chapter 1</div>
+    <h1>The Normal Distribution and the Central Limit Theorem</h1>
+    <p>By the end of this chapter you can turn any normal question into a Z-score, read the answer off a table, work the table backwards, and explain why sample averages behave so much better than single measurements.</p>
+  </div>
+
+  <p class="lead">Almost everything in this course rests on one curve. Heights, exam marks, manufacturing errors, pizza diameters — measure enough of them and they pile up in the same humped shape, thick in the middle and thin at both ends. This chapter is about that shape, the one table that unlocks it, and the theorem that quietly makes the rest of the syllabus possible.</p>
+
+  <h2 id="ch1-s1">1.1 · What the normal curve actually is</h2>
+
+  <p>With a coin you can count outcomes: heads, tails. With a measurement like a pizza's diameter you cannot count — between 15.5 and 15.6 inches there are infinitely many possible values. So instead of asking "what is the probability of exactly 15.5 inches?" (which is zero, always), we describe the variable with a <strong>density curve</strong> and ask about <em>ranges</em>.</p>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  The height of the curve is not a probability. <strong>Area under the curve is the probability.</strong> Think of the curve as a hill of soil: the question "how likely is a value between 15 and 16?" means "what fraction of the soil sits between 15 and 16?" The whole hill always contains exactly 1 unit of soil.</div>
+
+  <p>A continuous random variable $X$ is said to follow a <strong>normal distribution</strong> with mean $\mu$ and variance $\sigma^2$ if its probability density function is:</p>
+
+  <div class="formula">
+    <div class="name">The normal probability density function</div>
+    $$ f(x;\mu,\sigma) = \frac{1}{\sigma\sqrt{2\pi}}\; e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{2}} $$
+    <div class="where"><b>x</b> the value you are asking about · <b>μ</b> the population mean, which sets where the peak sits · <b>σ</b> the population standard deviation, which sets how wide the hill is · <b>π</b> 3.14159… · <b>e</b> 2.71828…</div>
+  </div>
+
+  <p>We write this as $X \sim N(\mu, \sigma^2)$, read aloud as "X is normally distributed with mean mu and variance sigma squared".</p>
+
+  <div class="box def"><span class="lbl">Conditions</span>
+  <ul>
+    <li>$-\infty < x < \infty$ — the curve never actually touches zero, it just gets vanishingly thin</li>
+    <li>$-\infty < \mu < \infty$ — the mean can be any number</li>
+    <li>$0 < \sigma$ — the standard deviation must be positive</li>
+  </ul></div>
+
+  <div class="box tip"><span class="lbl">You will never integrate this</span>
+  That formula looks frightening and you will almost certainly never plug numbers into it. It has no clean antiderivative, which is precisely <em>why</em> statistical tables exist. Somebody did the hard integration once, for one standard curve, and printed the answers. Your job is to reshape your problem until it fits that printed table.</div>
+
+  <h3>What μ and σ each do</h3>
+  <p>Only two numbers control the entire curve. $\mu$ slides it left and right without changing its shape. $\sigma$ changes how spread out it is: a small $\sigma$ gives a tall narrow spike, a large $\sigma$ gives a low wide mound. In both cases the total area stays pinned at exactly 1 — so if the curve gets wider it must also get shorter.</p>
+
+  <figure data-fig="normal-compare"><figcaption></figcaption></figure>
+
+  <h2 id="ch1-s2">1.2 · The standard normal variable Z</h2>
+
+  <p>There are infinitely many normal curves, one for every pair of $\mu$ and $\sigma$. Nobody could print a table for each. So we convert every normal problem into <strong>one</strong> reference curve: the one with mean 0 and standard deviation 1.</p>
+
+  <div class="formula">
+    <div class="name">Standardising — the single most used formula in this course</div>
+    $$ Z = \frac{X - \mu}{\sigma} $$
+    <div class="where"><b>X</b> your actual value · <b>μ</b> the mean · <b>σ</b> the standard deviation · <b>Z</b> how many standard deviations your value sits above (+) or below (−) the mean</div>
+  </div>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  $X - \mu$ asks "how far am I from average?" Dividing by $\sigma$ converts that distance from its original units (inches, kilos, marks) into a universal unit: <em>numbers of standard deviations</em>. A Z of 2 means "two standard deviations above the mean" whether we are talking about pizzas or battery life.</div>
+
+  <p>If $X \sim N(\mu, \sigma^2)$ then $Z \sim N(0,1)$, with $E(Z) = 0$ and $Var(Z) = 1$. Its density is the same formula with $\mu=0$ and $\sigma=1$ substituted in:</p>
+
+  <div class="formula">
+    <div class="name">Standard normal density</div>
+    $$ f(z) = \frac{1}{\sqrt{2\pi}}\, e^{-\frac{z^{2}}{2}} \qquad\text{and}\qquad F(x) = P(X \le x) = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}} e^{-\frac{u^{2}}{2}}\,du $$
+    <div class="where"><b>f(z)</b> the height of the standard curve at z · <b>F(x)</b> the cumulative probability, i.e. the area to the LEFT of x · <b>u</b> a dummy variable used only inside the integral</div>
+  </div>
+
+  <h3>Symmetry — the property that saves you constantly</h3>
+  <p>The normal curve is a mirror image about its mean: $f(\mu + a) = f(\mu - a)$ for any $a$.</p>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  <ul><li>The normal curve is symmetric about $\mu$; $a$ can take any value.</li>
+  <li>mean = median (and, in fact, the mode too — all three sit at the peak).</li></ul></div>
+
+  <p>For the standard curve this means $P(Z < -a) = P(Z > a)$. That is why tables only ever print the positive half: the negative half is the same numbers, flipped.</p>
+
+  <h3>The Empirical Rule</h3>
+  <p>Before doing any arithmetic, you should know roughly where the answer must land.</p>
+
+  <figure data-fig="normal-empirical" data-mu="0" data-sigma="1"><figcaption></figcaption></figure>
+
+  <div class="box tip"><span class="lbl">Sanity check</span>
+  If you calculate $P(X > \mu + 3\sigma)$ and get something like 0.4, you have made an arithmetic error — beyond 3σ there is only about 0.15% of the curve left on each side. Always ask "does this answer look right on the picture?" before writing it down.</div>
+
+  <h2 id="ch1-s3">1.3 · Reading the Z-table (do this slowly, once)</h2>
+
+  <div class="box warn"><span class="lbl">There are two kinds of Z-table — know which one you have</span>
+  <p><strong>Type A — "area from 0 to z".</strong> The cell gives $P(0 \le Z \le z)$, the area between the middle and your z. The biggest number in this table is about 0.5.</p>
+  <p><strong>Type B — cumulative.</strong> The cell gives $P(Z \le z) = \Phi(z)$, all the area to the left. The biggest number in this table is about 1.0.</p>
+  <p><strong>Your lecture slides use Type A.</strong> That is why their solutions constantly add or subtract 0.5. The table in the appendix of this book is Type B (cumulative) <em>and</em> Type A, side by side, so you can use whichever your exam gives you. Converting between them is easy: $\Phi(z) = 0.5 + P(0 \le Z \le z)$ for positive z.</p></div>
+
+  <h3>A worked lookup, step by step</h3>
+  <p>Say you want $P(0 \le Z \le 1.56)$ using a Type A table.</p>
+  <ol>
+    <li>Split your z at the decimal: $1.56 \rightarrow 1.5$ and $0.06$.</li>
+    <li>Go <em>down</em> the left-hand column to the row labelled <code>1.5</code>.</li>
+    <li>Go <em>across</em> the top to the column labelled <code>.06</code>.</li>
+    <li>Where they meet: <strong>0.4406</strong>. That is your area.</li>
+  </ol>
+
+  <h3>The four situations you will meet</h3>
+  <p>Every normal probability question is one of these four shapes. Learn to convert on sight, using a Type A table:</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>You want</th><th>Do this</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>$P(0 \le Z \le a)$</td><td>read the table directly</td><td>this is exactly what Type A prints</td></tr>
+      <tr><td>$P(Z > a)$, $a$ positive</td><td>$0.5 - \text{table}(a)$</td><td>the whole right half is 0.5; chop off the bit before $a$</td></tr>
+      <tr><td>$P(Z < -a)$</td><td>$0.5 - \text{table}(a)$</td><td>symmetry: it mirrors $P(Z > a)$</td></tr>
+      <tr><td>$P(-a \le Z \le b)$</td><td>$\text{table}(a) + \text{table}(b)$</td><td>you are adding two pieces that meet at the middle</td></tr>
+      <tr><td>$P(a \le Z \le b)$, both positive</td><td>$\text{table}(b) - \text{table}(a)$</td><td>big slice minus the small slice inside it</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box tip"><span class="lbl">Always draw the curve first</span>
+  Sketch a bell, mark the mean, mark your z values, and shade what you want. Then it is obvious whether you should add, subtract, or take it from 0.5. Students who skip the sketch are the ones who write $0.5 + $ when they meant $0.5 -$.</div>
+
+  <p>Now try it live. Drag the sliders below and watch the shaded area — this widget is doing exactly what the table does.</p>
+
+  <figure data-fig="i-normal" data-mu="12" data-sigma="4"><figcaption></figcaption></figure>
+
+  <h2 id="ch1-s4">1.4 · Combining independent normal variables</h2>
+
+  <p>If $X_1 \sim N(\mu_1, \sigma_1^2)$ and $X_2 \sim N(\mu_2, \sigma_2^2)$ are <strong>independent</strong>, then:</p>
+
+  <div class="formula">
+    <div class="name">Sum and difference of independent normals</div>
+    $$ X_1 + X_2 \sim N\!\left(\mu_1 + \mu_2,\; \sigma_1^2 + \sigma_2^2\right) $$
+    $$ X_1 - X_2 \sim N\!\left(\mu_1 - \mu_2,\; \sigma_1^2 + \sigma_2^2\right) $$
+    <div class="where"><b>μ₁, μ₂</b> the two means · <b>σ₁², σ₂²</b> the two variances — note these are <em>variances</em>, not standard deviations</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">The trap</span>
+  For the <em>difference</em>, the means subtract but the variances still <strong>add</strong>. Uncertainty never cancels out — combining two noisy things always gives you something noisier than either one. And you must add variances ($\sigma^2$), never standard deviations. If $\sigma_1 = 3$ and $\sigma_2 = 4$, the combined $\sigma$ is $\sqrt{9+16} = 5$, not 7.</div>
+
+  <h2 id="ch1-s5">1.5 · Sampling distributions</h2>
+
+  <div class="box def"><span class="lbl">Definition</span>
+  A <strong>sampling distribution</strong> is the probability distribution of a sample statistic, formed when samples of size $n$ are repeatedly taken from a population.</div>
+
+  <p>Read that again slowly, because it is the idea students most often skate past. We are no longer talking about the distribution of <em>individual values</em>. We are talking about the distribution of a <em>summary number</em> — like $\bar{x}$ — computed fresh from each of many different samples.</p>
+
+  <div class="box plain"><span class="lbl">In plain English</span>
+  Walk into a crowd, grab 30 people, measure their average height, write it down. Send them back. Do it again with a different 30. And again, a thousand times. You now have a thousand averages. Those averages have their own mean, their own spread, and their own shape. That collection is the sampling distribution of the mean.</div>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Three characteristics about the sampling distribution of a statistic: its mean, its variance, its shape.</li>
+    <li>Due to random variation, different samples from the same population will have different sample means.</li>
+    <li>If we repeatedly take samples of the same size $n$ from a population, the means of the samples form a sampling distribution of means, and its mean is equal to the population mean.</li>
+    <li>In practice we do not take repeated samples from a population — we do not encounter sampling distributions empirically — but it is necessary to know their properties in order to draw statistical inferences.</li>
+  </ul></div>
+
+  <p>That last note matters. You will never actually build a sampling distribution in real life. You take <em>one</em> sample. The sampling distribution is the imagined population of all the samples you <em>could</em> have taken, and it is what lets you say how much to trust the one sample you got.</p>
+
+  <h3>Standard deviation versus standard error</h3>
+
+  <figure data-fig="sampling-dist" data-mu="50" data-sigma="10"><figcaption></figcaption></figure>
+
+  <div class="formula">
+    <div class="name">Standard error of the mean</div>
+    $$ \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}} $$
+    <div class="where"><b>σ</b> how much individual observations vary · <b>n</b> the sample size · <b>σ<sub>x̄</sub></b> how much <em>sample means</em> vary from sample to sample</div>
+  </div>
+
+  <div class="box warn"><span class="lbl">σ and σ/√n are not the same thing — this costs marks constantly</span>
+  <p><strong>$\sigma$</strong> describes how much <em>one individual</em> differs from average. One pizza can easily be half an inch off.</p>
+  <p><strong>$\sigma/\sqrt{n}$</strong> describes how much the <em>average of n things</em> differs from average. For four pizzas to average half an inch small, all four have to be small together — much rarer.</p>
+  <p>Ask yourself one question every time: <em>is this question about a single item, or about an average?</em> Single item → divide by $\sigma$. Average of $n$ → divide by $\sigma/\sqrt{n}$. This is the entire difference between parts (a), (b) and (c) of the pizza example below.</p></div>
+
+  <div class="box note"><span class="lbl">Notes from the slides</span>
+  <ul>
+    <li>Standard deviation is a measure of variability between individual observations (a descriptive index relevant to the mean).</li>
+    <li>Standard error refers to the variability of summary statistics (e.g. the variability of the sample mean or a sample proportion).</li>
+    <li>Standard error is a measure of uncertainty in a sample statistic, i.e. the precision of the estimate of the estimator.</li>
+  </ul></div>
+
+  <h2 id="ch1-s6">1.6 · The Central Limit Theorem</h2>
+
+  <p>Here is the theorem that makes statistics work at all.</p>
+
+  <div class="formula">
+    <div class="name">Central Limit Theorem</div>
+    $$ Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}} \;\xrightarrow[n \to \infty]{}\; N(0,1) $$
+    <div class="where"><b>x̄</b> the sample mean · <b>μ</b> the population mean · <b>σ</b> the population standard deviation · <b>n</b> the sample size</div>
+  </div>
+
+  <div class="box note"><span class="lbl">Note from the slides</span>
+  Even if $X$ may or may not follow a normal distribution, when $n$ is sufficiently large ($n \ge 30$), then $\bar{x}$ approximately follows a normal distribution with mean $\mu$ and variance $\frac{\sigma^2}{n}$:
+  $$\bar{x} \sim N\!\left(\mu, \frac{\sigma^2}{n}\right)$$</div>
+
+  <div class="box plain"><span class="lbl">Why this is remarkable</span>
+  The population can be any shape at all — skewed, lumpy, two-humped, nothing like a bell. It does not matter. Average enough of it together and the averages come out normal. This is why one printed Z-table is enough for a whole course: whatever messy thing you sampled, the <em>mean</em> of your sample lands back on familiar ground.</div>
+
+  <p>Do not take that on faith — go and break it. In the widget below, pick the most lopsided population you can (Exponential), set $n$ to 1, and press <strong>Draw 100 samples</strong> a few times: the right-hand histogram is as skewed as the population. Now drag $n$ up to 30 and press Reset, then draw again. Watch the skew vanish and the orange predicted curve snap into place. Also watch the <em>observed spread</em> readout shrink and track $\sigma/\sqrt{n}$.</p>
+
+  <figure data-fig="i-clt"><figcaption></figcaption></figure>
+
+  <div class="box tip"><span class="lbl">When may I use the normal for x̄?</span>
+  <ul>
+    <li>Population is <strong>already normal</strong> → $\bar{x}$ is exactly normal for <em>any</em> $n$, even $n = 2$.</li>
+    <li>Population is <strong>not normal</strong> (or unknown) → you need $n \ge 30$ before you may treat $\bar{x}$ as normal.</li>
+  </ul>
+  In the pizza example below the population is stated to be normal, which is why parts (b) and (c) are legitimate with $n = 2$ and $n = 4$.</div>
+
+  <h3>Joint distribution of a random sample</h3>
+  <p>If $x_1, x_2, \dots, x_n$ are $n$ independent observations from the same distribution $f(x)$, their joint density is simply the product:</p>
+  <div class="formula">
+    <div class="name">Joint distribution of independent observations</div>
+    $$ f(x_1, x_2, \dots, x_n) = f(x_1)\,f(x_2)\cdots f(x_n) = \prod_{i=1}^{n} f(x_i) $$
+    <div class="where"><b>f(x<sub>i</sub>)</b> the density of one observation · the product form is allowed <em>only</em> because the observations are independent</div>
+  </div>
+
+  <h2 id="ch1-s7">1.7 · Worked example from the slides</h2>
+
+  <div class="example">
+    <div class="hd">Worked example 1 — single value vs average of n (the pizza problem)</div>
+    <div class="bd">
+      <p>The chefs at a local pizza chain in Bengaluru strive to maintain the suggested size of their 16-inch pizzas. Despite their best efforts, they are unable to make every pizza exactly 16 inches in diameter. The manager has determined that the size of the pizzas is normally distributed with a mean of 16 inches and a standard deviation of 0.8 inches.</p>
+      <p>a) What is the probability that a randomly selected pizza is less than 15.5 inches?<br>
+         b) What is the probability that two randomly selected pizzas average less than 15.5 inches?<br>
+         c) What is the probability that four randomly selected pizzas average less than 15.5 inches?</p>
+      <div class="given"><b>Given</b> μ = 16 inches · σ = 0.8 inches · $X \sim N(16, 0.8^2)$ · population is normal, so any $n$ is allowed</div>
+
+      <h4>Part (a) — one single pizza</h4>
+      <ol class="steps">
+        <li><b>Name the tool.</b> This is about one individual pizza, so we divide by $\sigma$ itself, not by the standard error.</li>
+        <li>Standardise: $Z = \dfrac{15.5 - 16}{0.8} = \dfrac{-0.5}{0.8} = -0.625$</li>
+        <li>Table lookup: $P(Z < -0.62) = 0.2676$ and $P(Z < -0.63) = 0.2643$. Interpolating at the midpoint $-0.625$ gives $0.2660$.</li>
+        <li>So $P(X < 15.5) = 0.2660$.</li>
+      </ol>
+      <div class="final">P(X &lt; 15.5) = 0.2660  (0.2643 if you round z to −0.63)</div>
+
+      <h4>Part (b) — the average of two pizzas</h4>
+      <ol class="steps">
+        <li><b>Name the tool.</b> Now it is an <em>average</em>, so the spread we need is the standard error, not σ.</li>
+        <li>Standard error: $\sigma_{\bar{x}} = \dfrac{0.8}{\sqrt{2}} = 0.565685$</li>
+        <li>Standardise: $Z = \dfrac{15.5 - 16}{0.565685} = -0.8839$</li>
+        <li>Table lookup: $P(Z < -0.88) = 0.1894$, $P(Z < -0.89) = 0.1867$; interpolated at $-0.8839$ gives $0.1884$.</li>
+      </ol>
+      <div class="final">P(x̄ &lt; 15.5) = 0.1884  (0.1894 if you round z to −0.88)</div>
+
+      <h4>Part (c) — the average of four pizzas</h4>
+      <ol class="steps">
+        <li>Standard error: $\sigma_{\bar{x}} = \dfrac{0.8}{\sqrt{4}} = \dfrac{0.8}{2} = 0.4$</li>
+        <li>Standardise: $Z = \dfrac{15.5 - 16}{0.4} = -1.25$</li>
+        <li>Table lookup: $P(Z < -1.25) = 0.1056$.</li>
+      </ol>
+      <div class="final">P(x̄ &lt; 15.5) = 0.1056</div>
+
+      <div class="box plain" style="margin-top:1.2rem"><span class="lbl">Read the three answers together</span>
+      0.2660 → 0.1884 → 0.1056. Same threshold, same population, but the probability keeps falling as the sample grows. One undersized pizza is unremarkable; four undersized pizzas in a row is a real signal. <strong>Averaging kills noise</strong> — and that single fact is the engine behind confidence intervals in Chapter 3 and hypothesis tests in Chapter 4.</div>
+    </div>
+  </div>
+
+  <h2 id="ch1-exercises">1.8 · Practice questions</h2>
+  <p>These are the questions from your slides, with nothing added and nothing removed. Try each one on paper first — sketch the curve, shade the region, then compute. Only then open the solution.</p>
+  <button class="revealall">Reveal all solutions</button>
+
+  <div class="exercise">
+    <div class="hd">Question 1</div>
+    <div class="bd">
+      <p>Finding probabilities using the standard normal distribution: find $P(0 < Z < 1.56)$.</p>
+      <div class="given"><b>Given</b> $Z \sim N(0,1)$ · target range $0 < Z < 1.56$</div>
+      <p class="hint">Hint: this is the plain Type A table lookup — no conversion needed at all.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li>Identify the Z-score: $z = 1.56$.</li>
+          <li>Split it: row $1.5$, column $.06$.</li>
+          <li>Read the area straight off the table: $P(0 \le Z \le 1.56) = 0.4406$.</li>
+        </ol>
+        <div class="final">0.4406</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 2</div>
+    <div class="bd">
+      <p>Find the area under the standard normal distribution which lies:</p>
+      <p>a) Between $Z = 0$ and $Z = 0.96$<br>
+         b) $Z = -1.45$ and $Z = 0$<br>
+         c) To the right of $Z = -0.35$<br>
+         d) To the left of $Z = -0.35$<br>
+         e) Between $Z = -0.67$ and $Z = 0.75$</p>
+      <div class="given"><b>Table values</b> $P(0 \le Z \le 0.96) = 0.3315$ · $P(0 \le Z \le 1.45) = 0.4265$ · $P(0 \le Z \le 0.35) = 0.1368$ · $P(0 \le Z \le 0.67) = 0.2486$ · $P(0 \le Z \le 0.75) = 0.2734$</div>
+      <p class="hint">Hint: for (c) and (d), remember the whole right half of the curve is 0.5. Sketch each one before computing.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a)</b> Straight lookup: $P(0 < Z < 0.96) = 0.3315$.</li>
+          <li><b>(b)</b> By symmetry $P(-1.45 < Z < 0) = P(0 < Z < 1.45) = 0.4265$.</li>
+          <li><b>(c)</b> Split at the middle: $P(Z > -0.35) = P(-0.35 < Z < 0) + P(Z > 0) = 0.1368 + 0.5 = 0.6368$.</li>
+          <li><b>(d)</b> The complement of (c): $P(Z < -0.35) = 1 - 0.6368 = 0.3632$.</li>
+          <li><b>(e)</b> The range straddles zero, so add the two halves: $P(0 < Z < 0.67) + P(0 < Z < 0.75) = 0.2486 + 0.2734 = 0.5220$.</li>
+        </ol>
+        <div class="final">a) 0.3315 · b) 0.4265 · c) 0.6368 · d) 0.3632 · e) 0.52</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 3</div>
+    <div class="bd">
+      <p>If $X$ is a normally distributed random variable with mean 12 and standard deviation 4, find the probability of the following:</p>
+      <p>i) $X \ge 20$ &nbsp;&nbsp; ii) $P(0 \le X \le 12)$</p>
+      <div class="given"><b>Given</b> μ = 12 · σ = 4 · $X \sim N(12, 16)$</div>
+      <p class="hint">Hint: convert each X to a Z first, then decide which of the four table situations you are in.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(i)</b> At $X = 20$: $Z = \dfrac{20-12}{4} = 2$.</li>
+          <li>$P(X \ge 20) = P(Z \ge 2) = 0.5 - P(0 \le Z \le 2) = 0.5 - 0.4772 = 0.0228$. Table value used: $P(0 \le Z \le 2) = 0.4772$.</li>
+          <li><b>(ii)</b> At $X = 0$: $Z = \dfrac{0-12}{4} = -3$. At $X = 12$: $Z = \dfrac{12-12}{4} = 0$.</li>
+          <li>$P(0 \le X \le 12) = P(-3 \le Z \le 0) = P(0 \le Z \le 3) = 0.4986$ by symmetry.</li>
+        </ol>
+        <div class="final">(i) 0.0228 · (ii) 0.4986</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 4</div>
+    <div class="bd">
+      <p>If $X$ is a normally distributed random variable with mean 30 and standard deviation 5, find the probabilities that:</p>
+      <p>(i) $26 \le X \le 40$ &nbsp;&nbsp; (ii) $X \ge 45$ &nbsp;&nbsp; (iii) $|X - 30| > 5$</p>
+      <div class="given"><b>Given</b> μ = 30 · σ = 5 · $X \sim N(30, 25)$</div>
+      <p class="hint">Hint for (iii): $|X - 30| > 5$ means "further than 5 from the mean in either direction". Find the probability of being <em>within</em> 5 first, then subtract from 1.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(i)</b> $Z_1 = \dfrac{26-30}{5} = -0.8$, $Z_2 = \dfrac{40-30}{5} = 2$. The range straddles zero, so add: $P(0 \le Z \le 0.8) + P(0 \le Z \le 2) = 0.2881 + 0.4772 = 0.7653$.</li>
+          <li><b>(ii)</b> $Z = \dfrac{45-30}{5} = 3$, so $P(X \ge 45) = 0.5 - 0.49865 = 0.0013$.</li>
+          <li><b>(iii)</b> Rewrite it: $P(|X-30| \le 5) = P(25 \le X \le 35)$, which in Z terms is $P(-1 \le Z \le 1)$.</li>
+          <li>By symmetry that is $2 \times P(0 \le Z \le 1) = 2 \times 0.3413 = 0.6826$.</li>
+          <li>Therefore $P(|X-30| > 5) = 1 - 0.6826 = 0.3174$.</li>
+        </ol>
+        <div class="final">(i) 0.7653 · (ii) 0.0013 · (iii) 0.3174</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 5 — working the table backwards</div>
+    <div class="bd">
+      <p>The random variable $X$ is normally distributed with mean 12 and variance 16.</p>
+      <p>i. Find $x_1$ such that $P(X > x_1) = 0.2296$<br>
+         ii. Find $x_2$ such that $P(X < x_2) = 0.6700$<br>
+         iii. Find $x_3$ such that $P(X > x_3) = 0.9123$</p>
+      <div class="given"><b>Given</b> μ = 12 · $\sigma^2 = 16 \Rightarrow \sigma = 4$</div>
+      <p class="hint">Hint: here you are given the area and must hunt <em>inside</em> the table for it, then read the z off the edges. For (iii), a probability above 0.5 to the <em>right</em> means the value sits <em>below</em> the mean, so z is negative.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <p>Rearranging the standardising formula gives the tool for all three parts: $x = \mu + z\sigma = 12 + 4z$.</p>
+        <ol class="steps">
+          <li><b>(i)</b> $P(Z > z_1) = 0.2296 \Rightarrow P(0 \le Z \le z_1) = 0.5 - 0.2296 = 0.2704$. Searching the table body for 0.2704 gives $z_1 = 0.74$. So $x_1 = 12 + 4(0.74) = 14.96$.</li>
+          <li><b>(ii)</b> $P(Z < z_2) = 0.6700 \Rightarrow P(0 \le Z \le z_2) = 0.6700 - 0.5 = 0.1700$. The table gives $z_2 = 0.44$. So $x_2 = 12 + 4(0.44) = 13.76$.</li>
+          <li><b>(iii)</b> $P(Z > z_3) = 0.9123$ is more than half, so $z_3$ is negative. Write $z_3 = -z_0$: then $0.5 + P(0 \le Z \le z_0) = 0.9123$, giving $P(0 \le Z \le z_0) = 0.4123$ and $z_0 = 1.36$.</li>
+          <li>So $z_3 = -1.36$ and $x_3 = 12 + 4(-1.36) = 6.56$.</li>
+        </ol>
+        <div class="final">i) x₁ = 14.96 · ii) x₂ = 13.76 · iii) x₃ = 6.56</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 6</div>
+    <div class="bd">
+      <p>The mean yield for a one-acre plot is 662 kilos with a standard deviation of 32 kilos. Assuming a normal distribution, how many one-acre plots in a batch of 1,000 plots would you expect to have a yield (i) over 700 kilos, (ii) below 650 kilos, and (iii) what is the lowest yield of the best 100 plots?</p>
+      <div class="given"><b>Given</b> μ = 662 kilos · σ = 32 kilos · N = 1000 plots</div>
+      <p class="hint">Hint: "how many plots" means multiply the probability by 1000. Part (iii) runs the table backwards — "the best 100 of 1000" is the top 10%.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(i)</b> $Z = \dfrac{700-662}{32} = 1.19$. Then $P(X > 700) = 0.5 - 0.3830 = 0.117$. Expected plots $= 1000 \times 0.117 = 117$.</li>
+          <li><b>(ii)</b> $Z = \dfrac{650-662}{32} = -0.38$. Then $P(X < 650) = 0.5 - 0.148 = 0.352$. Expected plots $= 1000 \times 0.352 = 352$.</li>
+          <li><b>(iii)</b> The best 100 out of 1000 is the top $\frac{100}{1000} = 0.1$ of the distribution, so we need $x_1$ with $P(X > x_1) = 0.1$.</li>
+          <li>$P(0 \le Z \le z_1) = 0.5 - 0.1 = 0.4$, and the table gives $z_1 \approx 1.28$ (table value $0.3997 \approx 0.40$).</li>
+          <li>$x_1 = 662 + 1.28(32) = 662 + 40.96 = 702.96$ kilos.</li>
+        </ol>
+        <div class="final">(i) 117 plots · (ii) 352 plots · (iii) 702.96 kilos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 7 — normal feeding into binomial</div>
+    <div class="bd">
+      <p>The marks obtained by a number of students for a certain subject are assumed to be approximately normally distributed with mean value 65 and with a standard deviation of 5. If 3 students are taken at random from the set, what is the probability that exactly 2 of them will have marks over 70?</p>
+      <div class="given"><b>Given</b> μ = 65 · σ = 5 · n = 3 students · we want exactly k = 2 above 70</div>
+      <p class="hint">Hint: two-stage question. First use the normal curve to find $p$, the chance that <em>one</em> student beats 70. Then "exactly 2 out of 3" is a binomial question with that $p$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Stage 1 — find p.</b> At $X = 70$: $Z = \dfrac{70-65}{5} = 1.0$.</li>
+          <li>$p = P(X > 70) = 0.5 - P(0 \le Z \le 1.0) = 0.5 - 0.3413 = 0.1587$.</li>
+          <li><b>Stage 2 — binomial.</b> Each of the 3 students independently either beats 70 or does not, so $P(Y = k) = \binom{n}{k}p^k(1-p)^{n-k}$.</li>
+          <li>$P(Y=2) = \binom{3}{2}(0.1587)^2(0.8413)^{1} = 3 \times 0.025186 \times 0.8413$</li>
+          <li>$= 0.06356 \approx 0.0635$.</li>
+        </ol>
+        <div class="final">0.0635</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="hd">Question 8</div>
+    <div class="bd">
+      <p>The effective life of dry battery cells is considered to be normally distributed with mean 20 hours and standard deviation 5 hours. In a consignment of 100 battery cells, how many cells are expected to have life: (i) less than 15 hours, (ii) between 8 and 16 hours, (iii) more than 15 hours, (iv) between 15 and 25 hours, (v) more than 30 hours?</p>
+      <div class="given"><b>Given</b> μ = 20 hours · σ = 5 hours · N = 100 cells</div>
+      <p class="hint">Hint: (iii) is the complement of (i) — you should not need a second lookup. And (iv) is the 1σ band, so you already know roughly what it must be.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(i)</b> $Z = \dfrac{15-20}{5} = -1.0$. $P(X<15) = 0.5 - 0.3413 = 0.1587$ → $100 \times 0.1587 = 15.87$ cells.</li>
+          <li><b>(ii)</b> $Z_1 = \dfrac{8-20}{5} = -2.4$, $Z_2 = \dfrac{16-20}{5} = -0.8$. Both negative, so subtract: $0.4918 - 0.2881 = 0.2037 \approx 0.2036$ → $20.36$ cells.</li>
+          <li><b>(iii)</b> $P(X > 15) = 0.5 + 0.3413 = 0.8413$ → $84.13$ cells. Notice this is just $100 - 15.87$.</li>
+          <li><b>(iv)</b> $Z_1 = -1.0$, $Z_2 = +1.0$: $2 \times 0.3413 = 0.6826$ → $68.26$ cells. This is the Empirical Rule's 68% appearing exactly where it should.</li>
+          <li><b>(v)</b> $Z = \dfrac{30-20}{5} = 2.0$. $P(X>30) = 0.5 - 0.4772 = 0.0228 \approx 0.0227$ → $2.27$ cells.</li>
+        </ol>
+        <div class="final">(i) 15.87 · (ii) 20.36 · (iii) 84.13 · (iv) 68.26 · (v) 2.27 cells</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <h4>Chapter recap</h4>
+    <ul>
+      <li><strong>Area is probability.</strong> The height of the curve means nothing on its own; the shaded area is the answer.</li>
+      <li><strong>$Z = \frac{X-\mu}{\sigma}$</strong> converts any normal problem onto the one curve that has a printed table.</li>
+      <li><strong>Know your table type.</strong> Your slides use the "area from 0 to z" table, which is why solutions keep adding or subtracting 0.5.</li>
+      <li><strong>Sketch, shade, then compute.</strong> The picture tells you whether to add, subtract, or take from 0.5.</li>
+      <li><strong>Single value → use σ. Average of n → use $\sigma/\sqrt{n}$.</strong> Confusing these two is the most expensive mistake in this chapter.</li>
+      <li><strong>Backwards questions</strong> give you the area and want the x: find z inside the table body, then $x = \mu + z\sigma$.</li>
+      <li><strong>The CLT</strong> says sample means go normal no matter what the population looks like, once $n \ge 30$ — and that is what licenses everything in Chapters 3 and 4.</li>
+    </ul>
+  </div>
+</section>
