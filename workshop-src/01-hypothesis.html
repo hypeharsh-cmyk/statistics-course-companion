@@ -1,0 +1,384 @@
+<section id="w1" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Part 1</div>
+    <h1>Hypothesis testing</h1>
+    <p>By the end of this part you will be able to take any hypothesis-testing question in this course, fill in the same six boxes, and write a complete answer without deciding anything on the fly.</p>
+  </div>
+
+  <p class="lead">Every hypothesis test in this syllabus is the <em>same</em> procedure. Only three things change from question to question: which formula goes on top, which table you look in, and how many tails. Everything else — the order of the steps, the words in the conclusion — never changes. So the goal here is not to understand six tests. It is to learn one machine and six settings.</p>
+
+  <div class="box plain">
+    <span class="lbl">In plain English</span>
+    <p>A hypothesis test is an argument by contradiction. You assume the boring thing is true ("the coin is fair", "the variance really is 20"), you work out how surprising your data would be <em>if</em> that were true, and if the answer is "very surprising indeed", you stop believing the boring thing. That is all. The formulas just measure "surprising" in a standard unit.</p>
+  </div>
+
+  <h2 id="w1-machine">1.1 · The machine — six steps, every single time</h2>
+
+  <p>Write these six lines down before you look at the numbers. Leave gaps. Then fill them in. Examiners give marks for the steps, not only the final number, and the instruction on your paper is explicit — <em>"answer all the questions with detailed steps in a proper order without any kind of step jump."</em> A correct answer with three steps missing loses more marks than a wrong answer with all six present.</p>
+
+  <div class="recipe">
+    <div class="hd">The six-step skeleton — copy this into your answer script</div>
+    <ol>
+      <li><b>State the hypotheses.</b>
+        <p>$H_0$ and $H_1$, in symbols, about a <em>population</em> parameter ($\mu$, $p$, $\sigma^2$) — never about $\bar{x}$, $\hat{p}$ or $s^2$. Note which one has the equals sign: that is always $H_0$.</p></li>
+      <li><b>State the level of significance and the tail.</b>
+        <p>Write $\alpha = 0.05$ (or whatever is given) and the words "left-tailed", "right-tailed" or "two-tailed". The tail comes from the direction of $H_1$ — nothing else.</p></li>
+      <li><b>Name the test statistic and write its formula.</b>
+        <p>One line, un-substituted. This is the step that earns marks for knowing <em>which</em> test it is.</p></li>
+      <li><b>Find the critical value, or the rejection region.</b>
+        <p>State the table, the degrees of freedom, and the value you read off, e.g. "from the $t$-table with $df = 8$, $t_{0.05,8} = 1.860$". Do this <em>before</em> you compute, so you cannot be accused of choosing it to suit your answer.</p></li>
+      <li><b>Compute the test statistic.</b>
+        <p>Full substitution, then the number. Four decimal places, as the paper asks.</p></li>
+      <li><b>Decide, then conclude in words.</b>
+        <p>Compare, state "reject $H_0$" or "do not reject $H_0$", then one sentence in the language of the original question. Underline it.</p></li>
+    </ol>
+    <div class="foot">Steps 1, 2, 3 and 4 can all be written before you touch the calculator. That is usually half the marks.</div>
+  </div>
+
+  <h2 id="w1-s1">1.2 · Step 1 — turning the English into H₀ and H₁</h2>
+
+  <p>This is where most marks are lost, and it is pure translation. Two rules settle every case:</p>
+
+  <div class="box def">
+    <span class="lbl">The two rules</span>
+    <p><b>Rule 1 — the equals sign lives in $H_0$.</b> $H_0$ always contains $=$, $\ge$ or $\le$. $H_1$ never contains an equals sign. If you have written $H_1: \mu = 50$ you have made a mistake.</p>
+    <p><b>Rule 2 — $H_1$ is what you would need evidence to believe.</b> $H_0$ is the status quo, the claim, the "no change" position. You only abandon it under pressure.</p>
+  </div>
+
+  <p>Here is the phrase book. Find the wording of your question in the left column.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>The question says…</th><th>$H_0$</th><th>$H_1$</th><th>Tail</th></tr></thead>
+      <tbody>
+        <tr><td>"is the mean equal to 50", "can we say the variance is 20"</td><td>$\mu = 50$</td><td>$\mu \ne 50$</td><td>Two-tailed</td></tr>
+        <tr><td>"has the mean increased", "is it more than", "does it exceed"</td><td>$\mu \le 50$</td><td>$\mu &gt; 50$</td><td>Right</td></tr>
+        <tr><td>"has the mean fallen", "is it less than", "is it below"</td><td>$\mu \ge 50$</td><td>$\mu &lt; 50$</td><td>Left</td></tr>
+        <tr><td>"the manufacturer claims <b>at least</b> 90%"</td><td>$p \ge 0.90$</td><td>$p &lt; 0.90$</td><td>Left</td></tr>
+        <tr><td>"the supplier claims <b>at most</b> 5% defective"</td><td>$p \le 0.05$</td><td>$p &gt; 0.05$</td><td>Right</td></tr>
+        <tr><td>"test whether the two differ"</td><td>equal</td><td>not equal</td><td>Two-tailed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">The trap in "test the claim"</span>
+    <p>When a question says <em>"test the claim of the manufacturer"</em>, the claim goes into $H_0$ — because the claim is the thing being defended, and the test asks whether the data forces us to abandon it. Rejecting $H_0$ then means <b>the claim is not supported</b>. Students frequently put the claim into $H_1$ and end up writing the opposite conclusion to the one their own arithmetic supports.</p>
+  </div>
+
+  <h2 id="w1-s2">1.3 · Step 3 — choosing the test statistic</h2>
+
+  <p>Read the question for three words only: <b>what</b> is being tested (a mean, a proportion, a variance), and if it is a mean, <b>is $\sigma$ known</b>. That is the entire decision.</p>
+
+  <div class="tree">
+    <ul>
+      <li><span class="q">What parameter does the question ask about?</span>
+        <ul>
+          <li><span class="a">A mean $\mu$</span> — "average", "mean lifetime", "mean weight"
+            <ul>
+              <li><span class="q">Is the <em>population</em> $\sigma$ given?</span>
+                <ul>
+                  <li><span class="a">Yes</span> $\rightarrow$ <span class="r">$Z$ test</span>, $\;z = \dfrac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}$, use the $Z$-table</li>
+                  <li><span class="a">No, only the sample $s$ (or raw data)</span> $\rightarrow$ <span class="r">$t$ test</span>, $\;t = \dfrac{\bar{x}-\mu_0}{s/\sqrt{n}}$, $df = n-1$</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><span class="a">A proportion $p$</span> — "percentage", "% conforming", "fraction defective", a count out of $n$
+            <ul><li>$\rightarrow$ <span class="r">$Z$ test for a proportion</span>, $\;z = \dfrac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}}$</li></ul>
+          </li>
+          <li><span class="a">A variance $\sigma^2$ or a standard deviation $\sigma$</span> — "variance", "variability", "consistency", "spread"
+            <ul><li>$\rightarrow$ <span class="r">$\chi^2$ test</span>, $\;\chi^2 = \dfrac{(n-1)s^2}{\sigma_0^2}$, $df = n-1$</li></ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">Exam technique</span>
+    <p>The giveaway for a proportion test is a count: "164 out of 200", "36 of 400 were defective". The giveaway for a variance test is the word <em>variance</em> or a target spread, e.g. "is the population variance equal to 20 square kgs". The giveaway for a $t$ test is being handed <b>raw data</b> with no $\sigma$ — because then you must compute $s$ yourself, and the moment you compute $s$ you are in $t$ territory.</p>
+  </div>
+
+  <div class="formula">
+    <div class="name">The three formulas, side by side</div>
+    $$ z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}} \qquad t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}} \qquad z=\frac{\hat{p}-p_0}{\sqrt{\dfrac{p_0(1-p_0)}{n}}} \qquad \chi^2=\frac{(n-1)s^2}{\sigma_0^2} $$
+    <div class="where">Notice the shape is identical in the first three: <b>(what I saw) − (what H<sub>0</sub> claims)</b>, divided by <b>the standard error</b>. The $\chi^2$ is the odd one out because variances are ratios, not differences — you divide instead of subtracting.</div>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">The commonest slip in the proportion test</span>
+    <p>The denominator uses $p_0$ — the value from $H_0$ — <b>not</b> $\hat{p}$ from the sample. You are asking "how would $\hat{p}$ behave if $H_0$ were true", so everything about the null world comes from $H_0$. (A confidence interval for $p$ is different: there, with no null to assume, you use $\hat{p}$. Same symbol, different job.)</p>
+  </div>
+
+  <h2 id="w1-s3">1.4 · Step 4 — finding the critical value</h2>
+
+  <p>Three questions, in this order: which table, how many tails, how many degrees of freedom.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Test</th><th>Table</th><th>df</th><th>Two-tailed at 5%</th><th>One-tailed at 5%</th><th>One-tailed at 1%</th></tr></thead>
+      <tbody>
+        <tr><td>$Z$ (mean or proportion)</td><td>$Z$</td><td>—</td><td class="num">$\pm 1.96$</td><td class="num">$1.645$</td><td class="num">$2.326$</td></tr>
+        <tr><td>$t$ (mean, $\sigma$ unknown)</td><td>$t$</td><td class="num">$n-1$</td><td class="num">$\pm t_{0.025,\,df}$</td><td class="num">$t_{0.05,\,df}$</td><td class="num">$t_{0.01,\,df}$</td></tr>
+        <tr><td>$\chi^2$ (variance)</td><td>$\chi^2$</td><td class="num">$n-1$</td><td class="num">$\chi^2_{0.975}$ and $\chi^2_{0.025}$</td><td colspan="2" class="num">right tail: $\chi^2_{0.05}$ · left tail: $\chi^2_{0.95}$</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box note">
+    <span class="lbl">Splitting $\alpha$ — why 5% becomes 2.5%</span>
+    <p>A two-tailed test is suspicious of departures in <em>both</em> directions, so the 5% of "surprising" outcomes has to be shared out, 2.5% at each end. That is why the two-tailed 5% critical value is $z_{0.025}=1.96$ and not $z_{0.05}=1.645$. One-tailed tests put the whole 5% at one end. Students who forget to halve $\alpha$ reject far too often.</p>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">Reading the $\chi^2$ table — the one that catches everybody</span>
+    <p>The $\chi^2$ table is labelled by <b>upper-tail area</b>. The column headed $\chi^2_{0.050}$ holds the value with 5% of the area to its <em>right</em>. So for a two-tailed test at 5% you need <em>both</em> $\chi^2_{0.975}$ (the small one, on the left) and $\chi^2_{0.025}$ (the big one, on the right). The $\chi^2$ curve is not symmetric, so — unlike $Z$ and $t$ — you cannot get the left value by putting a minus sign on the right one. You must look up two separate numbers.</p>
+  </div>
+
+  <h2 id="w1-s4">1.5 · Deciding — two routes that always agree</h2>
+
+  <p>There are two ways to finish, and they <b>always</b> agree. Use whichever the question names; if it names neither, the critical-value route is faster.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th></th><th>Critical-value route</th><th>p-value route</th></tr></thead>
+      <tbody>
+        <tr><td>What you compare</td><td>test statistic vs critical value</td><td>p-value vs $\alpha$</td></tr>
+        <tr><td>Reject $H_0$ when</td><td>the statistic falls in the rejection region</td><td>$p \le \alpha$</td></tr>
+        <tr><td>The sentence</td><td>"$|z| = 2.04 &gt; 1.96$, so reject $H_0$"</td><td>"$p = 0.0414 &lt; 0.05$, so reject $H_0$"</td></tr>
+        <tr><td>Best when</td><td>the table gives an exact critical value</td><td>the question says "use the p-value method"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box plain">
+    <span class="lbl">In plain English — what a p-value is</span>
+    <p>The p-value is the answer to: <em>"if $H_0$ were true, what fraction of samples would look at least this extreme?"</em> A p-value of 0.0414 says only about 4 samples in 100 would be this far out by luck alone. A p-value of 0.40 says 40 in 100 would — so nothing about your sample is surprising, and you have no case against $H_0$. <b>Small p, reject.</b> Say it to yourself as "small p means surprising means the null takes the blame".</p>
+  </div>
+
+  <h2 id="w1-pval">1.6 · The p-value method, in detail</h2>
+
+  <p>Because one full question on the May 2026 paper demanded it by name, this deserves its own recipe. The only new skill is converting a test statistic into a tail area — and then <em>doubling it, or not</em>.</p>
+
+  <div class="recipe">
+    <div class="hd">Computing a p-value</div>
+    <ol>
+      <li><b>Compute the test statistic as usual.</b><p>Nothing changes about steps 1–5.</p></li>
+      <li><b>Look up the area in the tail your $H_1$ points at.</b>
+        <p>Left-tailed $H_1$ ($&lt;$) $\rightarrow$ area to the <em>left</em> of your $z$: read $\Phi(z)$ straight off the table.<br>
+        Right-tailed $H_1$ ($&gt;$) $\rightarrow$ area to the <em>right</em>: $1 - \Phi(z)$.</p></li>
+      <li><b>If the test is two-tailed, double it.</b>
+        <p>$p = 2 \times P(Z &gt; |z|)$. Two-tailed means "extreme in either direction", so both tails count.</p></li>
+      <li><b>Compare with $\alpha$ and state the comparison explicitly.</b>
+        <p>Write the inequality out — "$0.0001 &lt; 0.01$" — then the decision. The comparison itself carries marks.</p></li>
+    </ol>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">With $t$ and $\chi^2$ you cannot get an exact p-value — bracket it instead</span>
+    <p>The $Z$-table gives areas, so a $Z$ p-value is exact. The $t$ and $\chi^2$ tables give only a handful of critical values, so you can only trap the p-value between two columns. That is a perfectly good exam answer, and is what is expected. For example, with $t = 2.8823$ on $df = 8$: the table row reads $t_{0.025,8} = 2.306$ and $t_{0.01,8} = 2.896$. Your value sits between them, so $0.01 &lt; p &lt; 0.025$. Since $p &lt; 0.05$, reject at 5%. Write it exactly like that.</p>
+  </div>
+
+  <h2 id="w1-sentence">1.7 · The conclusion sentence — a template you can memorise</h2>
+
+  <p>The final mark is for saying what happened in the language of the question, not in the language of statistics. Two templates cover everything.</p>
+
+  <div class="tmpl">
+    <b>When you reject:</b><br>
+    Since <u>test statistic</u> falls in the rejection region (or <u>p</u> &lt; <u>α</u>), we <u>reject $H_0$</u> at the <u>α×100</u>% level. There is sufficient evidence to conclude that <u>$H_1$ in the question's own words</u>.
+  </div>
+
+  <div class="tmpl">
+    <b>When you do not reject:</b><br>
+    Since <u>test statistic</u> does not fall in the rejection region (or <u>p</u> &gt; <u>α</u>), we <u>do not reject $H_0$</u> at the <u>α×100</u>% level. There is insufficient evidence to conclude that <u>$H_1$ in the question's own words</u>.
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">Never write "we accept $H_0$"</span>
+    <p>Failing to convict is not the same as proving innocence. A small sample can fail to detect a real effect, so "do not reject" means only "this data was not enough". Write <b>"do not reject $H_0$"</b> or <b>"there is insufficient evidence"</b>. Examiners deduct for "accept".</p>
+  </div>
+
+  <h2 id="w1-q5">1.8 · The real thing — exam Q5, broken apart</h2>
+
+  <p class="wsub">May 2026 end-term · Question 5 · 7 marks · testing a proportion by the p-value method</p>
+
+  <p>Now watch the machine run on the actual paper. Every step below is labelled with the step of the recipe it comes from, so you can see there is nothing new happening — only the six boxes being filled.</p>
+
+  <div class="exam">
+    <div class="hd">Exam Question 5 <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qtext">
+        <p>A manufacturer claimed that at least 90% of the components which he supplied are conforming to the specifications. However, a random sample of 200 components showed only 164 were conforming to the specifications. Test the claim of the manufacturer at 1% level of significance by using p-value method.</p>
+      </div>
+
+      <div class="part first">
+        <div class="ph">Reading the question <span class="tag">before any maths</span></div>
+        <p>Three things to extract, and one instruction to obey:</p>
+        <ul>
+          <li><b>What is being tested?</b> "90% of the components" and a count "164 of 200" — this is a <b>proportion</b>. So the $Z$ test for a proportion.</li>
+          <li><b>What is the claim?</b> "<em>at least</em> 90%", i.e. $p \ge 0.90$. And it is the <em>manufacturer's claim</em>, so it goes in $H_0$.</li>
+          <li><b>What is $\alpha$?</b> 1%, so $\alpha = 0.01$.</li>
+          <li><b>What method?</b> The question says p-value method. You must show a p-value; a critical-value answer alone will not score full marks.</li>
+        </ul>
+        <div class="given"><b>Given</b> $n = 200$ · $x = 164$ · $p_0 = 0.90$ · $\alpha = 0.01$</div>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 1 <span class="tag">state the hypotheses</span></div>
+        <p>The claim carries the equals sign, so it is $H_0$. The alternative is what would <em>disprove</em> the claim: that the true conforming rate is below 90%.</p>
+        $$ H_0: p \ge 0.90 \qquad\text{against}\qquad H_1: p &lt; 0.90 $$
+        <p>(Writing $H_0: p = 0.90$ is also accepted — the test is computed at the boundary either way.)</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 2 <span class="tag">significance level and tail</span></div>
+        <p>$\alpha = 0.01$. Because $H_1$ points left ($&lt;$), this is a <b>left-tailed test</b>. That single fact decides the whole of the final step, so write it down now.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 3 <span class="tag">name the statistic</span></div>
+        <p>Sample proportion first, because everything else needs it:</p>
+        $$ \hat{p}=\frac{x}{n}=\frac{164}{200}=0.82 $$
+        <p>Then the test statistic, un-substituted:</p>
+        $$ z=\frac{\hat{p}-p_0}{\sqrt{\dfrac{p_0(1-p_0)}{n}}} $$
+        <p>Check the sample is large enough for the normal approximation: $np_0 = 200(0.90) = 180 \ge 5$ and $n(1-p_0) = 200(0.10) = 20 \ge 5$. Both comfortably pass, so $Z$ is valid. One line, and it is a mark.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 4 <span class="tag">the p-value method replaces the critical value</span></div>
+        <p>With the p-value method you do not need a critical value — but it costs nothing to note that a left-tailed test at 1% would reject below $-z_{0.01} = -2.326$, and it lets you sanity-check the final decision.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 5 <span class="tag">compute</span></div>
+        <p>Denominator first, slowly — this is where arithmetic slips happen:</p>
+        $$ \sqrt{\frac{0.90 \times 0.10}{200}}=\sqrt{\frac{0.09}{200}}=\sqrt{0.00045}=0.0212 $$
+        <p>Then the statistic:</p>
+        $$ z=\frac{0.82-0.90}{0.0212132}=\frac{-0.08}{0.0212132}=-3.7712 $$
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 6a <span class="tag">the p-value</span></div>
+        <p>$H_1$ points left, so the p-value is the area to the <em>left</em> of $-3.7712$ — no doubling, because this is a one-tailed test.</p>
+        $$ p\text{-value}=P(Z &lt; -3.7712) \approx 0.0001 $$
+        <p>Printed $Z$-tables usually stop around $z = -3.49$, where the area is $0.0002$. Since $-3.7712$ lies even further into the tail, the area is smaller still. Write "$p\text{-value} &lt; 0.0002$, approximately $0.0001$" — that is honest and fully creditable.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 6b <span class="tag">decide and conclude</span></div>
+        <p>Compare, explicitly:</p>
+        $$ p\text{-value} = 0.0001 \;&lt;\; \alpha = 0.01 $$
+        <div class="final">Reject $H_0$. At the 1% level there is sufficient evidence that fewer than 90% of components conform, so the manufacturer's claim is <b>not supported</b>.</div>
+        <p>Sanity check against the other route: $z = -3.7712 &lt; -2.326$, which is deep inside the rejection region. Same decision, as it must be.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="lbl">Why this one is worth 7 marks</span>
+        <p>Because it hides three separate judgements: recognising a proportion from a count, putting the manufacturer's claim in $H_0$ rather than $H_1$, and using $p_0$ — not $\hat p$ — inside the square root. Get those three right and the arithmetic is one line.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="w1-q6">1.9 · The real thing — exam Q6, broken apart</h2>
+
+  <p class="wsub">May 2026 end-term · Question 6 · 6 marks · testing a variance with $\chi^2$</p>
+
+  <div class="exam">
+    <div class="hd">Exam Question 6 <span class="mk">6 marks</span></div>
+    <div class="bd">
+      <div class="qtext">
+        <p>Weights (in kgs) of 10 students are given below: <b>38, 40, 45, 53, 47, 43, 55, 48, 52, 49.</b> Can we say that the population variance of the distribution of weights of all students from which the above sample of 10 students was drawn is equal to 20 square kgs? Test an appropriate hypothesis at 5% level.</p>
+      </div>
+
+      <div class="part first">
+        <div class="ph">Reading the question</div>
+        <ul>
+          <li>"population <b>variance</b> … equal to 20" — a variance test, so $\chi^2$.</li>
+          <li>"<b>equal to</b>" — no direction is suggested, so this is <b>two-tailed</b>.</li>
+          <li>Raw data is given and no $\sigma$, so you must compute $s^2$ yourself.</li>
+          <li>"Test an appropriate hypothesis" is the examiner telling you to choose the test — which is part of what is being marked.</li>
+        </ul>
+        <div class="given"><b>Given</b> $n = 10$ · $\sigma_0^2 = 20$ · $\alpha = 0.05$ · raw data</div>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 1 &amp; 2 <span class="tag">hypotheses, level, tail</span></div>
+        $$ H_0: \sigma^2 = 20 \qquad\text{against}\qquad H_1: \sigma^2 \ne 20 $$
+        <p>$\alpha = 0.05$, two-tailed, $df = n - 1 = 9$.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 3 <span class="tag">the statistic</span></div>
+        $$ \chi^2=\frac{(n-1)s^2}{\sigma_0^2}\;\sim\;\chi^2_{n-1} \quad\text{where}\quad s^2=\frac{\sum (x-\bar{x})^2}{n-1} $$
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 4 <span class="tag">two critical values, because two tails</span></div>
+        <p>From the $\chi^2$ table with $df = 9$, splitting $\alpha$ into 2.5% at each end:</p>
+        $$ \chi^2_{0.975,\,9}=2.700 \qquad\text{and}\qquad \chi^2_{0.025,\,9}=19.023 $$
+        <p>So the rule is: <b>reject $H_0$ if $\chi^2 &lt; 2.700$ or $\chi^2 &gt; 19.023$</b>; otherwise do not reject. Remember the table is labelled by right-tail area, which is why the <em>lower</em> critical value sits in the column headed $\chi^2_{0.975}$.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 5a <span class="tag">build the deviation table</span></div>
+        <p>First the mean. $\sum x = 38+40+45+53+47+43+55+48+52+49 = 470$, so</p>
+        $$ \bar{x}=\frac{470}{10}=47 $$
+        <p>A whole-number mean is a gift — the deviations stay clean. Tabulate them:</p>
+        <div class="tw">
+          <table>
+            <thead><tr><th class="num">$x$</th><th class="num">38</th><th class="num">40</th><th class="num">45</th><th class="num">53</th><th class="num">47</th><th class="num">43</th><th class="num">55</th><th class="num">48</th><th class="num">52</th><th class="num">49</th><th class="num">Σ</th></tr></thead>
+            <tbody>
+              <tr><th class="num">$x-\bar{x}$</th><td class="num">−9</td><td class="num">−7</td><td class="num">−2</td><td class="num">6</td><td class="num">0</td><td class="num">−4</td><td class="num">8</td><td class="num">1</td><td class="num">5</td><td class="num">2</td><td class="num">0</td></tr>
+              <tr><th class="num">$(x-\bar{x})^2$</th><td class="num">81</td><td class="num">49</td><td class="num">4</td><td class="num">36</td><td class="num">0</td><td class="num">16</td><td class="num">64</td><td class="num">1</td><td class="num">25</td><td class="num">4</td><td class="num">280</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The deviations summing to $0$ is your free arithmetic check — if that row does not total zero, your mean is wrong and everything after it will be too.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 5b <span class="tag">sample variance, then the statistic</span></div>
+        $$ s^2=\frac{280}{10-1}=\frac{280}{9}=31.1111 $$
+        <p>Now substitute. Notice the $n-1$ cancels against the $n-1$ inside $s^2$, so in practice $\chi^2 = \sum(x-\bar{x})^2 / \sigma_0^2$ — a useful shortcut and a good check:</p>
+        $$ \chi^2=\frac{(10-1)(31.1111)}{20}=\frac{280}{20}=14.0000 $$
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 6 <span class="tag">decide and conclude</span></div>
+        $$ 2.700 \;&lt;\; 14.0000 \;&lt;\; 19.023 $$
+        <p>The statistic lands between the two critical values, i.e. outside both rejection regions.</p>
+        <div class="final">Do not reject $H_0$. At the 5% level there is insufficient evidence that the population variance differs from 20 square kgs, so we may take it to be 20.</div>
+      </div>
+
+      <div class="box tip">
+        <span class="lbl">If you are asked to bracket the p-value too</span>
+        <p>Look along the $df = 9$ row for $14.0000$: it lies between $\chi^2_{0.100,9}=14.684$ and $\chi^2_{0.250}$ (off this table). Since $14.0000 &lt; 14.684$, the right-tail area exceeds $0.10$, so for a two-tailed test $p &gt; 0.20$ — comfortably above $0.05$, confirming the same decision.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="w1-mistakes">1.10 · The mistakes that actually cost marks</h2>
+
+  <ul class="mistake">
+    <li><b>Hypotheses about the sample.</b> $H_0: \bar{x} = 47$ is meaningless — you <em>know</em> $\bar{x}$. Hypotheses are always about the population: $\mu$, $p$, $\sigma^2$.</li>
+    <li><b>Forgetting to halve $\alpha$.</b> Two-tailed at 5% is $1.96$, not $1.645$. This single slip flips a decision surprisingly often.</li>
+    <li><b>Using $\hat{p}$ in the standard error.</b> In a test it is $p_0$ under the square root, every time.</li>
+    <li><b>Dividing by $n$ instead of $n-1$</b> when computing $s^2$ from raw data. The test needs the sample variance with $n-1$.</li>
+    <li><b>Taking the left $\chi^2$ value as minus the right one.</b> $\chi^2$ is not symmetric and is never negative. Two tails means two separate lookups.</li>
+    <li><b>Writing "accept $H_0$".</b> Say "do not reject".</li>
+    <li><b>Stopping at the number.</b> No sentence in the question's own words means a lost mark, no matter how perfect the arithmetic.</li>
+    <li><b>Rounding too early.</b> Carry the full calculator value into the next step and round only the final answer, to four decimals as the paper instructs.</li>
+  </ul>
+
+  <div class="recap">
+    <h4>Part 1 recap</h4>
+    <ul>
+      <li>One machine, six steps, written before the numbers: hypotheses · level and tail · statistic · critical value · compute · conclude.</li>
+      <li>$H_0$ owns the equals sign and owns the claim. $H_1$ sets the tail.</li>
+      <li>Mean with $\sigma$ $\rightarrow$ $Z$ · mean without $\sigma$ $\rightarrow$ $t$, $df=n-1$ · proportion $\rightarrow$ $Z$ with $p_0$ inside the root · variance $\rightarrow$ $\chi^2$, $df=n-1$, two lookups if two-tailed.</li>
+      <li>p-value route: area in the tail $H_1$ points at, doubled if two-tailed; reject when $p \le \alpha$. With $t$ and $\chi^2$, bracket it between two columns.</li>
+      <li>Finish with a sentence in the question's own words, and underline it.</li>
+    </ul>
+  </div>
+</section>

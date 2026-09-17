@@ -1,0 +1,298 @@
+<section id="w4" class="wrap wide">
+  <div class="chapter-open">
+    <div class="kicker">Appendix</div>
+    <h1>Cards and tables</h1>
+    <p>The one-page formula card for these two topics, then the three statistical tables every question above reads from.</p>
+  </div>
+
+  <h2 id="w4-card">A1 · One-page formula card</h2>
+
+  <p>If you copy one page into the front of your revision notes, copy this one. Everything in Parts 1 to 3 is here.</p>
+
+  <h3>Hypothesis testing</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Testing</th><th>Conditions</th><th>Statistic</th><th>Distribution</th></tr></thead>
+      <tbody>
+        <tr><td>Mean $\mu$</td><td>$\sigma$ known</td><td>$z=\dfrac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}$</td><td>$Z$</td></tr>
+        <tr><td>Mean $\mu$</td><td>$\sigma$ unknown</td><td>$t=\dfrac{\bar{x}-\mu_0}{s/\sqrt{n}}$</td><td>$t_{n-1}$</td></tr>
+        <tr><td>Proportion $p$</td><td>$np_0 \ge 5$, $n(1-p_0) \ge 5$</td><td>$z=\dfrac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}}$</td><td>$Z$</td></tr>
+        <tr><td>Variance $\sigma^2$</td><td>normal population</td><td>$\chi^2=\dfrac{(n-1)s^2}{\sigma_0^2}$</td><td>$\chi^2_{n-1}$</td></tr>
+        <tr><td>Correlation $\rho$</td><td>testing $\rho = 0$</td><td>$t=\dfrac{r\sqrt{n-2}}{\sqrt{1-r^2}}$</td><td>$t_{n-2}$</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Quantity</th><th>Formula</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Sample variance</td><td>$s^2=\dfrac{\sum(x-\bar{x})^2}{n-1}$</td><td>always $n-1$ in a test</td></tr>
+        <tr><td>Type I error</td><td>$\alpha = P(\text{reject } H_0 \mid H_0 \text{ true})$</td><td>you choose it</td></tr>
+        <tr><td>Type II error</td><td>$\beta = P(\text{do not reject } H_0 \mid H_1 \text{ true})$</td><td>computed in the $H_1$ world</td></tr>
+        <tr><td>Power</td><td>$1-\beta$</td><td>rises with $n$</td></tr>
+        <tr><td>Critical $\bar{x}$, right tail</td><td>$\mu_0+z_\alpha\,\sigma/\sqrt{n}$</td><td>built under $H_0$</td></tr>
+        <tr><td>p-value, one-tailed</td><td>area beyond the statistic</td><td>in the tail $H_1$ points at</td></tr>
+        <tr><td>p-value, two-tailed</td><td>$2\times$ that area</td><td>reject when $p \le \alpha$</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Correlation and regression</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Quantity</th><th>Formula</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Building blocks</td><td>$S_{xy}=n\sum xy-\sum x\sum y$ · $S_{xx}=n\sum x^2-(\sum x)^2$ · $S_{yy}=n\sum y^2-(\sum y)^2$</td><td>compute once</td></tr>
+        <tr><td>Pearson's $r$</td><td>$r=\dfrac{S_{xy}}{\sqrt{S_{xx}S_{yy}}}$</td><td>always in $[-1,1]$</td></tr>
+        <tr><td>Regression $Y$ on $X$</td><td>$b_{yx}=\dfrac{S_{xy}}{S_{xx}}=r\dfrac{\sigma_y}{\sigma_x}$ · $y-\bar{y}=b_{yx}(x-\bar{x})$</td><td>predicts $y$</td></tr>
+        <tr><td>Regression $X$ on $Y$</td><td>$b_{xy}=\dfrac{S_{xy}}{S_{yy}}=r\dfrac{\sigma_x}{\sigma_y}$ · $x-\bar{x}=b_{xy}(y-\bar{y})$</td><td>predicts $x$</td></tr>
+        <tr><td>$r$ from both lines</td><td>$r=\pm\sqrt{b_{yx}\,b_{xy}}$</td><td>sign = sign of the coefficients</td></tr>
+        <tr><td>Which line is which</td><td>$b_{yx}\,b_{xy}=r^2 \le 1$</td><td>if the product $&gt;1$, swap</td></tr>
+        <tr><td>Point of means</td><td>both lines pass through $(\bar{x},\bar{y})$</td><td>solve them to find the means</td></tr>
+        <tr><td>Coefficient of determination</td><td>$R^2=r^2$</td><td>share of variation in $y$ explained</td></tr>
+        <tr><td>Spearman, no ties</td><td>$\rho=1-\dfrac{6\sum d^2}{n(n^2-1)}$</td><td>$\sum d$ must be 0</td></tr>
+        <tr><td>Spearman, with ties</td><td>$\rho=1-\dfrac{6\left[\sum d^2+\sum\frac{m(m^2-1)}{12}\right]}{n(n^2-1)}$</td><td>pair 0.5 · triple 2 · four 5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">Critical values worth knowing without the table</span>
+    <p>$z_{0.05}=1.645$ · $z_{0.025}=1.96$ · $z_{0.01}=2.326$ · $z_{0.005}=2.576$. These four cover every $Z$ test you will meet at 10%, 5%, 2% and 1%, one- or two-tailed, and knowing them saves a lookup under time pressure.</p>
+  </div>
+
+  <h2 id="w4-z">A2 · Standard normal — area to the LEFT of z</h2>
+  <p class="tblnote">Read the row for the first decimal of $z$ and the column for the second. The body of the table is $\Phi(z) = P(Z \le z)$. For an area to the right, subtract from 1.</p>
+  <div class="tw" id="ztable"></div>
+
+  <h2 id="w4-t">A3 · Student's t — upper-tail critical values</h2>
+  <p class="tblnote">The heading $t_{0.05}$ means the area to the <b>right</b> of that value is 0.05. For a two-tailed test at 5%, use the $t_{0.025}$ column.</p>
+  <div class="tw" id="ttable"></div>
+
+  <h2 id="w4-chi">A4 · Chi-square — critical values</h2>
+  <p class="tblnote">The heading $\chi^2_{0.050}$ means the area to the <b>right</b> of that value is 0.050. For a two-tailed test at 5% you need both the $\chi^2_{0.975}$ and $\chi^2_{0.025}$ columns — the distribution is not symmetric, so the two must be looked up separately.</p>
+  <div class="tw" id="chitable"></div>
+
+  <div class="recap">
+    <h4>Where to go next</h4>
+    <ul>
+      <li>The <a href="index.html">textbook</a> carries the underlying theory for these topics in chapters 4 and 5, with interactive figures for the rejection regions, the two error types and a drag-the-points regression sandbox.</li>
+      <li>The <a href="mock-tests.html">mock tests</a> put these question types back among the other five, under a 2.5-hour clock, with full solutions and self-scoring.</li>
+    </ul>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+/* ============================================================
+   CHROME — theme, sidebar, table of contents, scroll spy
+   ============================================================ */
+function toggleTheme(){
+  const h=document.documentElement, d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme', d?'light':'dark');
+  document.getElementById('themeBtn').textContent = d?'◑ Dark':'◐ Light';
+  try{localStorage.setItem('stats-theme', d?'light':'dark')}catch(e){}
+}
+(function syncThemeBtn(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.getElementById('themeBtn').textContent = dark?'◐ Light':'◑ Dark';
+})();
+
+function setTocBtn(collapsed){
+  const b=document.getElementById('menuBtn'); if(!b) return;
+  b.textContent = (window.innerWidth<=1000) ? '☰  Contents'
+                : (collapsed ? '☰  Show contents' : '⟨  Hide contents');
+}
+function toggleTOC(){
+  const t=document.getElementById('toc');
+  if(window.innerWidth<=1000){ t.classList.toggle('open'); return; }
+  const c=t.classList.toggle('collapsed');
+  document.body.classList.toggle('toc-collapsed', c);
+  setTocBtn(c);
+  try{localStorage.setItem('stats-toc', c?'closed':'open')}catch(e){}
+}
+(function initToc(){
+  let closed=false;
+  try{ closed = localStorage.getItem('stats-toc')==='closed'; }catch(e){}
+  if(closed && window.innerWidth>1000){
+    document.getElementById('toc').classList.add('collapsed');
+    document.body.classList.add('toc-collapsed');
+  }
+  setTocBtn(closed && window.innerWidth>1000);
+})();
+
+/* The contents panel is built from the document itself, so adding a part to
+   workshop-src/ needs no edit here. */
+(function buildTOC(){
+  const box=document.getElementById('tocLinks');
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem('stats-wstocgroups')||'{}') }catch(e){}
+  document.querySelectorAll('section[id]').forEach(sec=>{
+    const h1=sec.querySelector('.chapter-open h1'); if(!h1) return;
+    const g=document.createElement('div'); g.className='tocgroup'; g.dataset.for=sec.id;
+    const hd=document.createElement('div'); hd.className='tochead';
+    const car=document.createElement('button'); car.className='toccaret'; car.type='button';
+    car.textContent='▼'; car.setAttribute('aria-label','Toggle '+h1.textContent);
+    const a=document.createElement('a'); a.className='ch'; a.href='#'+sec.id; a.textContent=h1.textContent;
+    hd.appendChild(car); hd.appendChild(a); g.appendChild(hd);
+    const secs=document.createElement('div'); secs.className='tocsecs';
+    sec.querySelectorAll('h2[id]').forEach(h2=>{
+      const s=document.createElement('a'); s.className='sec'; s.href='#'+h2.id; s.textContent=h2.textContent; secs.appendChild(s);
+    });
+    g.appendChild(secs);
+    if(saved[sec.id]==='closed') g.classList.add('closed');
+    car.addEventListener('click',e=>{
+      e.preventDefault();
+      const c=g.classList.toggle('closed');
+      saved[sec.id]=c?'closed':'open';
+      try{localStorage.setItem('stats-wstocgroups',JSON.stringify(saved))}catch(e2){}
+    });
+    box.appendChild(g);
+  });
+})();
+
+const spyTargets=[...document.querySelectorAll('section[id], h2[id]')];
+const tocAnchors=[...document.querySelectorAll('#tocLinks a')];
+function onScroll(){
+  const st=window.scrollY, h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(h>0?(st/h*100):0)+'%';
+  let cur=null;
+  for(const t of spyTargets){ if(t.getBoundingClientRect().top<140) cur=t.id; }
+  tocAnchors.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+cur));
+}
+window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+document.querySelectorAll('#tocLinks a').forEach(a=>a.addEventListener('click',()=>{
+  if(window.innerWidth<=1000) document.getElementById('toc').classList.remove('open');
+}));
+
+/* ============================================================
+   SOLUTION REVEAL
+   ============================================================ */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.reveal-btn'); if(b){
+    const sol=b.parentElement.querySelector('.solution');
+    if(sol){ const open=sol.classList.toggle('open'); b.textContent=open?'Hide solution':'Reveal solution'; }
+    return;
+  }
+  const ra=e.target.closest('.revealall'); if(ra){
+    const sec=ra.closest('section'); const sols=sec.querySelectorAll('.solution');
+    const anyClosed=[...sols].some(s=>!s.classList.contains('open'));
+    sols.forEach(s=>s.classList.toggle('open',anyClosed));
+    sec.querySelectorAll('.reveal-btn').forEach(b2=>b2.textContent=anyClosed?'Hide solution':'Reveal solution');
+    ra.textContent=anyClosed?'Hide all solutions':'Reveal all solutions';
+  }
+});
+
+/* ============================================================
+   TABLES — the Z-table is generated from the normal CDF, the t and
+   chi-square tables are the printed critical values, so what a student
+   reads here is the same number the solutions above quote.
+   ============================================================ */
+function erf(x){
+  const s=x<0?-1:1; x=Math.abs(x);
+  const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x), y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return s*y;
+}
+const Phi = z => 0.5*(1+erf(z/Math.SQRT2));
+
+(function ztable(){
+  let h='<table><thead><tr><th>z</th>';
+  for(let c=0;c<10;c++) h+='<th class="num">0.0'+c+'</th>';
+  h+='</tr></thead><tbody>';
+  for(let i=-34;i<=34;i++){
+    const z=i/10;
+    h+='<tr><th class="num">'+z.toFixed(1)+'</th>';
+    for(let c=0;c<10;c++){
+      const zz = z<0 ? z-c/100 : z+c/100;
+      h+='<td class="num">'+Phi(zz).toFixed(4)+'</td>';
+    }
+    h+='</tr>';
+  }
+  document.getElementById('ztable').innerHTML=h+'</tbody></table>';
+})();
+
+(function ttable(){
+  const rows=[[1,3.078,6.314,12.706,31.821,63.657],[2,1.886,2.920,4.303,6.965,9.925],
+  [3,1.638,2.353,3.182,4.541,5.841],[4,1.533,2.132,2.776,3.747,4.604],
+  [5,1.476,2.015,2.571,3.365,4.032],[6,1.440,1.943,2.447,3.143,3.707],
+  [7,1.415,1.895,2.365,2.998,3.499],[8,1.397,1.860,2.306,2.896,3.355],
+  [9,1.383,1.833,2.262,2.821,3.250],[10,1.372,1.812,2.228,2.764,3.169],
+  [11,1.363,1.796,2.201,2.718,3.106],[12,1.356,1.782,2.179,2.681,3.055],
+  [13,1.350,1.771,2.160,2.650,3.012],[14,1.345,1.761,2.145,2.624,2.977],
+  [15,1.341,1.753,2.131,2.602,2.947],[16,1.337,1.746,2.120,2.583,2.921],
+  [17,1.333,1.740,2.110,2.567,2.898],[18,1.330,1.734,2.101,2.552,2.878],
+  [19,1.328,1.729,2.093,2.539,2.861],[20,1.325,1.725,2.086,2.528,2.845],
+  [21,1.323,1.721,2.080,2.518,2.831],[22,1.321,1.717,2.074,2.508,2.819],
+  [23,1.319,1.714,2.069,2.500,2.807],[24,1.318,1.711,2.064,2.492,2.797],
+  [25,1.316,1.708,2.060,2.485,2.787],[26,1.315,1.706,2.056,2.479,2.779],
+  [27,1.314,1.703,2.052,2.473,2.771],[28,1.313,1.701,2.048,2.467,2.763],
+  [29,1.311,1.699,2.045,2.462,2.756],[30,1.310,1.697,2.042,2.457,2.750],
+  [40,1.303,1.684,2.021,2.423,2.704],[60,1.296,1.671,2.000,2.390,2.660],
+  [120,1.289,1.658,1.980,2.358,2.617],['∞',1.282,1.645,1.960,2.326,2.576]];
+  let h='<table><thead><tr><th>df</th><th class="num">t₀.₁₀</th><th class="num">t₀.₀₅</th>'+
+        '<th class="num">t₀.₀₂₅</th><th class="num">t₀.₀₁</th><th class="num">t₀.₀₀₅</th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    h+='<tr><th class="num">'+r[0]+'</th>'+
+      r.slice(1).map(v=>'<td class="num">'+v.toFixed(3)+'</td>').join('')+'</tr>';
+  });
+  document.getElementById('ttable').innerHTML=h+'</tbody></table>';
+})();
+
+(function chitable(){
+  const rows=[[1,0.000,0.000,0.001,0.004,0.016,2.706,3.841,5.024,6.635,7.879],
+  [2,0.010,0.020,0.051,0.103,0.211,4.605,5.991,7.378,9.210,10.597],
+  [3,0.072,0.115,0.216,0.352,0.584,6.251,7.815,9.348,11.345,12.838],
+  [4,0.207,0.297,0.484,0.711,1.064,7.779,9.488,11.143,13.277,14.860],
+  [5,0.412,0.554,0.831,1.145,1.610,9.236,11.070,12.833,15.086,16.750],
+  [6,0.676,0.872,1.237,1.635,2.204,10.645,12.592,14.449,16.812,18.548],
+  [7,0.989,1.239,1.690,2.167,2.833,12.017,14.067,16.013,18.475,20.278],
+  [8,1.344,1.646,2.180,2.733,3.490,13.362,15.507,17.535,20.090,21.955],
+  [9,1.735,2.088,2.700,3.325,4.168,14.684,16.919,19.023,21.666,23.589],
+  [10,2.156,2.558,3.247,3.940,4.865,15.987,18.307,20.483,23.209,25.188],
+  [11,2.603,3.053,3.816,4.575,5.578,17.275,19.675,21.920,24.725,26.757],
+  [12,3.074,3.571,4.404,5.226,6.304,18.549,21.026,23.337,26.217,28.300],
+  [13,3.565,4.107,5.009,5.892,7.042,19.812,22.362,24.736,27.688,29.819],
+  [14,4.075,4.660,5.629,6.571,7.790,21.064,23.685,26.119,29.141,31.319],
+  [15,4.601,5.229,6.262,7.261,8.547,22.307,24.996,27.488,30.578,32.801],
+  [16,5.142,5.812,6.908,7.962,9.312,23.542,26.296,28.845,32.000,34.267],
+  [17,5.697,6.408,7.564,8.672,10.085,24.769,27.587,30.191,33.409,35.718],
+  [18,6.265,7.015,8.231,9.390,10.865,25.989,28.869,31.526,34.805,37.156],
+  [19,6.844,7.633,8.907,10.117,11.651,27.204,30.144,32.852,36.191,38.582],
+  [20,7.434,8.260,9.591,10.851,12.443,28.412,31.410,34.170,37.566,39.997],
+  [21,8.034,8.897,10.283,11.591,13.240,29.615,32.671,35.479,38.932,41.401],
+  [22,8.643,9.542,10.982,12.338,14.041,30.813,33.924,36.781,40.289,42.796],
+  [23,9.260,10.196,11.689,13.091,14.848,32.007,35.172,38.076,41.638,44.181],
+  [24,9.886,10.856,12.401,13.848,15.659,33.196,36.415,39.364,42.980,45.559],
+  [25,10.520,11.524,13.120,14.611,16.473,34.382,37.652,40.646,44.314,46.928],
+  [26,11.160,12.198,13.844,15.379,17.292,35.563,38.885,41.923,45.642,48.290],
+  [27,11.808,12.879,14.573,16.151,18.114,36.741,40.113,43.195,46.963,49.645],
+  [28,12.461,13.565,15.308,16.928,18.939,37.916,41.337,44.461,48.278,50.993],
+  [29,13.121,14.256,16.047,17.708,19.768,39.087,42.557,45.722,49.588,52.336],
+  [30,13.787,14.953,16.791,18.493,20.599,40.256,43.773,46.979,50.892,53.672],
+  [40,20.707,22.164,24.433,26.509,29.051,51.805,55.758,59.342,63.691,66.766],
+  [50,27.991,29.707,32.357,34.764,37.689,63.167,67.505,71.420,76.154,79.490],
+  [60,35.534,37.485,40.482,43.188,46.459,74.397,79.082,83.298,88.379,91.952],
+  [70,43.275,45.442,48.758,51.739,55.329,85.527,90.531,95.023,100.425,104.215],
+  [80,51.172,53.540,57.153,60.391,64.278,96.578,101.879,106.629,112.329,116.321],
+  [90,59.196,61.754,65.647,69.126,73.291,107.565,113.145,118.136,124.116,128.299],
+  [100,67.328,70.065,74.222,77.929,82.358,118.498,124.342,129.561,135.807,140.169]];
+  const hd=['χ²₀.₉₉₅','χ²₀.₉₉₀','χ²₀.₉₇₅','χ²₀.₉₅₀','χ²₀.₉₀₀','χ²₀.₁₀₀','χ²₀.₀₅₀','χ²₀.₀₂₅','χ²₀.₀₁₀','χ²₀.₀₀₅'];
+  let h='<table><thead><tr><th>df</th>'+hd.map(x=>'<th class="num">'+x+'</th>').join('')+
+        '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    h+='<tr><th class="num">'+r[0]+'</th>'+
+      r.slice(1).map(v=>'<td class="num">'+v.toFixed(3)+'</td>').join('')+'</tr>';
+  });
+  document.getElementById('chitable').innerHTML=h+'</tbody></table>';
+})();
+
+window.addEventListener('resize',()=>{
+  setTocBtn(document.getElementById('toc').classList.contains('collapsed'));
+});
+</script>
+</body>
+</html>

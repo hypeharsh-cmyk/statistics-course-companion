@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 const root = dirname(fileURLToPath(import.meta.url));
 const SRC = join(root, 'book-src');
 const MOCK = join(root, 'mock-src');
+const WORK = join(root, 'workshop-src');
 const OUT = join(root, 'public');
 const STATIC = join(root, 'static');
 
@@ -57,22 +58,42 @@ writeFileSync(join(OUT, 'index.html'), html);
 // The mock papers reuse the book's design system rather than carrying a second copy of it:
 // the book's one <style> block is lifted out of 00-head.html and dropped in at the token.
 // A missing token means the pages have silently drifted apart, so fail loudly instead.
-if (existsSync(MOCK)) {
-  const styleMatch = readFileSync(join(SRC, '00-head.html'), 'utf8').match(/<style>[\s\S]*?<\/style>/);
-  if (!styleMatch) {
+function bookStyle() {
+  const m = readFileSync(join(SRC, '00-head.html'), 'utf8').match(/<style>[\s\S]*?<\/style>/);
+  if (!m) {
     console.error('build failed: no <style> block found in book-src/00-head.html to share');
     process.exit(1);
   }
+  return m[0];
+}
+
+if (existsSync(MOCK)) {
   const MOCK_PARTS = mockParts();
   let mockHtml = assemble(MOCK, MOCK_PARTS, 'mock-src');
   if (!mockHtml.includes('@@BOOK_STYLE@@')) {
     console.error('build failed: mock-src is missing the @@BOOK_STYLE@@ token');
     process.exit(1);
   }
-  mockHtml = mockHtml.replace('@@BOOK_STYLE@@', styleMatch[0]);
+  mockHtml = mockHtml.replace('@@BOOK_STYLE@@', bookStyle());
   writeFileSync(join(OUT, 'mock-tests.html'), mockHtml);
   const mkb = (Buffer.byteLength(mockHtml, 'utf8') / 1024).toFixed(1);
   console.log(`built public/mock-tests.html  ${mkb} KB  from ${MOCK_PARTS.length} parts`);
+}
+
+// The workshop shares the book's design system the same way the mock papers do: one <style>
+// block, lifted from book-src/00-head.html and dropped in at the token. Its parts are a fixed
+// list because they are chapters, not a discovered collection.
+const WORK_PARTS = ['00-head.html', '01-hypothesis.html', '02-correlation.html', '03-examples.html', '99-tail.html'];
+if (existsSync(WORK)) {
+  let workHtml = assemble(WORK, WORK_PARTS, 'workshop-src');
+  if (!workHtml.includes('@@BOOK_STYLE@@')) {
+    console.error('build failed: workshop-src is missing the @@BOOK_STYLE@@ token');
+    process.exit(1);
+  }
+  workHtml = workHtml.replace('@@BOOK_STYLE@@', bookStyle());
+  writeFileSync(join(OUT, 'workshop.html'), workHtml);
+  const wkb = (Buffer.byteLength(workHtml, 'utf8') / 1024).toFixed(1);
+  console.log(`built public/workshop.html    ${wkb} KB  from ${WORK_PARTS.length} parts`);
 }
 
 // Everything in static/ is copied verbatim into the deploy folder: _headers, 404.html,

@@ -1,0 +1,314 @@
+<section id="w2" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Part 2</div>
+    <h1>Correlation and regression</h1>
+    <p>By the end of this part you will be able to recognise which of the four question types you have been handed, and run the fixed procedure for it — including the one where you are given no data at all, only two equations.</p>
+  </div>
+
+  <p class="lead">Correlation asks <em>how tightly</em> two quantities move together, and answers with a single number between $-1$ and $+1$. Regression asks <em>what line</em> best describes that movement, and answers with an equation you can predict from. They come from the same arithmetic — which is why, in an exam, one table of column sums usually answers every part of the question.</p>
+
+  <h2 id="w2-types">2.1 · First, identify which of four questions you have</h2>
+
+  <p>Correlation and regression questions come in exactly four flavours in this course. Spend ten seconds deciding which one you are looking at, because they need completely different procedures — and two of them need no data at all.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>You are given…</th><th>It is asking for…</th><th>Procedure</th></tr></thead>
+      <tbody>
+        <tr><td>Two columns of <b>measurements</b> (sales, cost, height)</td><td>$r$, and/or a regression line, and/or a prediction</td><td>Build the Σ table (§2.2)</td></tr>
+        <tr><td>Two columns of <b>ranks</b>, or measurements the question calls "rank"</td><td>rank correlation</td><td>Spearman (§2.4)</td></tr>
+        <tr><td>Only <b>summary totals</b>: $n$, $\sum x$, $\sum y$, $\sum xy$, $\sum x^2$, $\sum y^2$</td><td>$r$, lines, $R^2$</td><td>Same formulas — the table is already done for you (§2.2)</td></tr>
+        <tr><td>Only <b>two regression equations</b> and maybe one variance</td><td>the means, $r$, a standard deviation</td><td>Work backwards (§2.5)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">Exam technique</span>
+    <p>The fourth type — two equations, no data — looks alarming and is the easiest question on the paper. It is simultaneous equations plus one square root. It appeared as Q8 in May 2026 and is worth 6 marks for about four minutes of work. Learn it first if you are short of time.</p>
+  </div>
+
+  <h2 id="w2-table">2.2 · The Σ table — one table, every answer</h2>
+
+  <p>When you are given raw pairs, do not go hunting for a formula yet. Build five columns. Everything the question can possibly ask for is then a substitution away.</p>
+
+  <div class="recipe">
+    <div class="hd">Building the Σ table</div>
+    <ol>
+      <li><b>Draw five columns: $x$, $y$, $xy$, $x^2$, $y^2$.</b><p>Add a $\sum$ row at the bottom. If the question only asks for $r$ or for the line of $y$ on $x$, you can skip the $y^2$ column — but it costs one minute and protects you if a later part needs it.</p></li>
+      <li><b>Fill the table row by row, not column by column.</b><p>Going across a row keeps the pairing right. Going down a column is how pairs get mismatched.</p></li>
+      <li><b>Total each column and write $n$ next to the totals.</b><p>Check: $\sum x$ divided by $n$ should look like a plausible average of the $x$ column. Ten seconds, catches most addition slips.</p></li>
+      <li><b>Compute the three building blocks once.</b>
+        <p>$$ S_{xy}=n\sum xy-\sum x\sum y,\qquad S_{xx}=n\sum x^{2}-\Big(\sum x\Big)^{2},\qquad S_{yy}=n\sum y^{2}-\Big(\sum y\Big)^{2} $$</p></li>
+      <li><b>Read every answer off those three numbers.</b>
+        <p>$$ r=\frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}},\qquad b_{yx}=\frac{S_{xy}}{S_{xx}},\qquad b_{xy}=\frac{S_{xy}}{S_{yy}} $$</p></li>
+    </ol>
+    <div class="foot">$S_{xy}$ appears in all three. Compute it once, carefully, and the rest is division.</div>
+  </div>
+
+  <div class="box plain">
+    <span class="lbl">In plain English — what $r$ is measuring</span>
+    <p>$S_{xy}$ is large and positive when the pairs that are above average in $x$ are also above average in $y$. The square root underneath is just a scaling factor that strips out the units, so that the answer comes out between $-1$ and $+1$ whether you measured in rupees or lakhs. That is the whole idea: $S_{xy}$ measures the agreement, the denominator makes it comparable.</p>
+  </div>
+
+  <div class="formula">
+    <div class="name">The two regression lines</div>
+    $$ \text{Y on X:}\quad y-\bar{y}=b_{yx}(x-\bar{x}),\qquad b_{yx}=\frac{S_{xy}}{S_{xx}}=r\frac{S_y}{S_x} $$
+    $$ \text{X on Y:}\quad x-\bar{x}=b_{xy}(y-\bar{y}),\qquad b_{xy}=\frac{S_{xy}}{S_{yy}}=r\frac{S_x}{S_y} $$
+    <div class="where"><b>Y on X</b> is the line you use to predict $y$ from a given $x$ · <b>X on Y</b> predicts $x$ from a given $y$ · both lines pass through $(\bar{x},\bar{y})$, which is why they intersect there.</div>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">Which line, though?</span>
+    <p>Read the question for the word <b>estimate</b> or <b>predict</b> and see which variable is unknown. "Estimate sales when advertising is 60" means $y$ (sales) is unknown, so use <b>Y on X</b>. Using the wrong line gives a plausible-looking wrong number and loses every mark for that part. The two lines are genuinely different, and only coincide when $r = \pm 1$.</p>
+  </div>
+
+  <div class="box note">
+    <span class="lbl">The three faces of the same $r$</span>
+    <p>You may meet $r$ written three ways, and they are all one formula in disguise:</p>
+    <p>$$ r=\frac{\operatorname{Cov}(x,y)}{S_x S_y}=\frac{\sum(x-\bar{x})(y-\bar{y})}{\sqrt{\sum(x-\bar{x})^2\sum(y-\bar{y})^2}}=\frac{n\sum xy-\sum x\sum y}{\sqrt{\big[n\sum x^2-(\sum x)^2\big]\big[n\sum y^2-(\sum y)^2\big]}} $$</p>
+    <p>Use the <b>last one</b> in exams: it needs no means and no subtraction inside the table, so there is nothing to round and nothing to carry. Use the middle one only if the question hands you the deviations already.</p>
+  </div>
+
+  <h2 id="w2-spearman">2.3 · Spearman's rank correlation</h2>
+
+  <p>When the data is already ranks — or when the question says "rank correlation" — you do not build a Σ table at all. You rank both columns, subtract, square, and add.</p>
+
+  <div class="formula">
+    <div class="name">Spearman's rank correlation coefficient</div>
+    $$ \rho = 1-\frac{6\sum d^{2}}{n(n^{2}-1)} $$
+    <div class="where"><b>d</b> the difference between the two ranks of the same individual · <b>n</b> the number of pairs · the 6 is not a mystery, it is what makes $\rho$ come out on the $-1$ to $+1$ scale.</div>
+  </div>
+
+  <div class="recipe">
+    <div class="hd">The Spearman procedure</div>
+    <ol>
+      <li><b>Rank the first column.</b><p>Pick a direction — largest gets rank 1, or smallest gets rank 1 — and say which you chose. Either works, provided you use the <b>same direction for both columns</b>. Mixing directions flips the sign of your answer.</p></li>
+      <li><b>Rank the second column the same way.</b><p>Check both rank columns sum to $\tfrac{n(n+1)}{2}$. For $n=10$ that is 55. If they do not, you have skipped or duplicated a rank.</p></li>
+      <li><b>Compute $d = R_x - R_y$ for each row, then $d^2$.</b><p>Check $\sum d = 0$. It must be, since both rank columns have the same total. This is a free, reliable error-catcher — use it every time.</p></li>
+      <li><b>Add the $d^2$ column and substitute.</b><p>$\rho = 1 - \dfrac{6\sum d^2}{n(n^2-1)}$. For $n = 10$ the denominator is $10 \times 99 = 990$; for $n=8$ it is $8 \times 63 = 504$.</p></li>
+      <li><b>Interpret in one sentence.</b><p>"A strong positive rank correlation, so the two rankings largely agree."</p></li>
+    </ol>
+  </div>
+
+  <h3>When ranks are tied</h3>
+
+  <p>If two or more values in a column are equal they must share a rank — you give each of them the <em>average</em> of the positions they occupy — and then the formula needs a small repair.</p>
+
+  <div class="formula">
+    <div class="name">Spearman with tied ranks</div>
+    $$ \rho = 1-\frac{6\left[\sum d^{2}+\sum \dfrac{m(m^{2}-1)}{12}\right]}{n(n^{2}-1)} $$
+    <div class="where"><b>m</b> the number of items sharing one tied rank · the correction is added <b>once per tie group</b>, in <em>both</em> columns · a group of 2 contributes $0.5$, a group of 3 contributes $2$, a group of 4 contributes $5$.</div>
+  </div>
+
+  <div class="box plain">
+    <span class="lbl">In plain English — why ties need a correction</span>
+    <p>The plain formula quietly assumes every rank from 1 to $n$ is used exactly once. Ties break that: two items sharing rank 5.5 means nobody has rank 5 or 6, so the spread of the rank column shrinks a little. The correction term adds back exactly the amount of spread the ties removed. Forget it and your $\rho$ comes out slightly too large.</p>
+  </div>
+
+  <div class="box tip">
+    <span class="lbl">Getting tied ranks right</span>
+    <p>Rank as if there were no ties, then average the positions. Three values tied for positions 2, 3 and 4 all get $(2+3+4)/3 = 3$, and the next value down gets rank 5 — <b>not</b> rank 4. The next rank always resumes at the position after the last one consumed.</p>
+  </div>
+
+  <h2 id="w2-backwards">2.4 · Working backwards from two regression lines</h2>
+
+  <p>This is the "partially destroyed laboratory record" question, and it is entirely mechanical once you know the three facts it rests on.</p>
+
+  <div class="box def">
+    <span class="lbl">The three facts this question type is built on</span>
+    <p><b>Fact 1.</b> Both lines pass through $(\bar{x}, \bar{y})$. So solving the two equations simultaneously <em>gives you the means</em> — no data required.</p>
+    <p><b>Fact 2.</b> $b_{yx} \times b_{xy} = r^2$. So $r = \pm\sqrt{b_{yx}b_{xy}}$, with the sign taken from the (shared) sign of the two coefficients.</p>
+    <p><b>Fact 3.</b> $b_{yx} = r\dfrac{\sigma_y}{\sigma_x}$. So if you know $r$, one coefficient and one standard deviation, the other standard deviation falls out.</p>
+  </div>
+
+  <div class="box warn">
+    <span class="lbl">The hidden difficulty — which equation is which line?</span>
+    <p>The question hands you two equations and does <em>not</em> tell you which is $Y$ on $X$ and which is $X$ on $Y$. You have to work it out, and there is a clean test:</p>
+    <p>Since $r^2 = b_{yx}b_{xy}$ and $r^2$ can never exceed 1, <b>the product of the two regression coefficients can never exceed 1</b>. So: assume one assignment, compute the product. If it is $\le 1$, your assumption was right. If it is $&gt; 1$, swap them and the product becomes its reciprocal, which is then $&lt; 1$. Show this check in your answer — it is worth marks on its own.</p>
+  </div>
+
+  <div class="recipe">
+    <div class="hd">Two lines, no data — the procedure</div>
+    <ol>
+      <li><b>Solve the two equations simultaneously.</b><p>The solution <em>is</em> $(\bar{x}, \bar{y})$. Say so explicitly: "since both regression lines pass through the point of means, the intersection gives $\bar{x}$ and $\bar{y}$."</p></li>
+      <li><b>Assume an assignment and extract both coefficients.</b><p>Rearrange the line you called $Y$ on $X$ into $y = \ldots x + \ldots$ and read $b_{yx}$ off. Rearrange the other into $x = \ldots y + \ldots$ and read $b_{xy}$ off. <b>Make $y$ the subject for one and $x$ the subject for the other</b> — that is the step people rush and get wrong.</p></li>
+      <li><b>Test the assumption.</b><p>If $b_{yx}b_{xy} \le 1$, keep it. If not, swap the two lines and redo step 2.</p></li>
+      <li><b>Take the square root for $r$.</b><p>$r = \pm\sqrt{b_{yx}b_{xy}}$. Both coefficients positive $\rightarrow$ take $+$. Both negative $\rightarrow$ take $-$. They always share a sign, because they both carry the sign of $\operatorname{Cov}(x,y)$.</p></li>
+      <li><b>Use $b = r\sigma_y/\sigma_x$ for whichever standard deviation is missing.</b><p>And check with the other coefficient: $b_{xy}$ should equal $r\sigma_x/\sigma_y$. If it does, all four numbers are consistent.</p></li>
+    </ol>
+  </div>
+
+  <h2 id="w2-q7">2.5 · The real thing — exam Q7, broken apart</h2>
+
+  <p class="wsub">May 2026 end-term · Question 7 · 7 marks · Spearman's rank correlation</p>
+
+  <div class="exam">
+    <div class="hd">Exam Question 7 <span class="mk">7 marks</span></div>
+    <div class="bd">
+      <div class="qtext">
+        <p>Find the rank correlation coefficient between the Advertisement Cost and Sales from the data given below.</p>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Advertisement Cost ('000 Rs.)</th><th class="num">39</th><th class="num">65</th><th class="num">62</th><th class="num">90</th><th class="num">82</th><th class="num">75</th><th class="num">25</th><th class="num">98</th><th class="num">36</th><th class="num">78</th></tr></thead>
+            <tbody><tr><th>Sales (Lakhs Rs.)</th><td class="num">47</td><td class="num">53</td><td class="num">58</td><td class="num">86</td><td class="num">62</td><td class="num">68</td><td class="num">60</td><td class="num">91</td><td class="num">51</td><td class="num">84</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="part first">
+        <div class="ph">Reading the question</div>
+        <ul>
+          <li>"<b>rank</b> correlation coefficient" — Spearman, not Pearson. Do not build a Σ table.</li>
+          <li>The data are measurements, not ranks, so <b>you must rank them yourself</b>. That is the first two marks.</li>
+          <li>Scan for repeats before you start: 39, 65, 62, 90, 82, 75, 25, 98, 36, 78 — all different; 47, 53, 58, 86, 62, 68, 60, 91, 51, 84 — all different. <b>No ties</b>, so the plain formula applies and no correction term is needed. Say this out loud in your answer.</li>
+        </ul>
+        <div class="given"><b>Given</b> $n = 10$ pairs · no ties</div>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 1 <span class="tag">rank the advertisement cost</span></div>
+        <p>Choose a direction and state it: <b>rank 1 to the largest value</b>. Sorting the cost column descending gives $98, 90, 82, 78, 75, 65, 62, 39, 36, 25$, so $98$ takes rank 1, $90$ takes rank 2, and so on down to $25$ at rank 10.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 2 <span class="tag">rank sales the same way</span></div>
+        <p>Sorted descending, sales are $91, 86, 84, 68, 62, 60, 58, 53, 51, 47$ — so $91$ takes rank 1 and $47$ takes rank 10. Same direction as before, which is what keeps the sign honest.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 3 <span class="tag">the working table — write it out exactly like this</span></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th class="num">Cost $x$</th><th class="num">Sales $y$</th><th class="num">$R_x$</th><th class="num">$R_y$</th><th class="num">$d=R_x-R_y$</th><th class="num">$d^2$</th></tr></thead>
+            <tbody>
+              <tr><td class="num">39</td><td class="num">47</td><td class="num">8</td><td class="num">10</td><td class="num">−2</td><td class="num">4</td></tr>
+              <tr><td class="num">65</td><td class="num">53</td><td class="num">6</td><td class="num">8</td><td class="num">−2</td><td class="num">4</td></tr>
+              <tr><td class="num">62</td><td class="num">58</td><td class="num">7</td><td class="num">7</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">90</td><td class="num">86</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">82</td><td class="num">62</td><td class="num">3</td><td class="num">5</td><td class="num">−2</td><td class="num">4</td></tr>
+              <tr><td class="num">75</td><td class="num">68</td><td class="num">5</td><td class="num">4</td><td class="num">1</td><td class="num">1</td></tr>
+              <tr><td class="num">25</td><td class="num">60</td><td class="num">10</td><td class="num">6</td><td class="num">4</td><td class="num">16</td></tr>
+              <tr><td class="num">98</td><td class="num">91</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">36</td><td class="num">51</td><td class="num">9</td><td class="num">9</td><td class="num">0</td><td class="num">0</td></tr>
+              <tr><td class="num">78</td><td class="num">84</td><td class="num">4</td><td class="num">3</td><td class="num">1</td><td class="num">1</td></tr>
+              <tr><th class="num">Σ</th><th class="num"></th><th class="num">55</th><th class="num">55</th><th class="num">0</th><th class="num">30</th></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Both checks pass: each rank column totals $\tfrac{10 \times 11}{2} = 55$, and $\sum d = 0$. Only now is it safe to substitute.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 4 <span class="tag">substitute</span></div>
+        $$ \rho = 1-\frac{6\sum d^{2}}{n(n^{2}-1)} = 1-\frac{6(30)}{10(10^{2}-1)} = 1-\frac{180}{10 \times 99} = 1-\frac{180}{990} $$
+        $$ \rho = 1 - 0.1818 = 0.8182 $$
+      </div>
+
+      <div class="part">
+        <div class="ph">Step 5 <span class="tag">interpret — do not skip this</span></div>
+        <div class="final">$\rho = 0.8182$. There is a strong positive rank correlation between advertisement cost and sales: firms that spend more on advertising tend to rank higher on sales.</div>
+        <p>One caution worth a sentence if the question invites comment: this is association, not proof of cause. High sales could equally be funding the advertising budget.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="lbl">Where the 7 marks sit</span>
+        <p>Roughly: 2 for correct ranking of both columns, 2 for a correct $d$ and $d^2$ table, 1 for stating the formula, 1 for the arithmetic, 1 for the interpretation. Notice that <b>five of the seven marks are earned before you touch the formula.</b> Write the table out in full even if you can see the answer.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="w2-q8">2.6 · The real thing — exam Q8, broken apart</h2>
+
+  <p class="wsub">May 2026 end-term · Question 8 · 2+2+2 marks · regression lines, backwards</p>
+
+  <div class="exam">
+    <div class="hd">Exam Question 8 <span class="mk">6 marks</span></div>
+    <div class="bd">
+      <div class="qtext">
+        <p>In a partially destroyed laboratory record of an analysis of bivariate data, the following results only are legible: $\operatorname{Var}(X) = 9$, and the two regression lines are</p>
+        $$ 8X-10Y+66=0 \qquad\text{and}\qquad 40X-18Y=214 $$
+        <p>Find: (a) the mean values of $X$ and $Y$; (b) the coefficient of correlation between $X$ and $Y$; (c) the standard deviation of $Y$.</p>
+      </div>
+
+      <div class="part first">
+        <div class="ph">Reading the question</div>
+        <ul>
+          <li>Two regression equations, one variance, no data. This is type four — <b>work backwards</b>.</li>
+          <li>$\operatorname{Var}(X) = 9 \Rightarrow \sigma_x = 3$. Take that square root now; part (c) needs it.</li>
+          <li>The three parts are deliberately in order: (a) needs nothing but algebra, (b) needs (a)'s working, (c) needs (b)'s answer. So a mistake in (b) costs you (c) as well — check (b) before moving on.</li>
+        </ul>
+        <div class="given"><b>Given</b> $\operatorname{Var}(X) = 9$, so $\sigma_x = 3$ · two regression lines</div>
+      </div>
+
+      <div class="part">
+        <div class="ph">Part (a) <span class="tag">the mean values — 2+2 marks</span></div>
+        <p><b>The principle, stated first:</b> both regression lines pass through the point of means $(\bar{x},\bar{y})$, so that point satisfies both equations at once. Finding it is simply solving the pair.</p>
+        <p>Write them in standard form:</p>
+        $$ 8x-10y=-66 \qquad \cdots (1) $$
+        $$ 40x-18y=214 \qquad \cdots (2) $$
+        <p>Multiply (1) by 5 so the $x$ terms match:</p>
+        $$ 40x-50y=-330 \qquad \cdots (3) $$
+        <p>Subtract (3) from (2):</p>
+        $$ (40x-18y)-(40x-50y)=214-(-330) \;\Rightarrow\; 32y=544 \;\Rightarrow\; y=17 $$
+        <p>Substitute back into (1):</p>
+        $$ 8x=-66+10(17)=-66+170=104 \;\Rightarrow\; x=13 $$
+        <div class="final">$\bar{x}=13$ and $\bar{y}=17$</div>
+        <p>Check both equations: $8(13)-10(17)+66 = 104-170+66 = 0$ ✓ and $40(13)-18(17) = 520-306 = 214$ ✓.</p>
+      </div>
+
+      <div class="part">
+        <div class="ph">Part (b) <span class="tag">the coefficient of correlation — 2 marks</span></div>
+        <p><b>Assume</b> the first line is $Y$ on $X$ and the second is $X$ on $Y$. Rearrange each so the correct variable is the subject.</p>
+        <p>First line, make $y$ the subject:</p>
+        $$ 8x-10y+66=0 \;\Rightarrow\; 10y=8x+66 \;\Rightarrow\; y=0.8x+6.6 \;\Rightarrow\; b_{yx}=0.8 $$
+        <p>Second line, make $x$ the subject:</p>
+        $$ 40x-18y=214 \;\Rightarrow\; 40x=18y+214 \;\Rightarrow\; x=0.45y+5.35 \;\Rightarrow\; b_{xy}=0.45 $$
+        <p><b>Now test the assumption:</b></p>
+        $$ b_{yx}\times b_{xy}=0.8\times0.45=0.36 \;\le\; 1 \quad\checkmark $$
+        <p>The product does not exceed 1, so the assumption was correct. (Had we assigned them the other way round we would have got $b_{xy}=1.25$ and $b_{yx}=2.2222$, whose product is $2.7778 &gt; 1$ — impossible, since that product is $r^2$.)</p>
+        <p>Both coefficients are positive, so take the positive root:</p>
+        $$ r=+\sqrt{b_{yx}\,b_{xy}}=\sqrt{0.36}=0.6 $$
+        <div class="final">$r = 0.6000$ — a moderate positive correlation</div>
+      </div>
+
+      <div class="part">
+        <div class="ph">Part (c) <span class="tag">the standard deviation of Y — 2 marks</span></div>
+        <p>Use the definition of the regression coefficient that contains $\sigma_y$:</p>
+        $$ b_{yx}=r\frac{\sigma_y}{\sigma_x} \;\Rightarrow\; 0.8=0.6\times\frac{\sigma_y}{3} $$
+        $$ \sigma_y=\frac{0.8\times 3}{0.6}=4 $$
+        <div class="final">$\sigma_y = 4$, so $\operatorname{Var}(Y) = 16$</div>
+        <p>Confirm with the other coefficient, which must agree: $b_{xy}=r\dfrac{\sigma_x}{\sigma_y}=0.6\times\dfrac{3}{4}=0.45$ ✓ — exactly the value read off the second line. All four quantities are consistent.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="lbl">Six marks, four minutes</span>
+        <p>If you can do simultaneous equations you can do this question. The only genuinely statistical steps are "both lines pass through the means" and "the product of the coefficients is $r^2$, so it cannot exceed 1". Memorise those two sentences and this question is free marks every time it appears.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="w2-mistakes">2.7 · The mistakes that actually cost marks</h2>
+
+  <ul class="mistake">
+    <li><b>Ranking the two columns in opposite directions.</b> If largest gets rank 1 in one column and smallest gets rank 1 in the other, $\rho$ comes out with the wrong sign. State your direction and use it twice.</li>
+    <li><b>Skipping a rank after a tie.</b> Three values tied at positions 2, 3, 4 all get rank 3, and the next value gets rank <b>5</b>, not 4.</li>
+    <li><b>Forgetting the tie correction.</b> Whenever any value repeats in either column, the $\sum \frac{m(m^2-1)}{12}$ term must appear.</li>
+    <li><b>Using the wrong regression line to predict.</b> Predicting $y$? Use $Y$ on $X$. Predicting $x$? Use $X$ on $Y$.</li>
+    <li><b>Failing to test which line is which</b> in the "two lines given" question. Without the $b_{yx}b_{xy} \le 1$ check you have a 50% chance of a wrong $r$ and a wrong $\sigma$.</li>
+    <li><b>Reporting $r &gt; 1$.</b> An impossible value means an arithmetic error — nearly always a mis-squared total in $S_{xx}$ or $S_{yy}$. Go back rather than writing it down.</li>
+    <li><b>Losing the sign of $r$.</b> It is the sign of $S_{xy}$ (or of the regression coefficients), not something you choose. A negative $S_{xy}$ gives a negative $r$ and two negative coefficients.</li>
+    <li><b>Claiming causation.</b> "Advertising causes sales" is not something $\rho = 0.8182$ can support. Say "associated with".</li>
+  </ul>
+
+  <div class="recap">
+    <h4>Part 2 recap</h4>
+    <ul>
+      <li>Identify the type first: raw pairs · ranks · summary totals · two equations. Each has its own fixed route.</li>
+      <li>For raw pairs, build $x, y, xy, x^2, y^2$ once, compute $S_{xy}, S_{xx}, S_{yy}$ once, then read off $r$, $b_{yx}$ and $b_{xy}$ by division.</li>
+      <li>Spearman: same ranking direction in both columns · check both rank columns total $\frac{n(n+1)}{2}$ and $\sum d = 0$ · add the tie correction whenever a value repeats.</li>
+      <li>Two lines given: solve simultaneously for the means · check $b_{yx}b_{xy} \le 1$ to see which line is which · $r = \pm\sqrt{b_{yx}b_{xy}}$ · $b_{yx}=r\sigma_y/\sigma_x$ for the missing standard deviation.</li>
+      <li>Always finish with a sentence about what the number means, and never claim cause.</li>
+    </ul>
+  </div>
+</section>

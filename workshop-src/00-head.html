@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Statistics — Exam Workshop</title>
+<meta name="description" content="A procedure-first workshop on hypothesis testing and correlation &amp; regression: fixed step recipes, the May 2026 exam questions broken apart step by step, and thirteen fully solved examples.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbf9f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16151a" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Statistics — Exam Workshop">
+<meta property="og:description" content="Step recipes for hypothesis testing and regression, the real exam questions broken apart, and thirteen solved examples.">
+<meta name="twitter:card" content="summary">
+<script>
+  try{ var t=localStorage.getItem("stats-theme"); if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);} }catch(e){}
+</script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+    startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.body.classList.add('math-ready')) }
+  };
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+@@BOOK_STYLE@@
+<style>
+.wsub{font-family:var(--sans);font-size:.78rem;letter-spacing:.06em;color:var(--ink-3);margin:.2rem 0 0}
+
+.tblnote{font-family:var(--sans);font-size:.8rem;color:var(--ink-3);margin:.3rem 0 1.5rem}
+#ztable table,#ttable table,#chitable table{font-family:var(--mono);font-size:.74rem}
+#ztable,#ttable,#chitable{margin-bottom:2.4rem}
+
+.recipe{margin:1.9rem 0;border:1px solid var(--rule-2);border-radius:6px;background:var(--paper-2);overflow:hidden}
+.recipe>.hd{padding:.7rem 1.1rem;background:var(--blue-soft);color:var(--blue);font-family:var(--sans);
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-bottom:1px solid var(--rule)}
+.recipe>ol{counter-reset:rs;list-style:none;margin:0;padding:1rem 1.2rem .4rem}
+.recipe>ol>li{counter-increment:rs;position:relative;padding-left:2.9rem;margin-bottom:1rem}
+.recipe>ol>li::before{content:"S" counter(rs);position:absolute;left:0;top:.12em;
+  font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.04em;
+  color:var(--blue);background:var(--paper);border:1px solid var(--blue);border-radius:3px;padding:.12rem .38rem}
+.recipe>ol>li>b{font-family:var(--sans);font-size:.92rem;display:block;margin-bottom:.15rem;color:var(--ink)}
+.recipe>ol>li p{margin:.3rem 0 0;font-size:.94rem}
+.recipe .foot{padding:.4rem 1.2rem 1rem;font-family:var(--sans);font-size:.8rem;color:var(--ink-3);font-style:italic}
+
+.exam{margin:2.2rem 0;border:1px solid var(--rule-2);border-left:4px solid var(--violet);
+  border-radius:6px;overflow:hidden;background:var(--paper-2)}
+.exam>.hd{padding:.75rem 1.2rem;background:var(--violet-soft);color:var(--violet);overflow:hidden;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;border-bottom:1px solid var(--rule)}
+.exam>.hd .mk{float:right;font-weight:400;opacity:.78;letter-spacing:.06em}
+.exam>.bd{padding:1.2rem 1.3rem;font-size:.97rem}
+.exam>.bd>*:last-child{margin-bottom:0}
+.qtext{font-style:italic;border-left:2px solid var(--rule-2);padding-left:1rem;margin:0 0 1.3rem;color:var(--ink-2)}
+.qtext>*:last-child{margin-bottom:0}
+
+.part{margin-top:1.7rem;padding-top:1.2rem;border-top:1px dashed var(--rule-2)}
+.part.first{margin-top:0;padding-top:0;border-top:0}
+.part>.ph{font-family:var(--sans);font-size:.8rem;font-weight:700;color:var(--accent);margin-bottom:.55rem}
+.part>.ph .tag{font-weight:500;color:var(--ink-3);font-size:.76rem;margin-left:.5rem}
+
+.tmpl{font-family:var(--sans);font-size:.9rem;background:var(--gold-soft);border:1px solid var(--gold);
+  border-radius:4px;padding:.85rem 1.05rem;margin:1.1rem 0;line-height:1.85;color:var(--ink)}
+.tmpl u{text-decoration:none;border-bottom:1.5px solid var(--gold);padding:0 .35em;
+  color:var(--gold);font-weight:650}
+
+.tree{font-family:var(--sans);font-size:.87rem;background:var(--paper-2);border:1px solid var(--rule);
+  border-radius:6px;padding:1.15rem 1.3rem;margin:1.7rem 0;line-height:1.6}
+.tree ul{list-style:none;padding-left:1.15rem;margin:.25rem 0;border-left:1px solid var(--rule-2)}
+.tree>ul{border-left:0;padding-left:0}
+.tree li{margin:.4rem 0}
+.tree .q{font-weight:650;color:var(--ink)}
+.tree .a{color:var(--accent);font-weight:650}
+.tree .r{color:var(--green);font-weight:650}
+
+.wsteps{counter-reset:ws;list-style:none;padding-left:0;margin:1rem 0 0}
+.wsteps>li{counter-increment:ws;position:relative;padding-left:2.2rem;margin-bottom:.85rem}
+.wsteps>li::before{content:counter(ws);position:absolute;left:0;top:.1em;width:1.5rem;height:1.5rem;
+  border-radius:50%;background:var(--violet);color:var(--paper);font-family:var(--sans);
+  font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+.mistake{margin:1.6rem 0;padding:0;list-style:none}
+.mistake li{position:relative;padding-left:1.7rem;margin-bottom:.7rem;font-size:.95rem}
+.mistake li::before{content:"\2715";position:absolute;left:0;top:.05em;color:var(--red);font-weight:700;font-size:.9em}
+.mistake li b{color:var(--red);font-weight:650}
+
+.ex-nav{display:flex;flex-wrap:wrap;gap:.35rem;margin:1.2rem 0 2rem;font-family:var(--sans);font-size:.78rem}
+.ex-nav a{padding:.3rem .6rem;border:1px solid var(--rule-2);border-radius:3px;
+  color:var(--ink-2);text-decoration:none;background:var(--paper-2)}
+.ex-nav a:hover{border-color:var(--accent);color:var(--accent)}
+
+.topics{display:flex;flex-wrap:wrap;gap:.3rem;margin:.1rem 0 1rem}
+.topics span{font-family:var(--sans);font-size:.68rem;font-weight:600;padding:.15rem .5rem;
+  border-radius:3px;background:var(--paper-2);border:1px solid var(--rule-2);color:var(--ink-3)}
+
+@media print{
+  .ex-nav{display:none!important}
+  .exam,.recipe,.example,.exercise{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="toolbar">
+  <button id="menuBtn" onclick="toggleTOC()">☰ Contents</button>
+  <button onclick="toggleTheme()" id="themeBtn">◑ Dark</button>
+  <button onclick="window.print()">⎙ Print</button>
+</div>
+<div id="shell">
+<nav id="toc">
+  <div class="brand"><span>Course Companion</span><b>Exam Workshop</b></div>
+  <a class="xlink" href="index.html">Textbook &rarr;</a>
+  <a class="xlink" href="mock-tests.html">Mock tests &rarr;</a>
+  <div id="tocLinks"></div>
+</nav>
+<main>

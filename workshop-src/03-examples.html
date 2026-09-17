@@ -1,0 +1,572 @@
+<section id="w3" class="wrap">
+  <div class="chapter-open">
+    <div class="kicker">Part 3</div>
+    <h1>Thirteen solved examples</h1>
+    <p>Every question type from Parts 1 and 2, worked end to end. Try each one on paper first, then reveal — the value is in the attempt, not the reading.</p>
+  </div>
+
+  <p class="lead">These are ordered to build on each other: examples 1–6 drill the hypothesis-testing machine, 7–12 drill correlation and regression, and 13 joins the two. Each solution shows the full six-step layout an examiner expects, and finishes with a short note on <em>why</em> that step was necessary — so you are learning the reasoning, not memorising an answer.</p>
+
+  <div class="ex-nav">
+    <a href="#ex1">1 · Z mean</a>
+    <a href="#ex2">2 · t mean</a>
+    <a href="#ex3">3 · proportion</a>
+    <a href="#ex4">4 · variance</a>
+    <a href="#ex5">5 · Type II &amp; power</a>
+    <a href="#ex6">6 · pick the test</a>
+    <a href="#ex7">7 · Pearson r</a>
+    <a href="#ex8">8 · both lines</a>
+    <a href="#ex9">9 · Spearman</a>
+    <a href="#ex10">10 · Spearman, ties</a>
+    <a href="#ex11">11 · two lines given</a>
+    <a href="#ex12">12 · summary totals</a>
+    <a href="#ex13">13 · is r significant</a>
+  </div>
+
+  <button class="revealall">Reveal all solutions</button>
+
+  <h2 id="ex-hyp">3.1 · Hypothesis testing — examples 1 to 6</h2>
+
+  <div class="exercise" id="ex1">
+    <div class="hd">Example 1 — $Z$ test for a mean, two-tailed, by both routes</div>
+    <div class="bd">
+      <p>A manufacturer states that the mean lifetime of its bulbs is 1600 hours. From long records the population standard deviation is known to be 120 hours. A random sample of 64 bulbs gives a mean lifetime of 1570 hours. Test the manufacturer's statement at the 5% level of significance, using both the critical-value method and the p-value method.</p>
+      <div class="given"><b>Given</b> $\mu_0 = 1600$ · $\sigma = 120$ · $n = 64$ · $\bar{x} = 1570$ · $\alpha = 0.05$</div>
+      <p class="hint">Hint: $\sigma$ is given, not estimated — which of the four test statistics does that settle? And does the wording suggest a direction, or not?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> The claim is an equality with no direction suggested, so it is two-tailed.
+            $$ H_0: \mu = 1600 \qquad H_1: \mu \ne 1600 $$</li>
+          <li><b>Level and tail.</b> $\alpha = 0.05$, two-tailed, so $2.5\%$ sits in each tail.</li>
+          <li><b>Test statistic.</b> $\sigma$ is <em>known</em>, so this is a $Z$ test:
+            $$ z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}} $$</li>
+          <li><b>Critical values.</b> From the $Z$-table, $z_{0.025} = 1.96$. Reject $H_0$ if $|z| &gt; 1.96$.</li>
+          <li><b>Compute.</b> Standard error first:
+            $$ \frac{\sigma}{\sqrt{n}}=\frac{120}{\sqrt{64}}=\frac{120}{8}=15 $$
+            $$ z=\frac{1570-1600}{15}=\frac{-30}{15}=-2.0000 $$</li>
+          <li><b>Decide — critical-value route.</b> $|-2.0000| = 2.0000 &gt; 1.96$, so the statistic falls in the rejection region. <b>Reject $H_0$.</b></li>
+          <li><b>Decide — p-value route.</b> Two-tailed, so double the tail area:
+            $$ p = 2\times P(Z &lt; -2.00) = 2 \times 0.0228 = 0.0456 $$
+            $$ 0.0456 &lt; 0.05 \;\Rightarrow\; \text{reject } H_0 $$</li>
+        </ol>
+        <div class="final">Reject $H_0$ at the 5% level. There is sufficient evidence that the mean lifetime of the bulbs is not 1600 hours; the sample suggests it is lower.</div>
+        <div class="box plain">
+          <span class="lbl">Why the two routes must agree</span>
+          <p>They are the same comparison seen from two sides. "Is $|z|$ beyond 1.96?" and "is the tail area beyond $|z|$ smaller than 5%?" are logically identical, because 1.96 is <em>defined</em> as the point with 5% of the area beyond it in two tails. If your two routes ever disagree, you have made an arithmetic slip — most often forgetting to double the p-value.</p>
+        </div>
+        <div class="box tip">
+          <span class="lbl">Note the near miss</span>
+          <p>$p = 0.0456$ is only just under $0.05$. At the 1% level this same data would <b>not</b> lead to rejection, since $0.0456 &gt; 0.01$. The level of significance is not a detail — it is part of the conclusion, which is why you write "at the 5% level" every time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex2">
+    <div class="hd">Example 2 — $t$ test for a mean from raw data, with the p-value bracketed</div>
+    <div class="bd">
+      <p>A training programme claims to raise scores above the historical average of 50. Nine trainees are sampled after the programme and score: <b>48, 50, 52, 53, 54, 55, 56, 51, 58</b>. Test at the 5% level whether the programme has raised the mean score, and bracket the p-value.</p>
+      <div class="given"><b>Given</b> $n = 9$ raw observations · $\mu_0 = 50$ · $\alpha = 0.05$ · $\sigma$ unknown</div>
+      <p class="hint">Hint: "raised" points in one direction. And you are given data rather than $\sigma$ — so which table, and how many degrees of freedom?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> "Has raised" points upward, so a right-tailed test:
+            $$ H_0: \mu \le 50 \qquad H_1: \mu &gt; 50 $$</li>
+          <li><b>Level and tail.</b> $\alpha = 0.05$, right-tailed, $df = n-1 = 8$.</li>
+          <li><b>Test statistic.</b> No $\sigma$, so $s$ must be estimated and the statistic is $t$:
+            $$ t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}\;\sim\;t_{n-1} $$</li>
+          <li><b>Critical value.</b> From the $t$-table, $t_{0.05,\,8} = 1.860$. Reject $H_0$ if $t &gt; 1.860$.</li>
+          <li><b>Mean and deviations.</b> $\sum x = 477$, so $\bar{x} = 477/9 = 53$.
+            <div class="tw"><table>
+              <thead><tr><th class="num">$x$</th><th class="num">48</th><th class="num">50</th><th class="num">52</th><th class="num">53</th><th class="num">54</th><th class="num">55</th><th class="num">56</th><th class="num">51</th><th class="num">58</th><th class="num">Σ</th></tr></thead>
+              <tbody>
+                <tr><th class="num">$x-\bar{x}$</th><td class="num">−5</td><td class="num">−3</td><td class="num">−1</td><td class="num">0</td><td class="num">1</td><td class="num">2</td><td class="num">3</td><td class="num">−2</td><td class="num">5</td><td class="num">0</td></tr>
+                <tr><th class="num">$(x-\bar{x})^2$</th><td class="num">25</td><td class="num">9</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">4</td><td class="num">9</td><td class="num">4</td><td class="num">25</td><td class="num">78</td></tr>
+              </tbody>
+            </table></div>
+            The deviations total zero, so the mean is right.</li>
+          <li><b>Compute.</b>
+            $$ s^2=\frac{78}{9-1}=\frac{78}{8}=9.75 \qquad s=\sqrt{9.75}=3.1225 $$
+            $$ t=\frac{53-50}{3.1225/\sqrt{9}}=\frac{3}{1.0408}=2.8823 $$</li>
+          <li><b>Decide.</b> $2.8823 &gt; 1.860$, so <b>reject $H_0$.</b></li>
+          <li><b>Bracket the p-value.</b> Along the $df = 8$ row: $t_{0.025,8} = 2.306$ and $t_{0.01,8} = 2.896$. Our $2.8823$ lies between them, so
+            $$ 0.01 &lt; p &lt; 0.025 $$</li>
+        </ol>
+        <div class="final">Reject $H_0$ at the 5% level ($0.01 &lt; p &lt; 0.025$). There is sufficient evidence that the programme has raised the mean score above 50.</div>
+        <div class="box plain">
+          <span class="lbl">Why you can only bracket a $t$ p-value</span>
+          <p>The $Z$-table lists an area for every value of $z$ to two decimals, so you can read a p-value off directly. The $t$-table is arranged the other way round — it lists values for a fixed handful of areas (0.10, 0.05, 0.025, 0.01, 0.005), because there is a different curve for every $df$ and a full table would fill a book. So all you can do is find which two columns your statistic falls between. That <em>is</em> the expected answer; do not try to interpolate.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">Notice how close this is</span>
+          <p>$t = 2.8823$ against $t_{0.01,8} = 2.896$ — a hair short. At the 1% level you would <b>not</b> reject. Rounding $s$ to two decimals early ($3.12$ instead of $3.1225$) gives $t = 2.8846$, which is still below $2.896$, but on a tighter question that kind of premature rounding does flip the decision. Carry full precision.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex3">
+    <div class="hd">Example 3 — $Z$ test for a proportion, two-tailed, p-value method</div>
+    <div class="bd">
+      <p>A political party claims that 40% of voters in a constituency support it. In a random sample of 400 voters, 140 say they support the party. Using the p-value method, test the party's claim at the 5% level.</p>
+      <div class="given"><b>Given</b> $n = 400$ · $x = 140$ · $p_0 = 0.40$ · $\alpha = 0.05$</div>
+      <p class="hint">Hint: the claim is an exact percentage with no direction, so how many tails? And which proportion goes inside the square root?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> The claim is "40%", with no direction, so two-tailed:
+            $$ H_0: p = 0.40 \qquad H_1: p \ne 0.40 $$</li>
+          <li><b>Level and tail.</b> $\alpha = 0.05$, two-tailed.</li>
+          <li><b>Test statistic.</b> A count out of $n$ means a proportion test:
+            $$ z=\frac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}} $$
+            Validity check: $np_0 = 400(0.40) = 160 \ge 5$ and $n(1-p_0) = 240 \ge 5$, so the normal approximation holds.</li>
+          <li><b>Compute.</b>
+            $$ \hat{p}=\frac{140}{400}=0.35 $$
+            $$ \sqrt{\frac{0.40 \times 0.60}{400}}=\sqrt{\frac{0.24}{400}}=\sqrt{0.0006}=0.0245 $$
+            $$ z=\frac{0.35-0.40}{0.0244949}=\frac{-0.05}{0.0244949}=-2.0412 $$</li>
+          <li><b>p-value.</b> Two-tailed, so double the left-tail area:
+            $$ p = 2\times P(Z &lt; -2.04) = 2 \times 0.0207 = 0.0414 $$</li>
+          <li><b>Decide.</b> $0.0414 &lt; 0.05$, so <b>reject $H_0$.</b></li>
+        </ol>
+        <div class="final">Reject $H_0$ at the 5% level ($p = 0.0414$). There is sufficient evidence that the true level of support differs from 40%; the sample points to it being lower.</div>
+        <div class="box plain">
+          <span class="lbl">Why $p_0$ and not $\hat{p}$ under the root</span>
+          <p>The whole test is a thought experiment: "suppose the party is right and $p$ really is $0.40$ — how often would a sample of 400 land as far from $0.40$ as ours did?" Inside that thought experiment the true proportion <em>is</em> $0.40$, so the standard error must be built from $0.40$. Using $\hat{p}=0.35$ there would be quietly assuming the thing you are trying to test.</p>
+        </div>
+        <div class="box tip">
+          <span class="lbl">Compare this with exam Q5</span>
+          <p>Q5 was the same test with one difference — "at least 90%" gave it a direction, making it one-tailed, so its p-value was <b>not</b> doubled. Here "40%" has no direction, so this one is. That single word is the whole difference between the two questions, and it is worth a mark.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex4">
+    <div class="hd">Example 4 — $\chi^2$ test for a variance, right-tailed</div>
+    <div class="bd">
+      <p>A bottling machine is considered acceptable as long as the variance of fill volumes does not exceed 4 ml². A quality inspector takes a random sample of 16 bottles and finds a sample variance of 7.2 ml². Test at the 5% level whether the machine's variance exceeds the acceptable limit, and bracket the p-value.</p>
+      <div class="given"><b>Given</b> $n = 16$ · $s^2 = 7.2$ · $\sigma_0^2 = 4$ · $\alpha = 0.05$</div>
+      <p class="hint">Hint: "does not exceed" sets the direction. With only one tail, how many critical values do you need from the $\chi^2$ table?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> The acceptable state is "does not exceed 4", and we are looking for evidence that it does:
+            $$ H_0: \sigma^2 \le 4 \qquad H_1: \sigma^2 &gt; 4 $$</li>
+          <li><b>Level and tail.</b> $\alpha = 0.05$, right-tailed, $df = n - 1 = 15$.</li>
+          <li><b>Test statistic.</b>
+            $$ \chi^2=\frac{(n-1)s^2}{\sigma_0^2}\;\sim\;\chi^2_{n-1} $$</li>
+          <li><b>Critical value.</b> Right-tailed, so only <em>one</em> value is needed. From the $\chi^2$ table with $df = 15$: $\chi^2_{0.05,\,15} = 24.996$. Reject $H_0$ if $\chi^2 &gt; 24.996$.</li>
+          <li><b>Compute.</b>
+            $$ \chi^2=\frac{(16-1)(7.2)}{4}=\frac{108}{4}=27.0000 $$</li>
+          <li><b>Decide.</b> $27.0000 &gt; 24.996$, so <b>reject $H_0$.</b></li>
+          <li><b>Bracket the p-value.</b> Along the $df = 15$ row, $\chi^2_{0.05} = 24.996$ and $\chi^2_{0.025} = 27.488$. Our $27.0000$ lies between them, so
+            $$ 0.025 &lt; p &lt; 0.05 $$</li>
+        </ol>
+        <div class="final">Reject $H_0$ at the 5% level ($0.025 &lt; p &lt; 0.05$). There is sufficient evidence that the machine's fill variance exceeds 4 ml², so the machine needs attention.</div>
+        <div class="box plain">
+          <span class="lbl">Why only one critical value here, but two in exam Q6</span>
+          <p>The number of critical values equals the number of tails, never anything else. Q6 asked "is the variance <em>equal to</em> 20" — suspicious of both too-large and too-small, hence two tails and two lookups. This question asks only "does it <em>exceed</em> 4" — a variance that is unusually small is not a problem here, so all 5% goes in the right tail and one lookup suffices.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">Units</span>
+          <p>Compare variances with variances. If a question gives a <em>standard deviation</em> limit of 2 ml, square it to get $\sigma_0^2 = 4$ before substituting. Mixing $\sigma$ and $\sigma^2$ in this formula is a common and expensive slip.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex5">
+    <div class="hd">Example 5 — Type I error, Type II error and power</div>
+    <div class="bd">
+      <p>A process is tested with $H_0: \mu = 100$ against $H_1: \mu &gt; 100$, using a sample of $n = 25$ from a population with $\sigma = 15$, at $\alpha = 0.05$.</p>
+      <ol>
+        <li>Find the critical value of $\bar{x}$ above which $H_0$ is rejected.</li>
+        <li>Find the probability of a Type II error if the true mean is in fact 107.</li>
+        <li>State the power of the test against $\mu = 107$.</li>
+      </ol>
+      <div class="given"><b>Given</b> $\mu_0 = 100$ · $\sigma = 15$ · $n = 25$ · $\alpha = 0.05$ · true $\mu = 107$</div>
+      <p class="hint">Hint: $\beta$ is computed in the <em>alternative</em> world. Find the decision rule under $H_0$ first, then ask how often that rule fails when $\mu = 107$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Standard error.</b>
+            $$ \sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}=\frac{15}{\sqrt{25}}=\frac{15}{5}=3 $$</li>
+          <li><b>The decision rule, built under $H_0$.</b> Right-tailed at 5% uses $z_{0.05} = 1.645$:
+            $$ \bar{x}_{\text{crit}}=\mu_0+z_{0.05}\,\sigma_{\bar{x}}=100+1.645(3)=104.935 $$
+            So the rule is: <b>reject $H_0$ if $\bar{x} &gt; 104.935$</b>. By construction the probability of doing this when $H_0$ is true — the Type I error — is exactly $\alpha = 0.05$.</li>
+          <li><b>Type II error.</b> $\beta$ is the probability of <em>failing</em> to reject when $H_1$ is true. Keep the same rule, but now compute under $\mu = 107$:
+            $$ \beta=P(\bar{x} \le 104.935 \mid \mu = 107) $$
+            $$ z=\frac{104.935-107}{3}=\frac{-2.065}{3}=-0.6883 \approx -0.69 $$
+            $$ \beta = P(Z \le -0.69) = 0.2451 $$</li>
+          <li><b>Power.</b>
+            $$ \text{Power}=1-\beta=1-0.2451=0.7549 $$</li>
+        </ol>
+        <div class="final">$\bar{x}_{\text{crit}} = 104.935$ · $\beta = 0.2451$ · Power $= 0.7549$. The test correctly detects a true mean of 107 about 75% of the time.</div>
+        <div class="box plain">
+          <span class="lbl">The one idea that makes $\beta$ click</span>
+          <p>There are two bell curves, not one. The curve centred at 100 is the null world; the curve centred at 107 is the real world. You draw the cut-off at 104.935 using the <b>null</b> curve, because that is all you have when you design the test. Then $\beta$ is the area of the <b>alternative</b> curve that falls on the wrong side of that same line — the samples that really came from 107 but were not extreme enough to convince you. The cut-off is drawn once and used twice; that is why the same 104.935 appears in both calculations.</p>
+        </div>
+        <div class="box tip">
+          <span class="lbl">What moves $\beta$</span>
+          <p>Raise $n$ and both curves narrow, so they overlap less and $\beta$ falls — this is the only way to reduce $\alpha$ and $\beta$ together. Raise $\alpha$ and the cut-off slides left, so $\beta$ falls but you make more false rejections. And the further the true mean is from $\mu_0$, the smaller $\beta$: at $\mu = 115$ this same test would have $\beta$ near zero. Effects that are big are easy to detect.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex6">
+    <div class="hd">Example 6 — pick the test (a five-part drill)</div>
+    <div class="bd">
+      <p>For each scenario, state $H_0$ and $H_1$, name the test statistic, give the degrees of freedom where relevant, and state the tail. Do not compute anything.</p>
+      <ol>
+        <li>A firm claims its bulbs last 1200 hours on average. Records give $\sigma = 90$. A sample of 36 bulbs averages 1170 hours. Test the claim at 5%.</li>
+        <li>Twelve batteries are tested; the sample mean life is 41 hours with $s = 3$ hours. Is the mean life more than 40 hours?</li>
+        <li>Of 500 voters surveyed, 260 support a bill. Is support more than half?</li>
+        <li>A filling machine is meant to have a standard deviation of no more than 2 ml. A sample of 20 bottles gives $s = 2.8$ ml.</li>
+        <li>Eight weights are given as raw data. Test whether the population mean weight is 50 kg.</li>
+      </ol>
+      <p class="hint">Hint: for each one ask only two things — which parameter, and is $\sigma$ given?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <div class="tw">
+          <table>
+            <thead><tr><th></th><th>$H_0$ / $H_1$</th><th>Statistic</th><th>df</th><th>Tail</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>$\mu = 1200$ / $\mu \ne 1200$</td><td>$Z$ for a mean, $\sigma$ known</td><td>—</td><td>Two</td></tr>
+              <tr><td>2</td><td>$\mu \le 40$ / $\mu &gt; 40$</td><td>$t$ for a mean, $\sigma$ unknown</td><td class="num">11</td><td>Right</td></tr>
+              <tr><td>3</td><td>$p \le 0.50$ / $p &gt; 0.50$</td><td>$Z$ for a proportion</td><td>—</td><td>Right</td></tr>
+              <tr><td>4</td><td>$\sigma^2 \le 4$ / $\sigma^2 &gt; 4$</td><td>$\chi^2$ for a variance</td><td class="num">19</td><td>Right</td></tr>
+              <tr><td>5</td><td>$\mu = 50$ / $\mu \ne 50$</td><td>$t$ for a mean, $\sigma$ unknown</td><td class="num">7</td><td>Two</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ol class="steps">
+          <li><b>Why 1 is $Z$ and 2 is $t$.</b> Scenario 1 hands you $\sigma = 90$ from population records. Scenario 2 hands you $s = 3$ from the sample itself. Given $\sigma$ $\rightarrow$ $Z$; estimated $s$ $\rightarrow$ $t$ with $df = n - 1 = 11$.</li>
+          <li><b>Why 3 is a proportion.</b> "260 of 500" is a count, and "more than half" fixes $p_0 = 0.50$. Right-tailed because "more than".</li>
+          <li><b>Why 4 squares the 2.</b> The limit is given as a <em>standard deviation</em> of 2 ml, but the $\chi^2$ statistic works in variances, so $\sigma_0^2 = 2^2 = 4$. $df = 20 - 1 = 19$.</li>
+          <li><b>Why 5 is two-tailed.</b> "Whether the population mean is 50" suggests no direction — a mean of 45 would be just as much a contradiction as a mean of 55. Raw data with no $\sigma$ means $t$, with $df = 8 - 1 = 7$.</li>
+        </ol>
+        <div class="final">The parameter and the presence of $\sigma$ choose the statistic; the wording of the claim chooses the tail. Nothing else is involved.</div>
+        <div class="box tip">
+          <span class="lbl">Why this drill is worth doing twice</span>
+          <p>In an exam, choosing the wrong statistic loses every mark after step 2, however good the arithmetic. Choosing the right one takes about eight seconds. This is the single highest-value habit in the whole topic — practise it until it is automatic, then the computation is the easy part.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="ex-corr">3.2 · Correlation and regression — examples 7 to 13</h2>
+
+  <div class="exercise" id="ex7">
+    <div class="hd">Example 7 — Karl Pearson's coefficient of correlation from raw data</div>
+    <div class="bd">
+      <p>The table gives the hours studied ($x$) and the marks obtained ($y$) by five students. Compute the coefficient of correlation between them.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Hours $x$</th><th class="num">2</th><th class="num">4</th><th class="num">5</th><th class="num">6</th><th class="num">8</th></tr></thead>
+        <tbody><tr><th>Marks $y$</th><td class="num">3</td><td class="num">7</td><td class="num">6</td><td class="num">9</td><td class="num">10</td></tr></tbody>
+      </table></div>
+      <div class="given"><b>Given</b> $n = 5$ pairs of raw measurements</div>
+      <p class="hint">Hint: build all five columns before substituting anything. Do not compute the means first — the $n\sum xy$ form does not need them.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Build the Σ table.</b> Fill it row by row, then total each column.
+            <div class="tw"><table>
+              <thead><tr><th class="num">$x$</th><th class="num">$y$</th><th class="num">$xy$</th><th class="num">$x^2$</th><th class="num">$y^2$</th></tr></thead>
+              <tbody>
+                <tr><td class="num">2</td><td class="num">3</td><td class="num">6</td><td class="num">4</td><td class="num">9</td></tr>
+                <tr><td class="num">4</td><td class="num">7</td><td class="num">28</td><td class="num">16</td><td class="num">49</td></tr>
+                <tr><td class="num">5</td><td class="num">6</td><td class="num">30</td><td class="num">25</td><td class="num">36</td></tr>
+                <tr><td class="num">6</td><td class="num">9</td><td class="num">54</td><td class="num">36</td><td class="num">81</td></tr>
+                <tr><td class="num">8</td><td class="num">10</td><td class="num">80</td><td class="num">64</td><td class="num">100</td></tr>
+                <tr><th class="num">25</th><th class="num">35</th><th class="num">198</th><th class="num">145</th><th class="num">275</th></tr>
+              </tbody>
+            </table></div></li>
+          <li><b>Compute the three building blocks.</b>
+            $$ S_{xy}=n\sum xy-\sum x\sum y=5(198)-(25)(35)=990-875=115 $$
+            $$ S_{xx}=n\sum x^2-\Big(\sum x\Big)^2=5(145)-625=725-625=100 $$
+            $$ S_{yy}=n\sum y^2-\Big(\sum y\Big)^2=5(275)-1225=1375-1225=150 $$</li>
+          <li><b>Substitute.</b>
+            $$ r=\frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}}=\frac{115}{\sqrt{100\times150}}=\frac{115}{\sqrt{15000}}=\frac{115}{122.4745}=0.9390 $$</li>
+          <li><b>Interpret.</b> $r = 0.9390$ is close to $+1$: a very strong positive linear relationship. Students who studied longer scored higher, almost without exception.</li>
+        </ol>
+        <div class="final">$r = 0.9390$ — a very strong positive correlation between hours studied and marks obtained.</div>
+        <div class="box plain">
+          <span class="lbl">Why this version of the formula</span>
+          <p>There is a version using $\sum(x-\bar{x})(y-\bar{y})$, and it gives an identical answer. But it forces you to compute two means first and then subtract inside every row — which means decimals, rounding, and many chances to slip. The $n\sum xy$ form uses only whole-number column totals, so the whole calculation stays exact until the final division. In an exam, always prefer it.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">Sanity check before you write the answer down</span>
+          <p>$r$ must lie in $[-1, 1]$, and its sign must match the sign of $S_{xy}$. If you get $1.4$, or a negative $r$ from an obviously rising scatter, the error is almost always in $S_{xx}$ or $S_{yy}$ — typically $\sum x^2$ confused with $(\sum x)^2$. Those are different: here $\sum x^2 = 145$ but $(\sum x)^2 = 625$.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex8">
+    <div class="hd">Example 8 — both regression lines, and a prediction</div>
+    <div class="bd">
+      <p>Using the same data as Example 7 (hours studied $x$, marks $y$), find both lines of regression, verify the relationship between them and $r$, and estimate the marks of a student who studies for 7 hours.</p>
+      <div class="given"><b>Given</b> from Example 7: $n = 5$ · $S_{xy} = 115$ · $S_{xx} = 100$ · $S_{yy} = 150$ · $\sum x = 25$ · $\sum y = 35$</div>
+      <p class="hint">Hint: the Σ table is already built — do not rebuild it. Which line predicts marks from hours?</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Means.</b>
+            $$ \bar{x}=\frac{25}{5}=5 \qquad \bar{y}=\frac{35}{5}=7 $$</li>
+          <li><b>Both regression coefficients, straight from the blocks.</b>
+            $$ b_{yx}=\frac{S_{xy}}{S_{xx}}=\frac{115}{100}=1.15 \qquad b_{xy}=\frac{S_{xy}}{S_{yy}}=\frac{115}{150}=0.7667 $$</li>
+          <li><b>Line of $Y$ on $X$</b> — for predicting marks from hours:
+            $$ y-\bar{y}=b_{yx}(x-\bar{x}) \;\Rightarrow\; y-7=1.15(x-5) $$
+            $$ y=1.15x+1.25 $$</li>
+          <li><b>Line of $X$ on $Y$</b> — for predicting hours from marks:
+            $$ x-\bar{x}=b_{xy}(y-\bar{y}) \;\Rightarrow\; x-5=0.7667(y-7) $$
+            $$ x=0.7667y-0.3667 $$</li>
+          <li><b>Verify against $r$.</b> $r$ is the geometric mean of the two coefficients:
+            $$ r=\sqrt{b_{yx}\,b_{xy}}=\sqrt{1.15\times0.7667}=\sqrt{0.8817}=0.9390 $$
+            which matches Example 7 exactly. Both coefficients are positive, so $r$ takes the positive root.</li>
+          <li><b>Predict.</b> Marks are unknown, so use $Y$ on $X$:
+            $$ \hat{y}=1.15(7)+1.25=8.05+1.25=9.30 $$</li>
+        </ol>
+        <div class="final">$Y$ on $X$: $y = 1.15x + 1.25$ · $X$ on $Y$: $x = 0.7667y - 0.3667$ · a student studying 7 hours is estimated to score <b>9.30 marks</b>.</div>
+        <div class="box plain">
+          <span class="lbl">Why two different lines for one set of points</span>
+          <p>They answer different questions, so they minimise different errors. $Y$ on $X$ makes the <em>vertical</em> gaps small — it is built to be wrong by as little as possible about $y$. $X$ on $Y$ makes the <em>horizontal</em> gaps small. Only when every point sits exactly on one line ($r = \pm1$) do the two coincide. The weaker the correlation, the wider they open, like a pair of scissors hinged at $(\bar{x},\bar{y})$.</p>
+        </div>
+        <div class="box tip">
+          <span class="lbl">The check that costs ten seconds</span>
+          <p>Substitute $x = \bar{x}$ into your $Y$ on $X$ line: you must get exactly $\bar{y}$. Here $1.15(5)+1.25 = 7$ ✓. Every regression line passes through the point of means, so if it does not, your intercept is wrong.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">Do not extrapolate</span>
+          <p>The data covers 2 to 8 hours. Predicting the marks of someone who studies 20 hours uses the line far outside the evidence that built it, and the answer is not defensible. If an exam asks for such a prediction, give it but add the caveat — that sentence is often the mark.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex9">
+    <div class="hd">Example 9 — Spearman's rank correlation, no ties</div>
+    <div class="bd">
+      <p>Eight candidates were scored by two interviewers. Find the rank correlation coefficient between the two sets of scores and comment.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Interviewer A</th><th class="num">48</th><th class="num">60</th><th class="num">72</th><th class="num">62</th><th class="num">56</th><th class="num">40</th><th class="num">88</th><th class="num">50</th></tr></thead>
+        <tbody><tr><th>Interviewer B</th><td class="num">62</td><td class="num">78</td><td class="num">98</td><td class="num">65</td><td class="num">70</td><td class="num">38</td><td class="num">92</td><td class="num">54</td></tr></tbody>
+      </table></div>
+      <div class="given"><b>Given</b> $n = 8$ pairs · check for repeats before starting</div>
+      <p class="hint">Hint: scan both rows for repeated values first — that decides whether you need the correction term.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Check for ties.</b> A: 48, 60, 72, 62, 56, 40, 88, 50 — all distinct. B: 62, 78, 98, 65, 70, 38, 92, 54 — all distinct. <b>No ties</b>, so the plain formula applies.</li>
+          <li><b>Rank both columns, largest first.</b> State the direction once and apply it to both.
+            <div class="tw"><table>
+              <thead><tr><th class="num">A</th><th class="num">B</th><th class="num">$R_A$</th><th class="num">$R_B$</th><th class="num">$d$</th><th class="num">$d^2$</th></tr></thead>
+              <tbody>
+                <tr><td class="num">48</td><td class="num">62</td><td class="num">7</td><td class="num">6</td><td class="num">1</td><td class="num">1</td></tr>
+                <tr><td class="num">60</td><td class="num">78</td><td class="num">4</td><td class="num">3</td><td class="num">1</td><td class="num">1</td></tr>
+                <tr><td class="num">72</td><td class="num">98</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+                <tr><td class="num">62</td><td class="num">65</td><td class="num">3</td><td class="num">5</td><td class="num">−2</td><td class="num">4</td></tr>
+                <tr><td class="num">56</td><td class="num">70</td><td class="num">5</td><td class="num">4</td><td class="num">1</td><td class="num">1</td></tr>
+                <tr><td class="num">40</td><td class="num">38</td><td class="num">8</td><td class="num">8</td><td class="num">0</td><td class="num">0</td></tr>
+                <tr><td class="num">88</td><td class="num">92</td><td class="num">1</td><td class="num">2</td><td class="num">−1</td><td class="num">1</td></tr>
+                <tr><td class="num">50</td><td class="num">54</td><td class="num">6</td><td class="num">7</td><td class="num">−1</td><td class="num">1</td></tr>
+                <tr><th class="num">Σ</th><th class="num"></th><th class="num">36</th><th class="num">36</th><th class="num">0</th><th class="num">10</th></tr>
+              </tbody>
+            </table></div></li>
+          <li><b>Run both checks.</b> Each rank column totals $\tfrac{8 \times 9}{2} = 36$ ✓, and $\sum d = 0$ ✓. Safe to substitute.</li>
+          <li><b>Substitute.</b>
+            $$ \rho=1-\frac{6\sum d^2}{n(n^2-1)}=1-\frac{6(10)}{8(64-1)}=1-\frac{60}{504}=1-0.1190=0.8810 $$</li>
+        </ol>
+        <div class="final">$\rho = 0.8810$ — a strong positive rank correlation. The two interviewers largely agree on the order of merit of the candidates.</div>
+        <div class="box plain">
+          <span class="lbl">What rank correlation measures that Pearson's $r$ does not</span>
+          <p>Pearson's $r$ asks whether the points lie near a <em>straight line</em>. Spearman's $\rho$ asks only whether the two orderings agree — whether the person ranked third by A tends to be ranked around third by B. So $\rho$ survives any relationship that consistently rises, straight or curved, and it is unbothered by one wild outlier, because an extreme value is still just "rank 1". That is exactly why it is the right tool for judges, interviewers and preferences.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">The direction trap</span>
+          <p>Had you ranked A with largest-first and B with smallest-first, every $d$ would change and you would have computed $\rho = -0.8810$ — a confident statement that the interviewers <em>disagree</em>. Write "rank 1 = highest score" at the top of your working and apply it to both columns.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex10">
+    <div class="hd">Example 10 — Spearman's rank correlation with tied ranks</div>
+    <div class="bd">
+      <p>Find the rank correlation coefficient for the following data, which contains repeated values.</p>
+      <div class="tw"><table>
+        <thead><tr><th>$X$</th><th class="num">45</th><th class="num">50</th><th class="num">50</th><th class="num">62</th><th class="num">70</th><th class="num">38</th><th class="num">55</th><th class="num">66</th></tr></thead>
+        <tbody><tr><th>$Y$</th><td class="num">60</td><td class="num">65</td><td class="num">70</td><td class="num">70</td><td class="num">70</td><td class="num">50</td><td class="num">62</td><td class="num">75</td></tr></tbody>
+      </table></div>
+      <div class="given"><b>Given</b> $n = 8$ · $X$ has one tie of two values · $Y$ has one tie of three values</div>
+      <p class="hint">Hint: rank as if there were no ties, then average the positions each tie group occupies. The correction term is $\frac{m(m^2-1)}{12}$, added once per group, in both columns.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Identify the tie groups.</b> In $X$, the value 50 appears twice — a group of $m = 2$. In $Y$, the value 70 appears three times — a group of $m = 3$.</li>
+          <li><b>Rank $X$ (largest first), averaging tied positions.</b> Sorted: 70, 66, 62, 55, 50, 50, 45, 38. The two 50s occupy positions 5 and 6, so both take $\tfrac{5+6}{2} = 5.5$, and the next value (45) resumes at <b>position 7</b>, not 6.</li>
+          <li><b>Rank $Y$ the same way.</b> Sorted: 75, 70, 70, 70, 65, 62, 60, 50. The three 70s occupy positions 2, 3 and 4, so each takes $\tfrac{2+3+4}{3} = 3$, and the next value (65) resumes at <b>position 5</b>.
+            <div class="tw"><table>
+              <thead><tr><th class="num">$X$</th><th class="num">$Y$</th><th class="num">$R_X$</th><th class="num">$R_Y$</th><th class="num">$d$</th><th class="num">$d^2$</th></tr></thead>
+              <tbody>
+                <tr><td class="num">45</td><td class="num">60</td><td class="num">7</td><td class="num">7</td><td class="num">0</td><td class="num">0</td></tr>
+                <tr><td class="num">50</td><td class="num">65</td><td class="num">5.5</td><td class="num">5</td><td class="num">0.5</td><td class="num">0.25</td></tr>
+                <tr><td class="num">50</td><td class="num">70</td><td class="num">5.5</td><td class="num">3</td><td class="num">2.5</td><td class="num">6.25</td></tr>
+                <tr><td class="num">62</td><td class="num">70</td><td class="num">3</td><td class="num">3</td><td class="num">0</td><td class="num">0</td></tr>
+                <tr><td class="num">70</td><td class="num">70</td><td class="num">1</td><td class="num">3</td><td class="num">−2</td><td class="num">4</td></tr>
+                <tr><td class="num">38</td><td class="num">50</td><td class="num">8</td><td class="num">8</td><td class="num">0</td><td class="num">0</td></tr>
+                <tr><td class="num">55</td><td class="num">62</td><td class="num">4</td><td class="num">6</td><td class="num">−2</td><td class="num">4</td></tr>
+                <tr><td class="num">66</td><td class="num">75</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+                <tr><th class="num">Σ</th><th class="num"></th><th class="num">36</th><th class="num">36</th><th class="num">0</th><th class="num">15.5</th></tr>
+              </tbody>
+            </table></div>
+            Both rank columns still total 36 and $\sum d = 0$ ✓ — averaging preserves the total, which is precisely why it is the correct way to handle ties.</li>
+          <li><b>Compute the correction, once per tie group.</b>
+            $$ \text{from } X \text{ (}m=2\text{):}\quad \frac{2(2^2-1)}{12}=\frac{6}{12}=0.5 $$
+            $$ \text{from } Y \text{ (}m=3\text{):}\quad \frac{3(3^2-1)}{12}=\frac{24}{12}=2 $$
+            $$ \text{Total correction}=0.5+2=2.5 $$</li>
+          <li><b>Substitute into the corrected formula.</b>
+            $$ \rho=1-\frac{6\left[\sum d^2+\sum\frac{m(m^2-1)}{12}\right]}{n(n^2-1)}=1-\frac{6[15.5+2.5]}{8(64-1)} $$
+            $$ \rho=1-\frac{6(18)}{504}=1-\frac{108}{504}=1-0.2143=0.7857 $$</li>
+        </ol>
+        <div class="final">$\rho = 0.7857$ — a fairly strong positive rank correlation.</div>
+        <div class="box plain">
+          <span class="lbl">How much the correction matters</span>
+          <p>Leaving it out gives $\rho = 1 - \frac{6(15.5)}{504} = 0.8155$ — noticeably higher, and wrong. The plain formula assumes each rank from 1 to $n$ is used exactly once, which ties violate: nobody here holds rank 5, 6, 2 or 4. The correction adds back exactly the spread the ties removed. Without it you always overstate the agreement.</p>
+        </div>
+        <div class="box tip">
+          <span class="lbl">Memorise three numbers, not the formula</span>
+          <p>$\frac{m(m^2-1)}{12}$ for the group sizes you will actually meet: a pair contributes <b>0.5</b>, a triple contributes <b>2</b>, a group of four contributes <b>5</b>. Count your tie groups, add those numbers, done.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex11">
+    <div class="hd">Example 11 — two regression lines given, no data</div>
+    <div class="bd">
+      <p>For a bivariate distribution, the two lines of regression are $9X - 10Y + 26 = 0$ and $5X - 2Y = 14$, and $\operatorname{Var}(X) = 4$. Find (a) the mean values of $X$ and $Y$, (b) the correlation coefficient, (c) the standard deviation of $Y$, and (d) the estimated value of $Y$ when $X = 10$.</p>
+      <div class="given"><b>Given</b> two regression lines · $\operatorname{Var}(X) = 4$, so $\sigma_x = 2$</div>
+      <p class="hint">Hint: you are not told which line is which. There is a test for that, and it must appear in your answer.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>(a) The means — solve simultaneously.</b> Both regression lines pass through $(\bar{x},\bar{y})$, so that point satisfies both.
+            $$ 9x-10y=-26 \quad\cdots(1) \qquad\qquad 5x-2y=14 \quad\cdots(2) $$
+            Multiply (2) by 5: $\;25x-10y=70\;\cdots(3)$. Subtract (1) from (3):
+            $$ (25x-10y)-(9x-10y)=70-(-26) \;\Rightarrow\; 16x=96 \;\Rightarrow\; x=6 $$
+            Substitute into (2): $\;5(6)-2y=14 \Rightarrow 30-2y=14 \Rightarrow y=8$.
+            $$ \bar{x}=6, \qquad \bar{y}=8 $$</li>
+          <li><b>(b) Assume an assignment and extract the coefficients.</b> Take the first line as $Y$ on $X$ and make $y$ the subject:
+            $$ 10y=9x+26 \;\Rightarrow\; y=0.9x+2.6 \;\Rightarrow\; b_{yx}=0.9 $$
+            Take the second as $X$ on $Y$ and make $x$ the subject:
+            $$ 5x=2y+14 \;\Rightarrow\; x=0.4y+2.8 \;\Rightarrow\; b_{xy}=0.4 $$</li>
+          <li><b>Test the assumption.</b> Since $b_{yx}b_{xy}=r^2$ and $r^2 \le 1$, the product must not exceed 1:
+            $$ 0.9\times0.4=0.36 \le 1 \quad\checkmark $$
+            The assumption is correct. (The other assignment gives $b_{xy}=1.1111$ and $b_{yx}=2.5$, product $2.7778 &gt; 1$ — impossible.)</li>
+          <li><b>Take the root.</b> Both coefficients are positive, so:
+            $$ r=+\sqrt{0.36}=0.6000 $$</li>
+          <li><b>(c) The standard deviation of $Y$.</b>
+            $$ b_{yx}=r\frac{\sigma_y}{\sigma_x} \;\Rightarrow\; 0.9=0.6\times\frac{\sigma_y}{2} \;\Rightarrow\; \sigma_y=\frac{0.9\times2}{0.6}=3 $$
+            Cross-check with the other coefficient: $b_{xy}=r\frac{\sigma_x}{\sigma_y}=0.6\times\frac{2}{3}=0.4$ ✓.</li>
+          <li><b>(d) Estimate $Y$ at $X = 10$.</b> $Y$ is unknown, so use $Y$ on $X$:
+            $$ \hat{y}=0.9(10)+2.6=9+2.6=11.6 $$</li>
+        </ol>
+        <div class="final">$\bar{x}=6$, $\bar{y}=8$ · $r = 0.6000$ · $\sigma_y = 3$ · at $X=10$, estimated $Y = 11.6$</div>
+        <div class="box plain">
+          <span class="lbl">Why the product test works</span>
+          <p>Multiply the two coefficients: $b_{yx}b_{xy} = \left(r\frac{\sigma_y}{\sigma_x}\right)\left(r\frac{\sigma_x}{\sigma_y}\right) = r^2$, since the standard deviations cancel. And $r$ lives in $[-1,1]$, so $r^2$ cannot exceed 1. If your assignment produces a product above 1 it is claiming $|r| &gt; 1$, which is impossible — so the assignment, not the arithmetic, is wrong. Swap the two lines and the product becomes its reciprocal, which is then below 1. The test can never be ambiguous.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">Make the right variable the subject</span>
+          <p>To read $b_{yx}$ you must have $y$ alone on the left. To read $b_{xy}$ you must have $x$ alone on the left. Reading $b_{xy}$ off a line written as $y = \ldots$ by taking the reciprocal in your head is where this question goes wrong. Write the rearrangement out.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex12">
+    <div class="hd">Example 12 — everything from summary totals, plus $R^2$</div>
+    <div class="bd">
+      <p>For ten pairs of observations the following totals were recorded: $\sum x = 50$, $\sum y = 60$, $\sum xy = 350$, $\sum x^2 = 300$, $\sum y^2 = 450$. Find the correlation coefficient, the line of regression of $Y$ on $X$, the coefficient of determination with its interpretation, and the estimated value of $y$ when $x = 8$.</p>
+      <div class="given"><b>Given</b> $n = 10$ · $\sum x = 50$ · $\sum y = 60$ · $\sum xy = 350$ · $\sum x^2 = 300$ · $\sum y^2 = 450$</div>
+      <p class="hint">Hint: the Σ table has been done for you. Go straight to $S_{xy}$, $S_{xx}$, $S_{yy}$.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>The three building blocks.</b>
+            $$ S_{xy}=10(350)-(50)(60)=3500-3000=500 $$
+            $$ S_{xx}=10(300)-(50)^2=3000-2500=500 $$
+            $$ S_{yy}=10(450)-(60)^2=4500-3600=900 $$</li>
+          <li><b>Correlation coefficient.</b>
+            $$ r=\frac{500}{\sqrt{500\times900}}=\frac{500}{\sqrt{450000}}=\frac{500}{670.8204}=0.7454 $$</li>
+          <li><b>Means, then the regression coefficient.</b>
+            $$ \bar{x}=\frac{50}{10}=5 \qquad \bar{y}=\frac{60}{10}=6 \qquad b_{yx}=\frac{S_{xy}}{S_{xx}}=\frac{500}{500}=1.0000 $$</li>
+          <li><b>Line of $Y$ on $X$.</b>
+            $$ y-6=1.0000(x-5) \;\Rightarrow\; y=x+1 $$
+            Check: at $x=\bar{x}=5$, $y=6=\bar{y}$ ✓.</li>
+          <li><b>Coefficient of determination.</b>
+            $$ R^2=r^2=(0.7454)^2=0.5556 $$
+            So <b>55.56%</b> of the variation in $y$ is explained by its linear relationship with $x$; the remaining 44.44% is unexplained by this model.</li>
+          <li><b>Predict at $x = 8$.</b>
+            $$ \hat{y}=8+1=9 $$</li>
+        </ol>
+        <div class="final">$r = 0.7454$ · $Y$ on $X$: $y = x + 1$ · $R^2 = 0.5556$ (55.56% of the variation in $y$ explained) · at $x = 8$, $\hat{y} = 9$</div>
+        <div class="box plain">
+          <span class="lbl">Why $R^2$ feels smaller than $r$ suggests</span>
+          <p>$r = 0.7454$ sounds impressive, but squaring it gives $0.5556$ — barely more than half the variation accounted for. Squaring a number below 1 always shrinks it, and that is the honest measure: $R^2$ is the share of the ups and downs in $y$ that the line actually reproduces. It is why $r = 0.7$ is a much weaker result than it looks, and why examiners like asking for $R^2$ right after $r$.</p>
+        </div>
+        <div class="box tip">
+          <span class="lbl">Two free checks on this answer</span>
+          <p>First, $b_{xy} = S_{xy}/S_{yy} = 500/900 = 0.5556$, and $b_{yx} \times b_{xy} = 1.0000 \times 0.5556 = 0.5556 = r^2$ ✓. Second, a regression coefficient of exactly 1 with $r$ well below 1 is perfectly normal — the <em>slope</em> and the <em>strength</em> are different things. A slope of 1 with scattered points, and a slope of 1 with points on a perfect line, are both $b_{yx} = 1$.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise" id="ex13">
+    <div class="hd">Example 13 — is the correlation significant? (the two topics joined)</div>
+    <div class="bd">
+      <p>A sample of 20 pairs of observations gives a correlation coefficient of $r = 0.68$. Test at the 5% level whether there is a significant correlation between the two variables in the population.</p>
+      <div class="given"><b>Given</b> $n = 20$ · $r = 0.68$ · $\alpha = 0.05$</div>
+      <p class="hint">Hint: this is a hypothesis test, so use the six-step machine. The population parameter here is $\rho$, and the statistic is a $t$ with $n - 2$ degrees of freedom.</p>
+      <button class="reveal-btn">Reveal solution</button>
+      <div class="solution">
+        <ol class="steps">
+          <li><b>Hypotheses.</b> The null position is "no relationship at all":
+            $$ H_0: \rho = 0 \qquad H_1: \rho \ne 0 $$</li>
+          <li><b>Level and tail.</b> $\alpha = 0.05$, two-tailed (the question says "significant", not "positive"), $df = n - 2 = 18$.</li>
+          <li><b>Test statistic.</b>
+            $$ t=\frac{r\sqrt{n-2}}{\sqrt{1-r^2}}\;\sim\;t_{n-2} $$</li>
+          <li><b>Critical value.</b> From the $t$-table, $t_{0.025,\,18} = 2.101$. Reject $H_0$ if $|t| &gt; 2.101$.</li>
+          <li><b>Compute.</b>
+            $$ 1-r^2=1-(0.68)^2=1-0.4624=0.5376 \qquad \sqrt{0.5376}=0.7332 $$
+            $$ t=\frac{0.68\sqrt{18}}{0.7332}=\frac{0.68\times4.2426}{0.7332}=\frac{2.8850}{0.7332}=3.9347 $$</li>
+          <li><b>Decide.</b> $3.9347 &gt; 2.101$, so <b>reject $H_0$.</b> Bracketing the p-value: $t_{0.005,18} = 2.878$, and $3.9347$ exceeds even that, so the two-tailed $p &lt; 0.01$.</li>
+        </ol>
+        <div class="final">Reject $H_0$ at the 5% level ($t = 3.9347 &gt; 2.101$, $p &lt; 0.01$). There is a significant linear correlation between the two variables in the population.</div>
+        <div class="box plain">
+          <span class="lbl">Why $n-2$ degrees of freedom, not $n-1$</span>
+          <p>Degrees of freedom count how many independent pieces of information remain after you have estimated things from the data. Fitting a line costs you two — a slope and an intercept — so $n - 2$ are left. Testing a single mean costs only one (the mean itself), which is why that test uses $n - 1$. Same principle, different number of estimates.</p>
+        </div>
+        <div class="box warn">
+          <span class="lbl">"Significant" does not mean "strong"</span>
+          <p>Significance depends heavily on $n$. The same $r = 0.68$ from only 5 pairs gives $t = 1.6063$ on $df = 3$, which is nowhere near the critical $3.182$ — not significant at all. And with $n = 1000$, an $r$ of just $0.07$ becomes significant while explaining under half a percent of the variation. So always report $r$ (or $R^2$) alongside the test: one tells you whether the relationship is real, the other tells you whether it matters.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <h4>How to use these thirteen</h4>
+    <ul>
+      <li><b>First pass:</b> read each question, and write only the six-step skeleton or the Σ table — not the arithmetic. That is the skill that transfers.</li>
+      <li><b>Second pass:</b> do them fully, timed. Seven marks is about ten minutes on a 50-mark, 2.5-hour paper.</li>
+      <li><b>Third pass:</b> cover the questions and reconstruct them from the answers — if you can say <em>why</em> example 4 needed one critical value and exam Q6 needed two, you understand the topic rather than the examples.</li>
+      <li>Then sit the mock papers, which put these alongside the other five question types under exam conditions.</li>
+    </ul>
+  </div>
+</section>
